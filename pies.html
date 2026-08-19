@@ -1,0 +1,2097 @@
+<!DOCTYPE html>
+<!--
+  PIES - Paintable Indicator Editor for Stormworks
+
+  MIT License
+
+  Copyright (c) 2026
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
+-->
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PIES Paintable Indicator Editor for Stormworks</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23bfe0b0%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Crect%20x%3D%221%22%20y%3D%221%22%20width%3D%2222%22%20height%3D%2222%22%20rx%3D%225%22%20fill%3D%22%23182019%22%2F%3E%3Cpath%20d%3D%22M2%2019h8%22%2F%3E%3Cpath%20d%3D%22M3%2019v-5a1%201%200%200%201%201-1h4a1%201%200%200%201%201%201v5%22%2F%3E%3Cpath%20d%3D%22M3%2013c.5-.5%201-.5%201.5%200s1%20.5%201.5%200%201%20.5%201.5%200%201%20.5%201.5%200%22%2F%3E%3Cpath%20d%3D%22M3%2013v1.5M6%2013v1M9%2013v1.5%22%2F%3E%3Cpath%20d%3D%22M6%209v4%22%2F%3E%3Cpath%20d%3D%22M6%207v2%22%2F%3E%3Cpath%20d%3D%22M13%2018h9%22%2F%3E%3Cpath%20d%3D%22M14%2018v-6a1%201%200%200%201%201-1h6a1%201%200%200%201%201%201v6%22%2F%3E%3Cpath%20d%3D%22M14%2011c.6-.6%201.2-.6%201.8%200s1.2.6%201.8%200%201.2-.6%201.8%200%201.2.6%201.8%200%22%2F%3E%3Cpath%20d%3D%22M14%2011v1.5M16.5%2011v1M19%2011v1.5M21%2011v1%22%2F%3E%3Cpath%20d%3D%22M18%207v4%22%2F%3E%3Cpath%20d%3D%22M18%205v2%22%2F%3E%3C%2Fsvg%3E">
+<style>
+  :root{
+    --bg:#14161c; --panel:#1c1f27; --panel2:#232733; --line:#30353f;
+    --text:#e6e8ee; --dim:#9aa1b0; --acc:#bfe0b0; --acc2:#22c07f;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    background:var(--bg); color:var(--text);
+    font:14px/1.4 "Segoe UI",system-ui,sans-serif;
+    display:flex; flex-direction:column; height:100vh;
+  }
+  header{
+    padding:10px 16px; background:var(--panel); border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:14px;
+  }
+  header h1{font-size:16px; margin:0; font-weight:600}
+  header span{color:var(--dim); font-size:12px}
+  main{flex:1; display:flex; min-height:0}
+  .toolcol{
+    width:56px; background:var(--panel); border-right:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 4px; overflow-y:auto;
+  }
+  .toolcol h2{font-size:9px; color:var(--dim); text-transform:uppercase; letter-spacing:1px; margin:6px 0 2px}
+  .tool{width:44px; height:44px; border:1px solid transparent; border-radius:8px; background:var(--panel2); color:var(--dim); cursor:pointer; font-size:18px; display:flex; align-items:center; justify-content:center}
+  .tool:hover{color:var(--text); border-color:#bfe0b0}
+  .tool.active{background:#263f33; color:#bfe0b0; border-color:#bfe0b0; box-shadow:0 0 0 1px #bfe0b0}
+  .dpad{display:grid; grid-template-columns:repeat(2,auto); gap:4px; margin-bottom:4px}
+  .tool.sm{width:26px; height:26px; font-size:12px}
+  .tool svg{width:20px; height:20px}
+  .tool.sm svg{width:15px; height:15px}
+  .splash-logo svg{width:46px; height:46px; stroke:#bfe0b0}
+  .btn{
+    background:var(--panel2); color:var(--text); border:1px solid var(--line);
+    border-radius:8px; padding:7px 12px; cursor:pointer; font-size:13px;
+  }
+  .btn:hover{border-color:var(--acc)}
+  .btn:disabled{opacity:.4; cursor:default}
+  .btn.acc{background:#263f33; border-color:#bfe0b0}
+  .center{flex:1; display:flex; flex-direction:column; min-width:0}
+  .stage{flex:1; overflow:auto; display:flex; padding:16px}
+  #cv{
+    image-rendering:pixelated; background:#000; border:1px solid var(--line);
+    box-shadow:0 8px 30px rgba(0,0,0,.5); touch-action:none; cursor:crosshair; margin:auto;
+  }
+  .statusbar{
+    display:flex; gap:18px; padding:7px 14px; background:var(--panel);
+    border-top:1px solid var(--line); color:var(--dim); font-size:12px; flex-wrap:wrap;
+  }
+  .statusbar b{color:var(--text); font-weight:600}
+  .panel{
+    width:300px; background:var(--panel); border-left:1px solid var(--line);
+    padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;
+  }
+  section{border:1px solid var(--line); border-radius:10px; background:var(--panel2); padding:10px}
+  section h3{margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); font-weight:600; position:relative}
+  .row{display:flex; gap:6px; align-items:center; flex-wrap:wrap}
+  #pixrgb{display:inline-flex; align-items:center; gap:8px; font-family:Consolas,monospace; font-size:11px; white-space:nowrap}
+  .pxsw{width:14px; height:14px; border:1px solid var(--line); border-radius:3px; flex:none}
+  .pxhex{width:7ch; color:var(--text)}
+  .pxdec{color:var(--dim)}
+  .palette{display:grid; grid-template-columns:repeat(8,1fr); gap:4px}
+  .sw{aspect-ratio:1; border-radius:5px; border:2px solid transparent; cursor:pointer; padding:0}
+  .sw:hover{transform:scale(1.1)}
+  .sw.active{border-color:#fff; box-shadow:0 0 0 2px #000}
+  .sw.active2{outline:2px dashed var(--dim); outline-offset:1px}
+  .sw.hit{outline:2px solid var(--acc2); outline-offset:1px}
+  .layers label{display:flex; gap:6px; align-items:center; font-size:13px; cursor:pointer; padding:5px 8px; border-radius:6px; background:var(--panel); border:1px solid var(--line)}
+  .layers input[type=radio]{accent-color:var(--acc)}
+  label.chk{display:flex; gap:6px; align-items:center; font-size:12px; color:var(--dim); cursor:pointer}
+  label.chk input{accent-color:var(--acc)}
+  input[type=number],input[type=text]{
+    background:var(--panel); color:var(--text); border:1px solid var(--line);
+    border-radius:6px; padding:6px 8px; width:70px; font-size:13px;
+  }
+  input[type=color]{width:100%; height:38px; border:none; background:none; cursor:pointer; padding:0}
+  input[type=color].cmini{width:36px!important; height:28px}
+  textarea{
+    width:100%; height:3.2em; resize:vertical; background:#0d0f14; color:#bfe0b0;
+    border:1px solid var(--line); border-radius:8px; padding:8px; font:11px/1.4 Consolas,monospace;
+  }
+  .hint{font-size:11px; color:var(--dim); line-height:1.5}
+  .hint code{background:var(--panel); padding:1px 4px; border-radius:4px; color:#bfe0b0}
+  .q{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:15px; height:15px; margin-left:5px; border-radius:50%;
+    background:var(--panel); color:var(--acc); border:1px solid var(--line);
+    font-size:10px; line-height:1; font-weight:700; cursor:help;
+    vertical-align:1px; user-select:none;
+  }
+  .q .tip{
+    display:none; position:absolute; top:calc(100% + 8px); left:0; right:auto; z-index:60;
+    width:100%; padding:9px 11px; background:var(--panel); border:1px solid var(--line);
+    border-radius:8px; box-shadow:0 10px 28px rgba(0,0,0,.55);
+    font-size:11px; line-height:1.5; font-weight:400; text-transform:none;
+    letter-spacing:0; color:var(--dim); white-space:normal; cursor:default;
+  }
+  .q:hover .tip{display:block}
+  .q .tip code{background:var(--panel2); padding:1px 4px; border-radius:4px; color:#bfe0b0}
+  .q .tip kbd{background:var(--panel2)}
+  .range{width:100%}
+  kbd{background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:11px}
+  #splash{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    display:flex; align-items:center; justify-content:center;
+    transition:opacity .45s ease; opacity:1;
+  }
+  #splash.hidden{opacity:0; pointer-events:none}
+  .splash-inner{text-align:center; color:var(--dim)}
+  .splash-logo{font-size:46px; margin-bottom:10px}
+  .splash-title{font-size:18px; font-weight:600; color:var(--text); margin-bottom:18px}
+  .splash-sub{font-size:12px; margin-top:14px; letter-spacing:.5px}
+  .spinner{
+    width:26px; height:26px; margin:0 auto; border:3px solid var(--line);
+    border-top-color:var(--acc); border-radius:50%; animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+  #licmodal, #helpmodal{
+    position:fixed; inset:0; z-index:900; background:rgba(0,0,0,.6);
+    display:flex; align-items:center; justify-content:center;
+  }
+  #licmodal.hidden{display:none}
+  #helpmodal.hidden{display:none}
+  .licbox{
+    width:min(540px, 92vw); max-height:82vh; overflow:auto;
+    background:var(--panel); border:1px solid var(--line); border-radius:12px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6); display:flex; flex-direction:column;
+  }
+  .lichead{
+    display:flex; align-items:center; justify-content:space-between; gap:8px;
+    padding:12px 14px; border-bottom:1px solid var(--line); font-size:13px; font-weight:600;
+  }
+  .licx{padding:2px 10px; font-size:15px; line-height:1}
+  .licbody{padding:12px 14px; display:flex; flex-direction:column; gap:14px; font-size:12px; color:var(--dim)}
+  .licitem{display:flex; flex-direction:column; gap:3px; padding-bottom:12px; border-bottom:1px solid var(--line)}
+  .licitem:last-of-type{border-bottom:none; padding-bottom:0}
+  .licitem b{color:var(--text); font-size:13px}
+  .licitem span{line-height:1.5}
+  .licitem .lictag{color:var(--acc2); font-weight:600}
+  #helpmodal .licbox{width:min(720px, 94vw)}
+  .helpsec{display:flex; flex-direction:column; gap:6px}
+  .helpsec h4{color:var(--text); font-size:13px; margin:0}
+  .helpsec p, .helpsec li{line-height:1.55; margin:0}
+  .helpsec ul{margin:0; padding-left:18px}
+  .helpsec table{width:100%; border-collapse:collapse; font-size:12px}
+  .helpsec th, .helpsec td{border:1px solid var(--line); padding:4px 8px; text-align:left; vertical-align:top}
+  .helpsec th{color:var(--text); background:var(--panel2); font-weight:600; white-space:nowrap}
+  kbd{background:var(--panel2); border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; font-family:Consolas,monospace; font-size:11px}
+  .helpsec .dim{color:var(--dim)}
+  .licitem .licsrc{font-family:Consolas,monospace; font-size:11px; color:var(--dim); word-break:break-all}
+  .licitem a{color:var(--acc2); text-decoration:none}
+  .licitem a:hover{text-decoration:underline}
+  .licnote{font-size:11px; color:var(--dim); opacity:.8}
+</style>
+</head>
+<body>
+<div id="splash">
+  <div class="splash-inner">
+    <div class="splash-logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 19h8"/><path d="M3 19v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5"/><path d="M3 13c.5-.5 1-.5 1.5 0s1 .5 1.5 0 1 .5 1.5 0 1 .5 1.5 0"/><path d="M3 13v1.5M6 13v1M9 13v1.5"/><path d="M6 9v4"/><path d="M6 7v2"/><path d="M13 18h9"/><path d="M14 18v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6"/><path d="M14 11c.6-.6 1.2-.6 1.8 0s1.2.6 1.8 0 1.2-.6 1.8 0 1.2.6 1.8 0"/><path d="M14 11v1.5M16.5 11v1M19 11v1.5M21 11v1"/><path d="M18 7v4"/><path d="M18 5v2"/></svg></div>
+    <div class="splash-title">Stormworks Paintable Indicator Editor</div>
+    <div class="spinner"></div>
+    <div class="splash-sub">Loading editor …</div>
+  </div>
+</div>
+
+<header>
+  <h1 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="#bfe0b0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:20px;height:20px;flex:none"><path d="M2 19h8"/><path d="M3 19v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5"/><path d="M3 13c.5-.5 1-.5 1.5 0s1 .5 1.5 0 1 .5 1.5 0 1 .5 1.5 0"/><path d="M3 13v1.5M6 13v1M9 13v1.5"/><path d="M6 9v4"/><path d="M6 7v2"/><path d="M13 18h9"/><path d="M14 18v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6"/><path d="M14 11c.6-.6 1.2-.6 1.8 0s1.2.6 1.8 0 1.2-.6 1.8 0 1.2.6 1.8 0"/><path d="M14 11v1.5M16.5 11v1M19 11v1.5M21 11v1"/><path d="M18 7v4"/><path d="M18 5v2"/></svg><span style="color:#bfe0b0;font-size:22px;font-weight:700;margin-right:4px">PIES</span> Paintable Indicator Editor for Stormworks <span style="font-size:12px;color:var(--dim);font-weight:normal">v1</span></h1>
+  <span style="margin-left:auto;display:flex;gap:6px;align-items:center"><button class="btn" id="btnhelp" title="Open the help screen">Help</button><button class="btn" id="btnlicenses" title="Show license info for the bundled pixel fonts">Credits</button></span>
+</header>
+
+<main>
+  <div class="toolcol">
+    <button class="tool active" data-tool="pen" title="Pencil (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+    <button class="tool" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21"/><path d="m5.082 11.09 8.828 8.828"/></svg></button>
+    <button class="tool" data-tool="fill" title="Fill (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 7 6 2"/><path d="M18.992 12H2.041"/><path d="M21.145 18.38A3.34 3.34 0 0 1 20 16.5a3.3 3.3 0 0 1-1.145 1.88c-.575.46-.855 1.02-.855 1.595A2 2 0 0 0 20 22a2 2 0 0 0 2-2.025c0-.58-.285-1.13-.855-1.595"/><path d="m8.5 4.5 2.148-2.148a1.205 1.205 0 0 1 1.704 0l7.296 7.296a1.205 1.205 0 0 1 0 1.704l-7.592 7.592a3.615 3.615 0 0 1-5.112 0l-3.888-3.888a3.615 3.615 0 0 1 0-5.112L5.67 7.33"/></svg></button>
+    <button class="tool" data-tool="picker" title="Eyedropper (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 9-8.414 8.414A2 2 0 0 0 3 18.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 3.828 21h1.344a2 2 0 0 0 1.414-.586L15 12"/><path d="m18 9 .4.4a1 1 0 1 1-3 3l-3.8-3.8a1 1 0 1 1 3-3l.4.4 3.4-3.4a1 1 0 1 1 3 3z"/><path d="m2 22 .414-.414"/></svg></button>
+    <button class="tool" data-tool="line" title="Line (L)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 2 22"/></svg></button>
+    <button class="tool" data-tool="rect" title="Rectangle (R)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg></button>
+    <button class="tool" data-tool="text" title="Text (T)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/></svg></button>
+    <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
+    <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
+    <button class="tool" data-tool="select" title="Select region (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></button>
+    <button class="tool" id="btncut" title="Cut selection (Ctrl+X)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></button>
+    <button class="tool" id="btncopyc" title="Copy selection (Ctrl+C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
+    <button class="tool" id="btnpaste" title="Paste selection (Ctrl+V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
+    <button class="tool" id="btnclear" title="Clear all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+    <h2>Move</h2>
+    <div class="dpad">
+      <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+      <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
+      <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+    </div>
+  </div>
+
+  <div class="center">
+    <div class="stage" id="stage"><canvas id="cv"></canvas></div>
+    <div class="statusbar">
+      <span>Size: <b id="stBlocks">8&times;8 blocks</b></span>
+      <span>Pixels: <b id="stPix">72&times;36</b></span>
+      <span>XML: <b id="stXml">–</b></span>
+      <span style="display:flex;gap:4px;align-items:center;margin:0 auto">Zoom:
+        <button class="btn" id="btnzoomout" title="Zoom out">−</button>
+        <select id="zoomsel" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:3px 4px;font-size:12px">
+          <option value="0">1:1</option>
+          <option value="0.125">12.5%</option>
+          <option value="0.25">25%</option>
+          <option value="0.5">50%</option>
+          <option value="1" selected>100%</option>
+          <option value="2">200%</option>
+          <option value="4">400%</option>
+        </select>
+        <button class="btn" id="btnzoomin" title="Zoom in">+</button>
+      </span>
+      <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset app and clear all browser data</button></span>
+    </div>
+  </div>
+
+  <aside class="panel">
+    <section>
+      <h3>Project<span class="q">?<span class="tip">Save stores the project in the browser and downloads a .json file; Load restores from a file. The last saved project is restored automatically when the page opens.</span></span></h3>
+      <div class="row">
+        <button class="btn" id="btnsave">Save</button>
+        <button class="btn" id="btnload">Load</button>
+      </div>
+      <input type="file" id="fileload" accept=".json,application/json" style="display:none">
+    </section>
+
+    <section>
+      <h3>Import<span class="q">?<span class="tip">Image import paints onto the active layer (Background or Glow). Stretch fits the image to the canvas; Expand grows the canvas in whole blocks (top-left). The XML import rebuilds the canvas from a vehicle XML with paintable indicators/signs: it detects the dominant wall plane (ignores stray blocks) and reads <code>gc</code> background + <code>gca</code> glow.</span></span></h3>
+      <div class="row">
+        <button class="btn" id="btnimport">Image</button>
+        <select id="importmode" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px">
+          <option value="stretch" selected>Stretch to canvas</option>
+          <option value="expand">Expand canvas to fit</option>
+        </select>
+      </div>
+      <input type="file" id="fileimport" accept="image/*" style="display:none">
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btnimportxml">XML</button>
+      </div>
+      <input type="file" id="filexml" accept=".xml,text/xml,application/xml" style="display:none">
+    </section>
+
+    <section>
+      <h3>Dimensions<span class="q">?<span class="tip">One block = 9&times;9 pixels. Existing pixels are kept at the top-left; new space is added as black.</span></span></h3>
+      <div class="row">
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Width</span><input type="number" id="inw" min="1" max="100" value="8"></span>
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Height</span><input type="number" id="inh" min="1" max="100" value="8"></span>
+        <button class="btn" id="btnsize">Apply</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>Color<span class="q">?<span class="tip">Left click paints the primary color, right click the secondary one. Left click a palette swatch to pick it as primary, right click to pick as secondary. Double-left-click a swatch to set it to the current primary color, double-right-click to set it to the secondary color.</span></span></h3>
+      <div class="palette" id="palette"></div>
+      <div class="row" style="margin-top:8px;align-items:center">
+        <input type="color" id="colpicker" value="#ffffff" class="cmini" title="Primary color (left click)">
+        <input type="color" id="colpicker2" value="#ff0000" class="cmini" title="Secondary color (right click)">
+        <button class="btn" id="btnswap" title="Swap colors (X)">⇄</button>
+      </div>
+      <div class="row" style="margin-top:6px;justify-content:flex-end">
+        <span id="pixrgb">–</span>
+      </div>
+    </section>
+
+    <section class="layers">
+      <h3>Glow<span class="q">?<span class="tip">The background shows while the block is off, the glow image when toggled on via logic. Hold <kbd>Shift</kbd> for a temporary "on" preview.</span></span></h3>
+      <div class="row">
+        <label><input type="radio" name="layer" value="bg" checked> Background (off)</label>
+        <label><input type="radio" name="layer" value="glow"> Glow (on)</label>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <label class="chk"><input type="checkbox" id="chkboth"> Show both</label>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <button class="btn" id="btncopyglow" title="Copy the background layer into the glow layer">Background → Glow</button>
+        <button class="btn" id="btncopybg" title="Copy the glow layer into the background layer">Glow → Background</button>
+      </div>
+    </section>
+
+    <section>
+      <h3>Text<span class="q">?<span class="tip">Type your text, pick a pixel font, then use the Text tool (T) and click on the canvas to place it. Left click uses the primary color, right click the secondary one. Newlines place lines below.</span></span></h3>
+      <div class="row">
+        <span style="font-size:12px;color:var(--dim)">Font</span>
+        <select id="fontsel" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px">
+          <option value="f8" selected>8x8 Standard</option>
+          <option value="f8b">8x8 Spectrum</option>
+          <option value="f8c">8x8 Micro</option>
+          <option value="f8d">8x8 Classic</option>
+        </select>
+      </div>
+      <textarea id="textinput" rows="3" placeholder="Type text…"></textarea>
+    </section>
+
+    <section>
+      <h3>Export<span class="q">?<span class="tip">Save the file to <code>%appdata%/Stormworks/data/vehicles/</code> and load it in Stormworks as a vehicle, then copy the blocks with the selection tool. For signs, only the Background layer is exported.</span></span></h3>
+      <div class="row">
+        <select id="exporttype" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px">
+          <option value="sign" selected>Paintable Sign (bg only)</option>
+          <option value="indicator">Paintable Indicator (bg + glow)</option>
+        </select>
+      </div>
+      <label class="chk"><input type="checkbox" id="optmcu" checked> Add control microcontroller (group switch)</label>
+      <label class="chk"><input type="checkbox" id="optdark" checked> Darken glow</label>
+      <div class="row"><span style="font-size:12px;color:var(--dim)">Glow brightness</span></div>
+      <input type="range" class="range" id="darkness" min="0.05" max="1" step="0.05" value="0.55">
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btndl">Download XML</button>
+        <button class="btn" id="btngen">Generate &amp; Copy</button>
+      </div>
+      <textarea id="out" readonly placeholder="The XML will appear here after generating …"></textarea>
+      <div class="row" style="margin-top:6px">
+        <button class="btn" id="btnpng">Save PNG</button>
+      </div>
+    </section>
+    <div style="margin-top:auto; text-align:right; font-size:11px; color:var(--dim)">2026 by Nark</div>
+  </aside>
+</main>
+
+<div id="licmodal" class="licmodal hidden">
+  <div class="licbox">
+    <div class="lichead">Bundled fonts &amp; licenses<button class="btn licx" id="licclose" title="Close">×</button></div>
+    <div class="licbody">
+      <div class="licitem">
+        <b>Standard · 8x8</b>
+        <span>IBM PC / VGA 8x8 font, collected by Daniel Hepper (dhepper/font8x8), originally derived from public domain IBM VGA fonts (Marcel Sondaar / IBM).</span>
+        <span class="lictag"><a href="https://creativecommons.org/publicdomain/mark/1.0/" target="_blank" rel="noopener">License: Public Domain</a></span>
+        <span class="licsrc"><a href="https://github.com/dhepper/font8x8" target="_blank" rel="noopener">github.com/dhepper/font8x8</a></span>
+      </div>
+      <div class="licitem">
+        <b>Spectrum · 8x8</b>
+        <span>System font of the ZX Spectrum 48K (Sinclair Research, 1982), widely treated as public domain; sourced from the ivop/8x8-fonts collection.</span>
+        <span class="lictag"><a href="https://creativecommons.org/publicdomain/mark/1.0/" target="_blank" rel="noopener">License: Public Domain</a></span>
+        <span class="licsrc"><a href="https://github.com/ivop/8x8-fonts" target="_blank" rel="noopener">github.com/ivop/8x8-fonts</a></span>
+      </div>
+      <div class="licitem">
+        <b>Micro · 8x8</b>
+        <span>unscii Micro by Ville-Matias Heikkilä (viznut).</span>
+        <span class="lictag"><a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">License: Public Domain / CC-0</a></span>
+        <span class="licsrc"><a href="https://github.com/viznut/unscii" target="_blank" rel="noopener">github.com/viznut/unscii</a></span>
+      </div>
+      <div class="licitem">
+        <b>Classic · 8x8</b>
+        <span>unscii Classic by Ville-Matias Heikkilä (viznut).</span>
+        <span class="lictag"><a href="https://creativecommons.org/publicdomain/zero/1.0/" target="_blank" rel="noopener">License: Public Domain / CC-0</a></span>
+        <span class="licsrc"><a href="https://github.com/viznut/unscii" target="_blank" rel="noopener">github.com/viznut/unscii</a></span>
+      </div>
+      <div class="licitem">
+        <b>Lucide icons</b>
+        <span>Toolbar, move and logo icons by the Lucide contributors.</span>
+        <span class="lictag"><a href="https://opensource.org/license/isc" target="_blank" rel="noopener">License: ISC</a></span>
+        <span class="licsrc"><a href="https://github.com/lucide-icons/lucide" target="_blank" rel="noopener">github.com/lucide-icons/lucide</a></span>
+      </div>
+      <div class="licnote">The editor itself is released under the MIT License (see the file header). Fonts and icons are separate works licensed as listed above.</div>
+    </div>
+  </div>
+</div>
+
+<!-- KEEP THIS HELP IN SYNC WITH THE UI: update the sections below whenever tools, panels or shortcuts change. -->
+<div id="helpmodal" class="licmodal hidden">
+  <div class="licbox">
+    <div class="lichead">Help<button class="btn licx" id="helpclose" title="Close (Esc)">×</button></div>
+    <div class="licbody">
+      <div class="helpsec">
+        <h4>Concept</h4>
+        <p>PIES creates pixel images for the <b>paintable sign</b> and <b>paintable indicator</b> blocks in Stormworks. Every block has a 9&times;9 pixel grid. A project is a rectangular grid of blocks; each block contains a <b>Background</b> layer (shown while the block is powered off) and — for indicators — a <b>Glow</b> layer (shown while powered on).</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>Drawing</h4>
+        <table>
+          <tr><th>Tool</th><th>Shortcut</th><th>Description</th></tr>
+          <tr><td>Pencil</td><td><kbd>P</kbd></td><td>Paint pixels. Left click uses the primary color, right click the secondary color. Drag to paint a continuous line.</td></tr>
+          <tr><td>Eraser</td><td><kbd>E</kbd></td><td>Paint pixels black.</td></tr>
+          <tr><td>Fill</td><td><kbd>F</kbd></td><td>Flood fill the connected region of the clicked pixel with the chosen color.</td></tr>
+          <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
+          <tr><td>Line</td><td><kbd>L</kbd></td><td>Click and drag to draw a straight line.</td></tr>
+          <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
+          <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
+          <tr><td>Select</td><td><kbd>S</kbd></td><td>Drag to select a region, then use Cut / Copy / Paste. Right click deselects.</td></tr>
+          <tr><td>Grid</td><td><kbd>G</kbd></td><td>Toggle the pixel grid and the 9-pixel block guide.</td></tr>
+        </table>
+      </div>
+
+      <div class="helpsec">
+        <h4>Editing</h4>
+        <ul>
+          <li><b>Undo / Redo</b> (<kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd>) — every stroke or action is one undo step.</li>
+          <li><b>Cut / Copy / Paste</b> (<kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd>) — operate on the current selection; paste inserts the copied region.</li>
+          <li><b>Clear all</b> — empties both the Background and the Glow layer.</li>
+          <li><b>Move</b> — the arrow buttons shift the active layer by one pixel, wrapping around the edges.</li>
+        </ul>
+      </div>
+
+      <div class="helpsec">
+        <h4>Colors</h4>
+        <ul>
+          <li><b>Primary</b> (left click) and <b>Secondary</b> (right click) colors; switch them with <b>Swap</b> (<kbd>X</kbd>).</li>
+          <li><b>Palette</b>: left click a swatch to make it the primary color, right click to make it the secondary. Double-left-click sets the swatch itself to the current primary color, double-right-click sets it to the secondary color.</li>
+          <li><b>Highlighting</b>: hovering a swatch tints every canvas pixel of that color; hovering the canvas outlines the matching palette swatches.</li>
+          <li><b>Readout</b>: below the palette shows the swatch, hex value and decimal RGB of the hovered pixel — or of the primary color when the cursor is not over the canvas.</li>
+        </ul>
+      </div>
+
+      <div class="helpsec">
+        <h4>Glow (layers)</h4>
+        <ul>
+          <li><b>Background (off)</b> and <b>Glow (on)</b> select the active drawing layer; <b>Show both</b> blends both layers additively for visualization (it does not change the layer you draw on).</li>
+          <li>Holding <kbd>Shift</kbd> gives a temporary Glow-layer preview.</li>
+          <li><b>Background → Glow</b> / <b>Glow → Background</b> copy one layer onto the other.</li>
+        </ul>
+      </div>
+
+      <div class="helpsec">
+        <h4>Text</h4>
+        <p>Pick one of the four bundled 8&times;8 pixel fonts, type your text and place it with the Text tool. The text preview box on the canvas shows the occupied area before you click.</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>Dimensions</h4>
+        <p>Width and Height are measured in blocks (1 block = 9&times;9 pixels). <b>Apply</b> resizes the canvas; existing pixels stay at the top-left and new space is added as black. Each side is limited to 100 blocks (900 pixels).</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>Import</h4>
+        <ul>
+          <li><b>Image</b> — paints a picture onto the active layer. <b>Stretch to canvas</b> fits the image to the whole project; <b>Expand canvas to fit</b> grows the project in whole blocks from the top-left (it warns if the result exceeds 100&times;100 blocks). Any format your browser can decode works (PNG, JPEG, GIF, WebP, BMP, AVIF); GIFs use the first frame. After an import the palette is rebuilt from the image's most frequent, distinct colors.</li>
+          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions and the <code>gc</code> (background) and <code>gca</code> (glow) pixel data.</li>
+        </ul>
+      </div>
+
+      <div class="helpsec">
+        <h4>Export</h4>
+        <ul>
+          <li><b>Paintable Sign (bg only)</b> exports only the Background layer; <b>Paintable Indicator (bg + glow)</b> also exports the Glow layer.</li>
+          <li><b>Add control microcontroller</b> (indicators only) wires the blocks to a group-switch microcontroller.</li>
+          <li><b>Darken glow</b> and the <b>Glow brightness</b> slider make the glow layer match the game's dimmed glow rendering.</li>
+          <li><b>Download XML</b> saves <code>pies_out-WxH.xml</code>; <b>Generate &amp; Copy</b> fills the text field and copies it to the clipboard; <b>Save PNG</b> exports the current canvas as an image.</li>
+        </ul>
+        <p class="dim">Using the export in-game: place the file in <code>%appdata%/Stormworks/data/vehicles/</code>, load it in Stormworks as a vehicle, and copy the blocks with the in-game selection tool.</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>Project</h4>
+        <p><b>Save</b> stores the project in the browser and downloads a <code>.json</code> file; <b>Load</b> restores it from a file. The last saved project is restored automatically when the page opens. <b>Debug: Reset</b> clears the saved data and reloads the editor.</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>View</h4>
+        <p>The status bar shows the project size in blocks and pixels and the size of the generated XML. <b>Zoom</b> (− / dropdown / +) adjusts the canvas display size between 12.5% and 400%; the <b>mouse wheel</b> anywhere in the middle area zooms as well. <b>1:1</b> shows every pixel at its exact size without the grid. Above 100%, drag with the <b>middle mouse button</b> to pan the canvas.</p>
+      </div>
+
+      <div class="helpsec">
+        <h4>Keyboard shortcuts</h4>
+        <table>
+          <tr><th>Key</th><th>Action</th></tr>
+          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
+          <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
+          <tr><td><kbd>Shift</kbd> (hold)</td><td>Temporary glow preview</td></tr>
+          <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
+          <tr><td><kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd></td><td>Cut / Copy / Paste selection</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+var S = {
+  wb: 8, hb: 8, W: 72, H: 72,
+  bg: null, glow: null,
+  color: "ffffff", color2: "ff0000",
+  palette: null,
+  font: "f8",
+  tool: "pen", layer: "bg", glowPreview: false, showGrid: true,
+};
+var cv = document.getElementById("cv");
+var wrap = document.getElementById("stage");
+var undoStack = [], redoStack = [];
+var hoverC = -1, hoverR = -1;
+var swatchHover = null;
+var lastC = -1, lastR = -1;
+var painting = false;
+var panning = false, panLast = {x:0, y:0};
+var shapeAnchor = null;
+var sel = null;
+var cs = 8;
+var zoom = 1;
+
+var PALETTE = [
+  "000000","232323","474747","6e6e6e","969696","bdbdbd","e1e1e1","ffffff",
+  "8f0000","ff0000","ff8800","ffe400","006400","00a900","7cff6b","00b3b3",
+  "00007f","0026ff","6bc4ff","005a9f","8a00ff","ff00c8","6b3a00","c8a25b",
+];
+
+/* 8x8 font: 95 glyphs (char 32..126), 8 bytes/glyph, MSB=left pixel. Public domain (IBM VGA). */
+var FONT8 = [
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x18,0x3c,0x3c,0x18,0x18,0x00,0x18,0x00,
+  0x6c,0x6c,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x6c,0x6c,0xfe,0x6c,0xfe,0x6c,0x6c,0x00,
+  0x30,0x7c,0xc0,0x78,0x0c,0xf8,0x30,0x00,
+  0x00,0xc6,0xcc,0x18,0x30,0x66,0xc6,0x00,
+  0x38,0x6c,0x38,0x76,0xdc,0xcc,0x76,0x00,
+  0x60,0x60,0xc0,0x00,0x00,0x00,0x00,0x00,
+  0x18,0x30,0x60,0x60,0x60,0x30,0x18,0x00,
+  0x60,0x30,0x18,0x18,0x18,0x30,0x60,0x00,
+  0x00,0x66,0x3c,0xff,0x3c,0x66,0x00,0x00,
+  0x00,0x30,0x30,0xfc,0x30,0x30,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x30,0x30,0x60,
+  0x00,0x00,0x00,0xfc,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x30,0x30,0x00,
+  0x06,0x0c,0x18,0x30,0x60,0xc0,0x80,0x00,
+  0x7c,0xc6,0xce,0xde,0xf6,0xe6,0x7c,0x00,
+  0x30,0x70,0x30,0x30,0x30,0x30,0xfc,0x00,
+  0x78,0xcc,0x0c,0x38,0x60,0xcc,0xfc,0x00,
+  0x78,0xcc,0x0c,0x38,0x0c,0xcc,0x78,0x00,
+  0x1c,0x3c,0x6c,0xcc,0xfe,0x0c,0x1e,0x00,
+  0xfc,0xc0,0xf8,0x0c,0x0c,0xcc,0x78,0x00,
+  0x38,0x60,0xc0,0xf8,0xcc,0xcc,0x78,0x00,
+  0xfc,0xcc,0x0c,0x18,0x30,0x30,0x30,0x00,
+  0x78,0xcc,0xcc,0x78,0xcc,0xcc,0x78,0x00,
+  0x78,0xcc,0xcc,0x7c,0x0c,0x18,0x70,0x00,
+  0x00,0x30,0x30,0x00,0x00,0x30,0x30,0x00,
+  0x00,0x30,0x30,0x00,0x00,0x30,0x30,0x60,
+  0x18,0x30,0x60,0xc0,0x60,0x30,0x18,0x00,
+  0x00,0x00,0xfc,0x00,0x00,0xfc,0x00,0x00,
+  0x60,0x30,0x18,0x0c,0x18,0x30,0x60,0x00,
+  0x78,0xcc,0x0c,0x18,0x30,0x00,0x30,0x00,
+  0x7c,0xc6,0xde,0xde,0xde,0xc0,0x78,0x00,
+  0x30,0x78,0xcc,0xcc,0xfc,0xcc,0xcc,0x00,
+  0xfc,0x66,0x66,0x7c,0x66,0x66,0xfc,0x00,
+  0x3c,0x66,0xc0,0xc0,0xc0,0x66,0x3c,0x00,
+  0xf8,0x6c,0x66,0x66,0x66,0x6c,0xf8,0x00,
+  0xfe,0x62,0x68,0x78,0x68,0x62,0xfe,0x00,
+  0xfe,0x62,0x68,0x78,0x68,0x60,0xf0,0x00,
+  0x3c,0x66,0xc0,0xc0,0xce,0x66,0x3e,0x00,
+  0xcc,0xcc,0xcc,0xfc,0xcc,0xcc,0xcc,0x00,
+  0x78,0x30,0x30,0x30,0x30,0x30,0x78,0x00,
+  0x1e,0x0c,0x0c,0x0c,0xcc,0xcc,0x78,0x00,
+  0xe6,0x66,0x6c,0x78,0x6c,0x66,0xe6,0x00,
+  0xf0,0x60,0x60,0x60,0x62,0x66,0xfe,0x00,
+  0xc6,0xee,0xfe,0xfe,0xd6,0xc6,0xc6,0x00,
+  0xc6,0xe6,0xf6,0xde,0xce,0xc6,0xc6,0x00,
+  0x38,0x6c,0xc6,0xc6,0xc6,0x6c,0x38,0x00,
+  0xfc,0x66,0x66,0x7c,0x60,0x60,0xf0,0x00,
+  0x78,0xcc,0xcc,0xcc,0xdc,0x78,0x1c,0x00,
+  0xfc,0x66,0x66,0x7c,0x6c,0x66,0xe6,0x00,
+  0x78,0xcc,0xe0,0x70,0x1c,0xcc,0x78,0x00,
+  0xfc,0xb4,0x30,0x30,0x30,0x30,0x78,0x00,
+  0xcc,0xcc,0xcc,0xcc,0xcc,0xcc,0xfc,0x00,
+  0xcc,0xcc,0xcc,0xcc,0xcc,0x78,0x30,0x00,
+  0xc6,0xc6,0xc6,0xd6,0xfe,0xee,0xc6,0x00,
+  0xc6,0xc6,0x6c,0x38,0x38,0x6c,0xc6,0x00,
+  0xcc,0xcc,0xcc,0x78,0x30,0x30,0x78,0x00,
+  0xfe,0xc6,0x8c,0x18,0x32,0x66,0xfe,0x00,
+  0x78,0x60,0x60,0x60,0x60,0x60,0x78,0x00,
+  0xc0,0x60,0x30,0x18,0x0c,0x06,0x02,0x00,
+  0x78,0x18,0x18,0x18,0x18,0x18,0x78,0x00,
+  0x10,0x38,0x6c,0xc6,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xff,
+  0x30,0x30,0x18,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x78,0x0c,0x7c,0xcc,0x76,0x00,
+  0xe0,0x60,0x60,0x7c,0x66,0x66,0xdc,0x00,
+  0x00,0x00,0x78,0xcc,0xc0,0xcc,0x78,0x00,
+  0x1c,0x0c,0x0c,0x7c,0xcc,0xcc,0x76,0x00,
+  0x00,0x00,0x78,0xcc,0xfc,0xc0,0x78,0x00,
+  0x38,0x6c,0x60,0xf0,0x60,0x60,0xf0,0x00,
+  0x00,0x00,0x76,0xcc,0xcc,0x7c,0x0c,0xf8,
+  0xe0,0x60,0x6c,0x76,0x66,0x66,0xe6,0x00,
+  0x30,0x00,0x70,0x30,0x30,0x30,0x78,0x00,
+  0x0c,0x00,0x0c,0x0c,0x0c,0xcc,0xcc,0x78,
+  0xe0,0x60,0x66,0x6c,0x78,0x6c,0xe6,0x00,
+  0x70,0x30,0x30,0x30,0x30,0x30,0x78,0x00,
+  0x00,0x00,0xcc,0xfe,0xfe,0xd6,0xc6,0x00,
+  0x00,0x00,0xf8,0xcc,0xcc,0xcc,0xcc,0x00,
+  0x00,0x00,0x78,0xcc,0xcc,0xcc,0x78,0x00,
+  0x00,0x00,0xdc,0x66,0x66,0x7c,0x60,0xf0,
+  0x00,0x00,0x76,0xcc,0xcc,0x7c,0x0c,0x1e,
+  0x00,0x00,0xdc,0x76,0x66,0x60,0xf0,0x00,
+  0x00,0x00,0x7c,0xc0,0x78,0x0c,0xf8,0x00,
+  0x10,0x30,0x7c,0x30,0x30,0x34,0x18,0x00,
+  0x00,0x00,0xcc,0xcc,0xcc,0xcc,0x76,0x00,
+  0x00,0x00,0xcc,0xcc,0xcc,0x78,0x30,0x00,
+  0x00,0x00,0xc6,0xd6,0xfe,0xfe,0x6c,0x00,
+  0x00,0x00,0xc6,0x6c,0x38,0x6c,0xc6,0x00,
+  0x00,0x00,0xcc,0xcc,0xcc,0x7c,0x0c,0xf8,
+  0x00,0x00,0xfc,0x98,0x30,0x64,0xfc,0x00,
+  0x1c,0x30,0x30,0xe0,0x30,0x30,0x1c,0x00,
+  0x18,0x18,0x18,0x00,0x18,0x18,0x18,0x00,
+  0xe0,0x30,0x30,0x1c,0x30,0x30,0xe0,0x00,
+  0x76,0xdc,0x00,0x00,0x00,0x00,0x00,0x00,
+];
+
+/* 8x8 font: ZX Spectrum 48K ROM (Sinclair Research, 1982). 95 glyphs (char 32..126), 8 bytes/glyph, MSB=left. Public domain. */
+var FONT8B = [
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x10,0x10,0x10,0x10,0x00,0x10,0x00,
+  0x00,0x24,0x24,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x24,0x7E,0x24,0x24,0x7E,0x24,0x00,
+  0x00,0x08,0x3E,0x28,0x3E,0x0A,0x3E,0x08,
+  0x00,0x62,0x64,0x08,0x10,0x26,0x46,0x00,
+  0x00,0x10,0x28,0x10,0x2A,0x44,0x3A,0x00,
+  0x00,0x08,0x10,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x04,0x08,0x08,0x08,0x08,0x04,0x00,
+  0x00,0x20,0x10,0x10,0x10,0x10,0x20,0x00,
+  0x00,0x00,0x14,0x08,0x3E,0x08,0x14,0x00,
+  0x00,0x00,0x08,0x08,0x3E,0x08,0x08,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x08,0x08,0x10,
+  0x00,0x00,0x00,0x00,0x3E,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x00,
+  0x00,0x00,0x02,0x04,0x08,0x10,0x20,0x00,
+  0x00,0x3C,0x46,0x4A,0x52,0x62,0x3C,0x00,
+  0x00,0x18,0x28,0x08,0x08,0x08,0x3E,0x00,
+  0x00,0x3C,0x42,0x02,0x3C,0x40,0x7E,0x00,
+  0x00,0x3C,0x42,0x0C,0x02,0x42,0x3C,0x00,
+  0x00,0x08,0x18,0x28,0x48,0x7E,0x08,0x00,
+  0x00,0x7E,0x40,0x7C,0x02,0x42,0x3C,0x00,
+  0x00,0x3C,0x40,0x7C,0x42,0x42,0x3C,0x00,
+  0x00,0x7E,0x02,0x04,0x08,0x10,0x10,0x00,
+  0x00,0x3C,0x42,0x3C,0x42,0x42,0x3C,0x00,
+  0x00,0x3C,0x42,0x42,0x3E,0x02,0x3C,0x00,
+  0x00,0x00,0x00,0x10,0x00,0x00,0x10,0x00,
+  0x00,0x00,0x10,0x00,0x00,0x10,0x10,0x20,
+  0x00,0x00,0x04,0x08,0x10,0x08,0x04,0x00,
+  0x00,0x00,0x00,0x3E,0x00,0x3E,0x00,0x00,
+  0x00,0x00,0x10,0x08,0x04,0x08,0x10,0x00,
+  0x00,0x3C,0x42,0x04,0x08,0x00,0x08,0x00,
+  0x00,0x3C,0x4A,0x56,0x5E,0x40,0x3C,0x00,
+  0x00,0x3C,0x42,0x42,0x7E,0x42,0x42,0x00,
+  0x00,0x7C,0x42,0x7C,0x42,0x42,0x7C,0x00,
+  0x00,0x3C,0x42,0x40,0x40,0x42,0x3C,0x00,
+  0x00,0x78,0x44,0x42,0x42,0x44,0x78,0x00,
+  0x00,0x7E,0x40,0x7C,0x40,0x40,0x7E,0x00,
+  0x00,0x7E,0x40,0x7C,0x40,0x40,0x40,0x00,
+  0x00,0x3C,0x42,0x40,0x4E,0x42,0x3C,0x00,
+  0x00,0x42,0x42,0x7E,0x42,0x42,0x42,0x00,
+  0x00,0x3E,0x08,0x08,0x08,0x08,0x3E,0x00,
+  0x00,0x02,0x02,0x02,0x42,0x42,0x3C,0x00,
+  0x00,0x44,0x48,0x70,0x48,0x44,0x42,0x00,
+  0x00,0x40,0x40,0x40,0x40,0x40,0x7E,0x00,
+  0x00,0x42,0x66,0x5A,0x42,0x42,0x42,0x00,
+  0x00,0x42,0x62,0x52,0x4A,0x46,0x42,0x00,
+  0x00,0x3C,0x42,0x42,0x42,0x42,0x3C,0x00,
+  0x00,0x7C,0x42,0x42,0x7C,0x40,0x40,0x00,
+  0x00,0x3C,0x42,0x42,0x52,0x4A,0x3C,0x00,
+  0x00,0x7C,0x42,0x42,0x7C,0x44,0x42,0x00,
+  0x00,0x3C,0x40,0x3C,0x02,0x42,0x3C,0x00,
+  0x00,0xFE,0x10,0x10,0x10,0x10,0x10,0x00,
+  0x00,0x42,0x42,0x42,0x42,0x42,0x3C,0x00,
+  0x00,0x42,0x42,0x42,0x42,0x24,0x18,0x00,
+  0x00,0x42,0x42,0x42,0x42,0x5A,0x24,0x00,
+  0x00,0x42,0x24,0x18,0x18,0x24,0x42,0x00,
+  0x00,0x82,0x44,0x28,0x10,0x10,0x10,0x00,
+  0x00,0x7E,0x04,0x08,0x10,0x20,0x7E,0x00,
+  0x00,0x0E,0x08,0x08,0x08,0x08,0x0E,0x00,
+  0x00,0x00,0x40,0x20,0x10,0x08,0x04,0x00,
+  0x00,0x70,0x10,0x10,0x10,0x10,0x70,0x00,
+  0x00,0x10,0x38,0x54,0x10,0x10,0x10,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,
+  0x00,0x1C,0x22,0x78,0x20,0x20,0x7E,0x00,
+  0x00,0x00,0x38,0x04,0x3C,0x44,0x3C,0x00,
+  0x00,0x20,0x20,0x3C,0x22,0x22,0x3C,0x00,
+  0x00,0x00,0x1C,0x20,0x20,0x20,0x1C,0x00,
+  0x00,0x04,0x04,0x3C,0x44,0x44,0x3C,0x00,
+  0x00,0x00,0x38,0x44,0x78,0x40,0x3C,0x00,
+  0x00,0x0C,0x10,0x18,0x10,0x10,0x10,0x00,
+  0x00,0x00,0x3C,0x44,0x44,0x3C,0x04,0x38,
+  0x00,0x40,0x40,0x78,0x44,0x44,0x44,0x00,
+  0x00,0x10,0x00,0x30,0x10,0x10,0x38,0x00,
+  0x00,0x04,0x00,0x04,0x04,0x04,0x24,0x18,
+  0x00,0x20,0x28,0x30,0x30,0x28,0x24,0x00,
+  0x00,0x10,0x10,0x10,0x10,0x10,0x0C,0x00,
+  0x00,0x00,0x68,0x54,0x54,0x54,0x54,0x00,
+  0x00,0x00,0x78,0x44,0x44,0x44,0x44,0x00,
+  0x00,0x00,0x38,0x44,0x44,0x44,0x38,0x00,
+  0x00,0x00,0x78,0x44,0x44,0x78,0x40,0x40,
+  0x00,0x00,0x3C,0x44,0x44,0x3C,0x04,0x06,
+  0x00,0x00,0x1C,0x20,0x20,0x20,0x20,0x00,
+  0x00,0x00,0x38,0x40,0x38,0x04,0x78,0x00,
+  0x00,0x10,0x38,0x10,0x10,0x10,0x0C,0x00,
+  0x00,0x00,0x44,0x44,0x44,0x44,0x38,0x00,
+  0x00,0x00,0x44,0x44,0x28,0x28,0x10,0x00,
+  0x00,0x00,0x44,0x54,0x54,0x54,0x28,0x00,
+  0x00,0x00,0x44,0x28,0x10,0x28,0x44,0x00,
+  0x00,0x00,0x44,0x44,0x44,0x3C,0x04,0x38,
+  0x00,0x00,0x7C,0x08,0x10,0x20,0x7C,0x00,
+  0x00,0x0E,0x08,0x30,0x08,0x08,0x0E,0x00,
+  0x00,0x08,0x08,0x08,0x08,0x08,0x08,0x00,
+  0x00,0x70,0x10,0x0C,0x10,0x10,0x70,0x00,
+  0x00,0x14,0x28,0x00,0x00,0x00,0x00,0x00,
+];
+
+/* 8x8 font: unscii Micro (viznut/unscii). 95 glyphs (char 32..126), 8 bytes/glyph, MSB=left. Public domain / CC-0. */
+var FONT8C = [
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x1C,0x1C,0x1C,0x18,0x00,0x18,0x18,0x00,
+  0xEE,0xEE,0xCC,0x00,0x00,0x00,0x00,0x00,
+  0x6C,0x6C,0xFE,0x6C,0xFE,0x6C,0x6C,0x00,
+  0x18,0xFE,0xC0,0xFE,0x0E,0xFE,0x38,0x00,
+  0xE6,0xEE,0xDC,0x38,0x76,0xEE,0xCE,0x00,
+  0x7C,0x60,0x6C,0xFE,0xCC,0xCC,0xFC,0x00,
+  0x1C,0x1C,0x38,0x00,0x00,0x00,0x00,0x00,
+  0x0C,0x18,0x30,0x30,0x38,0x1C,0x0E,0x00,
+  0x30,0x18,0x0C,0x0C,0x1C,0x38,0x70,0x00,
+  0x00,0x66,0x3C,0xFF,0x3C,0x66,0x00,0x00,
+  0x00,0x18,0x18,0x7E,0x18,0x18,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x38,0x38,0x70,
+  0x00,0x00,0x00,0xFE,0xF0,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x38,0x38,
+  0x03,0x06,0x0C,0x18,0x30,0x60,0xC0,0x00,
+  0x7E,0x66,0x66,0xE6,0xE6,0xE6,0xFE,0x00,
+  0x38,0x18,0x18,0x18,0x3E,0x3E,0x3E,0x00,
+  0xFE,0xC6,0x06,0xFE,0xE0,0xE0,0xFE,0x00,
+  0xFC,0x0C,0x0C,0xFE,0x0E,0x0E,0xFE,0x00,
+  0xC0,0xC0,0xCC,0xCC,0xFE,0x1C,0x1C,0x00,
+  0xFE,0xC0,0xC0,0xFE,0x0E,0xCE,0xFE,0x00,
+  0xFE,0xC6,0xC0,0xFE,0xE6,0xE6,0xFE,0x00,
+  0xFE,0x06,0x06,0x0E,0x0E,0x0E,0x0E,0x00,
+  0x7E,0x66,0x66,0xFE,0xE6,0xE6,0xFE,0x00,
+  0xFE,0xC6,0xC6,0xFE,0x0E,0x0E,0x0E,0x00,
+  0x00,0x38,0x38,0x00,0x00,0x38,0x38,0x00,
+  0x00,0x38,0x38,0x00,0x00,0x38,0x38,0x70,
+  0x0C,0x18,0x30,0x60,0x30,0x18,0x0C,0x00,
+  0x00,0x00,0x7E,0x00,0x7E,0x00,0x00,0x00,
+  0x60,0x30,0x18,0x0C,0x18,0x30,0x60,0x00,
+  0xFE,0xC6,0x06,0x3E,0x38,0x00,0x38,0x00,
+  0xFE,0xC6,0xDE,0xDE,0xDE,0xC0,0xFE,0x00,
+  0x7E,0x66,0x66,0xFE,0xE6,0xE6,0xE6,0x00,
+  0xFC,0xCC,0xCC,0xFE,0xCE,0xCE,0xFE,0x00,
+  0x7E,0x66,0x60,0x60,0xE0,0xE6,0xFE,0x00,
+  0xFC,0xCC,0xCC,0xEE,0xEE,0xEE,0xFE,0x00,
+  0x7E,0x60,0x60,0x78,0xE0,0xE0,0xFE,0x00,
+  0x7E,0x60,0x60,0xF8,0xE0,0xE0,0xE0,0x00,
+  0x7E,0x66,0x60,0xEE,0xE6,0xE6,0xFE,0x00,
+  0x66,0x66,0x66,0xFE,0xE6,0xE6,0xE6,0x00,
+  0x18,0x18,0x18,0x1C,0x1C,0x1C,0x1C,0x00,
+  0x0C,0x0C,0x0C,0x0E,0xCE,0xCE,0xFE,0x00,
+  0xCC,0xCC,0xD8,0xFE,0xCE,0xCE,0xCE,0x00,
+  0x30,0x30,0x30,0x70,0x70,0x70,0x7E,0x00,
+  0xEE,0xFE,0xD6,0xC6,0xE6,0xE6,0xE6,0x00,
+  0x7E,0x66,0x66,0xE6,0xE6,0xE6,0xE6,0x00,
+  0x7E,0x66,0x66,0xE6,0xE6,0xE6,0xFE,0x00,
+  0x7E,0x66,0x66,0x7E,0xE0,0xE0,0xE0,0x00,
+  0xFE,0xC6,0xC6,0xCE,0xCE,0xFE,0x0E,0x00,
+  0xFC,0xCC,0xCC,0xFE,0xE6,0xE6,0xE6,0x00,
+  0xFE,0xC0,0xFE,0x06,0xE6,0xE6,0xFE,0x00,
+  0xFE,0x30,0x30,0x38,0x38,0x38,0x38,0x00,
+  0x66,0x66,0x66,0x66,0xE6,0xE6,0xFE,0x00,
+  0xC6,0xC6,0xC6,0xE6,0xEC,0xF8,0xF0,0x00,
+  0xE6,0xE6,0xC6,0xD6,0xFE,0xFE,0xC6,0x00,
+  0xE6,0xE6,0xE6,0x7C,0xCE,0xCE,0xCE,0x00,
+  0xCE,0xCE,0xCE,0xFE,0x38,0x38,0x38,0x00,
+  0x7E,0x06,0x0C,0x18,0x30,0x7E,0x7E,0x00,
+  0x3C,0x30,0x30,0x30,0x30,0x30,0x3C,0x00,
+  0xC0,0x60,0x30,0x18,0x0C,0x06,0x03,0x00,
+  0x3C,0x0C,0x0C,0x0C,0x0C,0x0C,0x3C,0x00,
+  0x10,0x38,0x6C,0xC6,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,
+  0x18,0x0C,0x06,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0xFE,0x06,0xFE,0xE6,0xFE,0x00,
+  0xC0,0xC0,0xFE,0xC6,0xE6,0xE6,0xFE,0x00,
+  0x00,0x00,0xFE,0xC0,0xE0,0xE0,0xFE,0x00,
+  0x06,0x06,0xFE,0xC6,0xE6,0xE6,0xFE,0x00,
+  0x00,0x00,0xFE,0xC6,0xFE,0xE0,0xFE,0x00,
+  0x3E,0x30,0x30,0xFC,0x38,0x38,0x38,0x00,
+  0x00,0x00,0xFE,0xC6,0xCE,0xFE,0x0E,0xFE,
+  0xC0,0xC0,0xFE,0xC6,0xE6,0xE6,0xE6,0x00,
+  0x00,0x38,0x00,0x30,0x38,0x38,0x38,0x00,
+  0x00,0x0C,0x00,0x0C,0x0C,0x0E,0xCE,0xFE,
+  0x00,0xC0,0xCC,0xD8,0xFE,0xE6,0xE6,0x00,
+  0x30,0x30,0x30,0x30,0x38,0x38,0x38,0x00,
+  0x00,0x00,0xFE,0xD6,0xD6,0xE6,0xE6,0x00,
+  0x00,0x00,0xFE,0xC6,0xE6,0xE6,0xE6,0x00,
+  0x00,0x00,0xFE,0xC6,0xE6,0xE6,0xFE,0x00,
+  0x00,0x00,0xFE,0xC6,0xC6,0xFE,0xE0,0xE0,
+  0x00,0x00,0xFE,0xC6,0xC6,0xFE,0x0E,0x0E,
+  0x00,0x00,0xFE,0xC6,0xE0,0xE0,0xE0,0x00,
+  0x00,0x00,0xFE,0xC0,0xFE,0x0E,0xFE,0x00,
+  0x30,0x30,0xFC,0x38,0x38,0x38,0x3E,0x00,
+  0x00,0x00,0xC6,0xC6,0xE6,0xE6,0xFE,0x00,
+  0x00,0x00,0xC6,0xC6,0xEC,0xF8,0xF0,0x00,
+  0x00,0x00,0xE6,0xE6,0xD6,0xD6,0xFE,0x00,
+  0x00,0x00,0xC6,0xC6,0x38,0xE6,0xE6,0x00,
+  0x00,0x00,0xC6,0xE6,0xE6,0xFE,0x06,0xFE,
+  0x00,0x00,0xFE,0x0C,0x38,0x70,0xFE,0x00,
+  0x0E,0x18,0x18,0x70,0x18,0x18,0x0E,0x00,
+  0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x00,
+  0x70,0x18,0x18,0x0E,0x18,0x18,0x70,0x00,
+  0x76,0xDC,0x00,0x00,0x00,0x00,0x00,0x00,
+];
+
+/* 8x8 font: unscii Classic (viznut/unscii). 95 glyphs (char 32..126), 8 bytes/glyph, MSB=left. Public domain / CC-0. */
+var FONT8D = [
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
+  0x18,0x18,0x18,0x18,0x18,0x00,0x18,0x00,
+  0x66,0x66,0x66,0x00,0x00,0x00,0x00,0x00,
+  0x6C,0x6C,0xFE,0x6C,0xFE,0x6C,0x6C,0x00,
+  0x18,0x3E,0x60,0x3C,0x06,0x7C,0x18,0x00,
+  0x00,0xC6,0xCC,0x18,0x30,0x66,0xC6,0x00,
+  0x38,0x6C,0x38,0x76,0xDC,0xCC,0x76,0x00,
+  0x18,0x18,0x30,0x00,0x00,0x00,0x00,0x00,
+  0x0C,0x18,0x30,0x30,0x30,0x18,0x0C,0x00,
+  0x30,0x18,0x0C,0x0C,0x0C,0x18,0x30,0x00,
+  0x00,0x66,0x3C,0xFF,0x3C,0x66,0x00,0x00,
+  0x00,0x18,0x18,0x7E,0x18,0x18,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x30,
+  0x00,0x00,0x00,0x7E,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x18,0x18,0x00,
+  0x03,0x06,0x0C,0x18,0x30,0x60,0xC0,0x00,
+  0x3C,0x66,0x6E,0x76,0x66,0x66,0x3C,0x00,
+  0x18,0x38,0x18,0x18,0x18,0x18,0x7E,0x00,
+  0x3C,0x66,0x0C,0x18,0x30,0x60,0x7E,0x00,
+  0x3C,0x66,0x06,0x1C,0x06,0x66,0x3C,0x00,
+  0x1C,0x3C,0x6C,0xCC,0xFE,0x0C,0x0C,0x00,
+  0x7E,0x60,0x7C,0x06,0x06,0x66,0x3C,0x00,
+  0x1C,0x30,0x60,0x7C,0x66,0x66,0x3C,0x00,
+  0x7E,0x06,0x06,0x0C,0x18,0x18,0x18,0x00,
+  0x3C,0x66,0x66,0x3C,0x66,0x66,0x3C,0x00,
+  0x3C,0x66,0x66,0x3E,0x06,0x0C,0x38,0x00,
+  0x00,0x18,0x18,0x00,0x00,0x18,0x18,0x00,
+  0x00,0x18,0x18,0x00,0x00,0x18,0x18,0x30,
+  0x0C,0x18,0x30,0x60,0x30,0x18,0x0C,0x00,
+  0x00,0x00,0x7E,0x00,0x7E,0x00,0x00,0x00,
+  0x60,0x30,0x18,0x0C,0x18,0x30,0x60,0x00,
+  0x3C,0x66,0x06,0x0C,0x18,0x00,0x18,0x00,
+  0x7C,0xC6,0xDE,0xDE,0xDE,0xC0,0x7C,0x00,
+  0x18,0x3C,0x66,0x66,0x7E,0x66,0x66,0x00,
+  0x7C,0x66,0x66,0x7C,0x66,0x66,0x7C,0x00,
+  0x3C,0x66,0x60,0x60,0x60,0x66,0x3C,0x00,
+  0x78,0x6C,0x66,0x66,0x66,0x6C,0x78,0x00,
+  0x7E,0x60,0x60,0x7C,0x60,0x60,0x7E,0x00,
+  0x7E,0x60,0x60,0x7C,0x60,0x60,0x60,0x00,
+  0x3C,0x66,0x60,0x6E,0x66,0x66,0x3E,0x00,
+  0x66,0x66,0x66,0x7E,0x66,0x66,0x66,0x00,
+  0x7E,0x18,0x18,0x18,0x18,0x18,0x7E,0x00,
+  0x06,0x06,0x06,0x06,0x06,0x66,0x3C,0x00,
+  0xC6,0xCC,0xD8,0xF0,0xD8,0xCC,0xC6,0x00,
+  0x60,0x60,0x60,0x60,0x60,0x60,0x7E,0x00,
+  0xC6,0xEE,0xFE,0xD6,0xC6,0xC6,0xC6,0x00,
+  0xC6,0xE6,0xF6,0xDE,0xCE,0xC6,0xC6,0x00,
+  0x3C,0x66,0x66,0x66,0x66,0x66,0x3C,0x00,
+  0x7C,0x66,0x66,0x7C,0x60,0x60,0x60,0x00,
+  0x3C,0x66,0x66,0x66,0x66,0x6C,0x36,0x00,
+  0x7C,0x66,0x66,0x7C,0x6C,0x66,0x66,0x00,
+  0x3C,0x66,0x60,0x3C,0x06,0x66,0x3C,0x00,
+  0x7E,0x18,0x18,0x18,0x18,0x18,0x18,0x00,
+  0x66,0x66,0x66,0x66,0x66,0x66,0x3C,0x00,
+  0x66,0x66,0x66,0x66,0x66,0x3C,0x18,0x00,
+  0xC6,0xC6,0xC6,0xD6,0xFE,0xEE,0xC6,0x00,
+  0xC3,0x66,0x3C,0x18,0x3C,0x66,0xC3,0x00,
+  0xC3,0x66,0x3C,0x18,0x18,0x18,0x18,0x00,
+  0x7E,0x06,0x0C,0x18,0x30,0x60,0x7E,0x00,
+  0x3C,0x30,0x30,0x30,0x30,0x30,0x3C,0x00,
+  0xC0,0x60,0x30,0x18,0x0C,0x06,0x03,0x00,
+  0x3C,0x0C,0x0C,0x0C,0x0C,0x0C,0x3C,0x00,
+  0x10,0x38,0x6C,0xC6,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x00,0x00,0x00,0x00,0x00,0xFF,
+  0x18,0x0C,0x06,0x00,0x00,0x00,0x00,0x00,
+  0x00,0x00,0x3C,0x06,0x3E,0x66,0x3E,0x00,
+  0x60,0x60,0x7C,0x66,0x66,0x66,0x7C,0x00,
+  0x00,0x00,0x3C,0x60,0x60,0x60,0x3C,0x00,
+  0x06,0x06,0x3E,0x66,0x66,0x66,0x3E,0x00,
+  0x00,0x00,0x3C,0x66,0x7E,0x60,0x3C,0x00,
+  0x1C,0x30,0x7C,0x30,0x30,0x30,0x30,0x00,
+  0x00,0x00,0x3E,0x66,0x66,0x3E,0x06,0x7C,
+  0x60,0x60,0x7C,0x66,0x66,0x66,0x66,0x00,
+  0x18,0x00,0x38,0x18,0x18,0x18,0x1E,0x00,
+  0x0C,0x00,0x0C,0x0C,0x0C,0x0C,0x0C,0x78,
+  0x60,0x60,0x66,0x6C,0x78,0x6C,0x66,0x00,
+  0x38,0x18,0x18,0x18,0x18,0x18,0x1E,0x00,
+  0x00,0x00,0xCC,0xFE,0xD6,0xD6,0xC6,0x00,
+  0x00,0x00,0x7C,0x66,0x66,0x66,0x66,0x00,
+  0x00,0x00,0x3C,0x66,0x66,0x66,0x3C,0x00,
+  0x00,0x00,0x7C,0x66,0x66,0x7C,0x60,0x60,
+  0x00,0x00,0x3E,0x66,0x66,0x3E,0x06,0x06,
+  0x00,0x00,0x7C,0x66,0x60,0x60,0x60,0x00,
+  0x00,0x00,0x3E,0x60,0x3C,0x06,0x7C,0x00,
+  0x30,0x30,0x7E,0x30,0x30,0x30,0x1E,0x00,
+  0x00,0x00,0x66,0x66,0x66,0x66,0x3E,0x00,
+  0x00,0x00,0x66,0x66,0x66,0x3C,0x18,0x00,
+  0x00,0x00,0xC6,0xC6,0xD6,0x7C,0x6C,0x00,
+  0x00,0x00,0xC6,0x6C,0x38,0x6C,0xC6,0x00,
+  0x00,0x00,0x66,0x66,0x66,0x3E,0x06,0x3C,
+  0x00,0x00,0x7E,0x0C,0x18,0x30,0x7E,0x00,
+  0x0E,0x18,0x18,0x70,0x18,0x18,0x0E,0x00,
+  0x18,0x18,0x18,0x18,0x18,0x18,0x18,0x00,
+  0x70,0x18,0x18,0x0E,0x18,0x18,0x70,0x00,
+  0x76,0xDC,0x00,0x00,0x00,0x00,0x00,0x00,
+];
+
+function trunc(x){ return x < 0 ? Math.ceil(x) : Math.floor(x); }
+function idx(r,c){ return r * S.W + c; }
+function hex2(v){ return v.toString(16).toUpperCase().padStart(2,"0"); }
+function colorRGB(h){
+  return [parseInt(h.substr(0,2),16), parseInt(h.substr(2,2),16), parseInt(h.substr(4,2),16)];
+}
+function initLayers(){
+  S.bg = new Array(S.W*S.H).fill("000000");
+  S.glow = new Array(S.W*S.H).fill("000000");
+}
+function layerNow(){
+  return S.glowPreview ? S.glow : S.bg;
+}
+function snap(){
+  return { bg: S.bg.slice(), glow: S.glow.slice(), palette: S.palette.slice() };
+}
+function commit(){
+  undoStack.push(snap());
+  if(undoStack.length > 500) undoStack.shift();
+  refreshEditBtns();
+}
+function undo(){
+  if(!undoStack.length) return;
+  redoStack.push(snap());
+  var s = undoStack.pop();
+  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice();
+  render(); scheduleExport(); refreshEditBtns();
+  buildPalette(); syncColorUI();
+}
+function redo(){
+  if(!redoStack.length) return;
+  undoStack.push(snap());
+  var s = redoStack.pop();
+  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice();
+  render(); scheduleExport(); refreshEditBtns();
+  buildPalette(); syncColorUI();
+}
+function refreshEditBtns(){
+  document.getElementById("btnundo").disabled = !undoStack.length;
+  document.getElementById("btnredo").disabled = !redoStack.length;
+}
+
+function computeCs(){
+  if(zoom === 0){ cs = 1; return; }
+  var avail = wrap.clientWidth - 32;
+  var availH = wrap.clientHeight - 32;
+  var base = Math.floor(Math.min(avail / S.W, availH / S.H, 26));
+  if(base < 2) base = 2;
+  cs = Math.max(1, Math.round(base * zoom));
+  var maxByDim = Math.floor(4096 / Math.max(S.W, S.H));
+  if(cs > maxByDim) cs = maxByDim;
+}
+
+var off = document.createElement("canvas");
+var offCtx = off.getContext("2d");
+
+function render(){
+  computeCs();
+  cv.width = S.W * cs; cv.height = S.H * cs;
+  cv.style.width = cv.width + "px";
+  cv.style.height = cv.height + "px";
+  off.width = S.W; off.height = S.H;
+  var img = offCtx.createImageData(S.W, S.H);
+  var d = img.data;
+  var showGlow = S.glowPreview;
+  var both = document.getElementById("chkboth").checked;
+  for(var i = 0; i < S.W*S.H; i++){
+    var o = i*4;
+    if(both){
+      var c1 = colorRGB(S.bg[i]), c2 = colorRGB(S.glow[i]);
+      d[o] = Math.min(255, c1[0]+c2[0]);
+      d[o+1] = Math.min(255, c1[1]+c2[1]);
+      d[o+2] = Math.min(255, c1[2]+c2[2]);
+      d[o+3] = 255;
+    } else {
+      var h = showGlow ? S.glow[i] : S.bg[i];
+      var c = colorRGB(h);
+      d[o]=c[0]; d[o+1]=c[1]; d[o+2]=c[2]; d[o+3]=255;
+    }
+  }
+  offCtx.putImageData(img, 0, 0);
+  var ctx = cv.getContext("2d");
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.imageSmoothingEnabled = false;
+  ctx.drawImage(off, 0, 0, cv.width, cv.height);
+  ctx.globalCompositeOperation = "source-over";
+  if(S.showGrid && zoom !== 0){
+    if(cs >= 5){
+      ctx.fillStyle = "rgba(128,128,128,0.4)";
+      for(var c=1;c<S.W;c++) ctx.fillRect(c*cs, 0, 1, cv.height);
+      for(var r=1;r<S.H;r++) ctx.fillRect(0, r*cs, cv.width, 1);
+    }
+    ctx.fillStyle = "rgba(160,160,160,0.6)";
+    for(var b=9;b<S.W;b+=9) ctx.fillRect(b*cs, 0, 2, cv.height);
+    for(var b2=9;b2<S.H;b2+=9) ctx.fillRect(0, b2*cs, cv.width, 2);
+  }
+  if(swatchHover){
+    var layH = S.glowPreview ? S.glow : S.bg;
+    ctx.fillStyle = "rgba(34,192,127,0.35)";
+    for(var hi=0;hi<S.W*S.H;hi++){
+      if(layH[hi] === swatchHover) ctx.fillRect((hi%S.W)*cs, Math.floor(hi/S.W)*cs, cs, cs);
+    }
+  }
+  if(shapeAnchor){
+    ctx.strokeStyle = "rgba(255,255,96,0.9)";
+    ctx.lineWidth = 2;
+    var r0=shapeAnchor.r, c0=shapeAnchor.c, r1=hoverR, c1=hoverC;
+    if(S.tool === "rect"){
+      ctx.strokeRect(Math.min(c0,c1)*cs+1, Math.min(r0,r1)*cs+1,
+        (Math.abs(c1-c0)+1)*cs-2, (Math.abs(r1-r0)+1)*cs-2);
+    } else if(S.tool === "line"){
+      ctx.beginPath(); ctx.moveTo(c0*cs+cs/2, r0*cs+cs/2); ctx.lineTo(c1*cs+cs/2, r1*cs+cs/2); ctx.stroke();
+    }
+    ctx.lineWidth = 1;
+  }
+  if(hoverR >= 0 && hoverC >= 0){
+    ctx.globalCompositeOperation = "difference";
+    ctx.strokeStyle = "#ffffff";
+    ctx.lineWidth = Math.max(1, Math.floor(cs/6));
+    ctx.strokeRect(hoverC*cs+0.5, hoverR*cs+0.5, cs-1, cs-1);
+    ctx.lineWidth = 1;
+    ctx.globalCompositeOperation = "source-over";
+  }
+  if(S.tool === "text" && hoverR >= 0 && hoverC >= 0){
+    var ttxt = document.getElementById("textinput").value;
+    if(ttxt){
+      var te = textExtent(ttxt, fontInfo(S.font));
+      ctx.globalCompositeOperation = "difference";
+      ctx.strokeStyle = "#8fffb0";
+      ctx.lineWidth = Math.max(1, Math.floor(cs/8));
+      ctx.setLineDash([3,3]);
+      ctx.strokeRect(hoverC*cs+0.5, hoverR*cs+0.5, te.w*cs-1, te.h*cs-1);
+      ctx.setLineDash([]);
+      ctx.lineWidth = 1;
+      ctx.globalCompositeOperation = "source-over";
+    }
+  }
+  if(sel){
+    ctx.globalCompositeOperation = "difference";
+    ctx.strokeStyle = "#ffd21e";
+    ctx.lineWidth = Math.max(1, Math.floor(cs/6));
+    ctx.setLineDash([4,4]);
+    ctx.strokeRect(sel.c0*cs+0.5, sel.r0*cs+0.5, (sel.c1-sel.c0+1)*cs-1, (sel.r1-sel.r0+1)*cs-1);
+    ctx.setLineDash([]);
+    ctx.lineWidth = 1;
+    ctx.globalCompositeOperation = "source-over";
+  }
+  updatePixelReadout();
+  updatePaletteHits();
+}
+
+function updatePaletteHits(){
+  var swatches = document.querySelectorAll(".sw");
+  var h = null;
+  if(hoverR >= 0 && hoverC >= 0) h = (S.glowPreview ? S.glow : S.bg)[idx(hoverR, hoverC)];
+  for(var i=0;i<swatches.length;i++){
+    swatches[i].classList.toggle("hit", swatches[i].getAttribute("data-c") === h);
+  }
+}
+
+function updatePixelReadout(){
+  var el = document.getElementById("pixrgb");
+  var h = (hoverR < 0 || hoverC < 0) ? S.color : (S.glowPreview ? S.glow : S.bg)[idx(hoverR, hoverC)];
+  var c = colorRGB(h);
+  function p3(n){ var s = String(n); while(s.length < 3) s = "0" + s; return s; }
+  el.innerHTML = '<span class="pxsw" style="background:#' + h + '"></span>' +
+    '<span class="pxhex">#' + h.toUpperCase() + '</span>' +
+    '<span class="pxdec">' + p3(c[0]) + ',' + p3(c[1]) + ',' + p3(c[2]) + '</span>';
+}
+
+function cellFromEvent(e){
+  var rect = cv.getBoundingClientRect();
+  var x = e.clientX - rect.left;
+  var y = e.clientY - rect.top;
+  var c = Math.floor(x / cs), r = Math.floor(y / cs);
+  if(c < 0 || c >= S.W || r < 0 || r >= S.H) return null;
+  return { r: r, c: c };
+}
+
+function paintAt(cell, color){
+  var lay = layerNow();
+  lay[idx(cell.r, cell.c)] = color;
+}
+function lineBres(r0,c0,r1,c1,fn){
+  var dr = Math.abs(r1-r0), dc = Math.abs(c1-c0);
+  var sr = r0<r1?1:-1, sc = c0<c1?1:-1;
+  var err = dr-dc;
+  while(true){
+    fn(r0,c0);
+    if(r0===r1 && c0===c1) break;
+    var e2 = 2*err;
+    if(e2 > -dc){ err -= dc; r0 += sr; }
+    if(e2 < dr){ err += dr; c0 += sc; }
+  }
+}
+
+function bresPixels(r0,c0,r1,c1){
+  var out = [];
+  lineBres(r0,c0,r1,c1,function(r,c){ out.push([r,c]); });
+  return out;
+}
+
+function floodFill(cell, color){
+  var lay = layerNow();
+  var target = lay[idx(cell.r, cell.c)];
+  if(target === color) return;
+  var queue = [cell];
+  lay[idx(cell.r, cell.c)] = color;
+  while(queue.length){
+    var p = queue.pop();
+    var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
+    for(var i=0;i<around.length;i++){
+      var rr = around[i][0], cc = around[i][1];
+      if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+      if(lay[idx(rr,cc)] === target){
+        lay[idx(rr,cc)] = color;
+        queue.push({r:rr,c:cc});
+      }
+    }
+  }
+}
+
+function normSel(r0,c0,r1,c1){
+  return { r0: Math.min(r0,r1), c0: Math.min(c0,c1), r1: Math.max(r0,r1), c1: Math.max(c0,c1) };
+}
+
+function onPointerDown(e){
+  e.preventDefault();
+  if(e.button === 1){
+    if(zoom > 1){
+      panning = true;
+      panLast.x = e.clientX; panLast.y = e.clientY;
+      cv.setPointerCapture(e.pointerId);
+    }
+    return;
+  }
+  var cell = cellFromEvent(e);
+  if(!cell) return;
+  cv.setPointerCapture(e.pointerId);
+  painting = true;
+  shapeAnchor = null;
+  var color = (e.button === 2) ? S.color2 : S.color;
+  if(S.tool === "eraser") color = "000000";
+  if(S.tool === "pen" || S.tool === "eraser"){
+    commit();
+    paintAt(cell, color);
+    lastR = cell.r; lastC = cell.c;
+  } else if(S.tool === "fill"){
+    commit(); floodFill(cell, color);
+  } else if(S.tool === "picker"){
+    var picked = layerNow()[idx(cell.r,cell.c)];
+    if(e.button === 2) S.color2 = picked; else S.color = picked;
+    syncColorUI();
+  } else if(S.tool === "select"){
+    if(e.button === 2){ sel = null; }
+    else{
+      shapeAnchor = { r: cell.r, c: cell.c };
+      sel = normSel(cell.r, cell.c, cell.r, cell.c);
+    }
+  } else if(S.tool === "text"){
+    var txt = document.getElementById("textinput").value;
+    if(txt.replace(/\n/g,"").replace(/ /g,"") !== ""){
+      commit();
+      placeText(txt, cell.r, cell.c, (e.button === 2) ? S.color2 : S.color);
+      scheduleExport();
+    }
+  } else if(S.tool === "line" || S.tool === "rect"){
+    commit();
+    shapeAnchor = { r: cell.r, c: cell.c };
+
+  }
+  render();
+}
+function onPointerMove(e){
+  if(panning){
+    var stage = document.querySelector(".stage");
+    stage.scrollLeft -= (e.clientX - panLast.x);
+    stage.scrollTop -= (e.clientY - panLast.y);
+    panLast.x = e.clientX; panLast.y = e.clientY;
+    return;
+  }
+  if(e.buttons === 0 && !painting){
+    var hc = cellFromEvent(e);
+    hoverR = hc ? hc.r : -1; hoverC = hc ? hc.c : -1;
+    render();
+    return;
+  }
+  var cell = cellFromEvent(e);
+  if(!cell || !painting) return;
+  var color = (e.buttons === 2) ? S.color2 : S.color;
+  if(S.tool === "eraser") color = "000000";
+  if(S.tool === "pen" || S.tool === "eraser"){
+    hoverR = cell.r; hoverC = cell.c;
+    if(lastR >= 0 && lastC >= 0){
+      var pts = bresPixels(lastR,lastC,cell.r,cell.c);
+      for(var i=0;i<pts.length;i++) paintAt({r:pts[i][0],c:pts[i][1]}, color);
+    }
+    lastR = cell.r; lastC = cell.c;
+  } else if(S.tool === "select" && shapeAnchor){
+    hoverR = cell.r; hoverC = cell.c;
+    sel = normSel(shapeAnchor.r, shapeAnchor.c, cell.r, cell.c);
+  } else if((S.tool === "line" || S.tool === "rect") && shapeAnchor){
+    hoverR = cell.r; hoverC = cell.c;
+  }
+  render();
+}
+function onPointerUp(e){
+  if(panning){ panning = false; return; }
+  if(S.tool === "select"){
+    if(shapeAnchor){
+      sel = normSel(shapeAnchor.r, shapeAnchor.c,
+        hoverR >= 0 ? hoverR : shapeAnchor.r, hoverC >= 0 ? hoverC : shapeAnchor.c);
+      shapeAnchor = null;
+    }
+  } else if(S.tool === "line" || S.tool === "rect"){
+    if(shapeAnchor){
+      var r0=shapeAnchor.r,c0=shapeAnchor.c,r1=hoverR,c1=hoverC;
+      var color = (e.button === 2) ? S.color2 : S.color;
+      if(S.tool === "eraser") color = "000000";
+      if(S.tool === "rect"){
+        commit();
+        var a=Math.min(r0,r1), b=Math.max(r0,r1), cmin=Math.min(c0,c1), cmax=Math.max(c0,c1);
+        var lay = layerNow();
+        for(var rr=a;rr<=b;rr++){
+          for(var cc=cmin;cc<=cmax;cc++){
+            if(rr===a||rr===b||cc===cmin||cc===cmax) lay[idx(rr,cc)] = color;
+          }
+        }
+      } else if(S.tool === "line"){
+        commit();
+        var pts = bresPixels(r0,c0,r1,c1);
+        for(var i=0;i<pts.length;i++) paintAt({r:pts[i][0],c:pts[i][1]}, color);
+      }
+      shapeAnchor = null;
+    }
+  }
+  painting = false;
+  lastR = -1; lastC = -1;
+  render();
+  scheduleExport();
+}
+function onPointerLeave(){ if(!painting){ hoverR=-1; hoverC=-1; render(); } }
+
+cv.addEventListener("pointerdown", onPointerDown);
+cv.addEventListener("pointermove", onPointerMove);
+cv.addEventListener("pointerup", onPointerUp);
+cv.addEventListener("pointercancel", onPointerUp);
+cv.addEventListener("pointerleave", onPointerLeave);
+cv.addEventListener("contextmenu", function(e){ e.preventDefault(); });
+
+function setTool(t){
+  S.tool = t;
+  var btns = document.querySelectorAll("[data-tool]");
+  for(var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-tool") === t);
+}
+
+var tools = document.querySelectorAll("[data-tool]");
+for(var t=0;t<tools.length;t++){
+  (function(btn){
+    btn.addEventListener("click", function(){ setTool(btn.getAttribute("data-tool")); });
+  })(tools[t]);
+}
+
+document.getElementById("btnundo").addEventListener("click", undo);
+document.getElementById("btnredo").addEventListener("click", redo);
+
+var btnRaster = document.getElementById("btnraster");
+function syncRasterBtn(){ btnRaster.classList.toggle("active", S.showGrid); }
+btnRaster.addEventListener("click", function(){
+  S.showGrid = !S.showGrid;
+  syncRasterBtn();
+  render();
+});
+syncRasterBtn();
+document.getElementById("btnclear").addEventListener("click", function(){
+  commit();
+  S.bg.fill("000000"); S.glow.fill("000000");
+  sel = null;
+  render(); scheduleExport();
+});
+
+function shiftLayer(dr, dc){
+  var lay = layerNow();
+  var copy = lay.slice();
+  var W = S.W, H = S.H;
+  for(var r = 0; r < H; r++){
+    for(var c = 0; c < W; c++){
+      lay[idx(r,c)] = copy[idx((r - dr + H) % H, (c - dc + W) % W)];
+    }
+  }
+}
+function addShiftButton(id, dr, dc){
+  document.getElementById(id).addEventListener("click", function(){
+    commit();
+    shiftLayer(dr, dc);
+    render(); scheduleExport();
+  });
+}
+addShiftButton("mvUp", -1, 0);
+addShiftButton("mvDown", 1, 0);
+addShiftButton("mvLeft", 0, -1);
+addShiftButton("mvRight", 0, 1);
+
+var clipboard = null;
+function copyRegion(clear){
+  if(!sel) return false;
+  var w = sel.c1 - sel.c0 + 1, h = sel.r1 - sel.r0 + 1;
+  var arr = [];
+  var lay = layerNow();
+  for(var r=0;r<h;r++){
+    for(var c=0;c<w;c++){
+      arr.push(lay[idx(sel.r0+r, sel.c0+c)]);
+      if(clear) lay[idx(sel.r0+r, sel.c0+c)] = "000000";
+    }
+  }
+  clipboard = { arr: arr, w: w, h: h };
+  return true;
+}
+function clipboardCopy(){
+  if(!sel) return;
+  copyRegion(false);
+}
+function clipboardCut(){
+  if(!sel) return;
+  commit();
+  copyRegion(true);
+  render(); scheduleExport();
+}
+function clipboardPaste(){
+  if(!clipboard) return;
+  commit();
+  var r0 = sel ? sel.r0 : 0;
+  var c0 = sel ? sel.c0 : 0;
+  var lay = layerNow();
+  for(var r=0;r<clipboard.h;r++){
+    for(var c=0;c<clipboard.w;c++){
+      var rr = r0+r, cc = c0+c;
+      if(rr>=0 && rr<S.H && cc>=0 && cc<S.W){
+        lay[idx(rr,cc)] = clipboard.arr[r*clipboard.w+c];
+      }
+    }
+  }
+  render(); scheduleExport();
+}
+document.getElementById("btncut").addEventListener("click", clipboardCut);
+document.getElementById("btncopyc").addEventListener("click", clipboardCopy);
+document.getElementById("btnpaste").addEventListener("click", clipboardPaste);
+
+function fontInfo(name){
+  if(name === "f8b") return { g: FONT8B, w: 8, h: 8, adv: 8, col: false, pitch: 8 };
+  if(name === "f8c") return { g: FONT8C, w: 8, h: 8, adv: 8, col: false, pitch: 8 };
+  if(name === "f8d") return { g: FONT8D, w: 8, h: 8, adv: 8, col: false, pitch: 8 };
+  return { g: FONT8, w: 8, h: 8, adv: 8, col: false, pitch: 8 };
+}
+function stampGlyph(font, gi, r0, c0, color, lay){
+  for(var y2=0;y2<font.h;y2++){
+    var row = font.g[gi + y2];
+    for(var x2=0;x2<font.w;x2++){
+      if(row & (0x80 >> x2)){
+        var rr2=r0+y2, cc2=c0+x2;
+        if(rr2>=0 && rr2<S.H && cc2>=0 && cc2<S.W) lay[idx(rr2,cc2)] = color;
+      }
+    }
+  }
+}
+function textExtent(txt, font){
+  var lines = txt.split("\n");
+  var w = 0;
+  for(var i=0;i<lines.length;i++){
+    var lw = lines[i].length * font.adv;
+    if(lines[i].length > 0) lw = (lines[i].length - 1) * font.adv + font.w;
+    if(lw > w) w = lw;
+  }
+  return { w: w, h: lines.length * font.h };
+}
+function placeText(txt, r0, c0, color){
+  var font = fontInfo(S.font);
+  var lay = layerNow();
+  var lines = txt.split("\n");
+  var cy = r0;
+  for(var y=0;y<lines.length;y++){
+    var cx = c0;
+    for(var x=0;x<lines[y].length;x++){
+      var ch = lines[y].charCodeAt(x);
+      if(ch >= 32 && ch <= 126){
+        stampGlyph(font, (ch - 32) * font.pitch, cy, cx, color, lay);
+      }
+      cx += font.adv;
+    }
+    cy += font.h;
+  }
+}
+document.getElementById("fontsel").addEventListener("change", function(){
+  S.font = this.value;
+  render();
+});
+
+document.getElementById("btnlicenses").addEventListener("click", function(){
+  document.getElementById("licmodal").classList.remove("hidden");
+});
+document.getElementById("licclose").addEventListener("click", function(){
+  document.getElementById("licmodal").classList.add("hidden");
+});
+document.getElementById("licmodal").addEventListener("click", function(e){
+  if(e.target === this) this.classList.add("hidden");
+});
+
+document.getElementById("btnhelp").addEventListener("click", function(){
+  document.getElementById("helpmodal").classList.remove("hidden");
+});
+document.getElementById("helpclose").addEventListener("click", function(){
+  document.getElementById("helpmodal").classList.add("hidden");
+});
+document.getElementById("helpmodal").addEventListener("click", function(e){
+  if(e.target === this) this.classList.add("hidden");
+});
+document.addEventListener("keydown", function(e){
+  if(e.key === "Escape"){
+    document.getElementById("helpmodal").classList.add("hidden");
+    document.getElementById("licmodal").classList.add("hidden");
+  }
+});
+
+var layerRadio = document.querySelectorAll("input[name=layer]");
+for(var l=0;l<layerRadio.length;l++){
+  layerRadio[l].addEventListener("change", function(){
+    S.layer = this.value;
+    S.glowPreview = (this.value === "glow");
+    render();
+  });
+}
+
+document.getElementById("chkboth").addEventListener("change", function(){ render(); });
+
+document.getElementById("btncopyglow").addEventListener("click", function(){
+  commit();
+  S.glow = S.bg.slice();
+  render(); scheduleExport();
+});
+document.getElementById("btncopybg").addEventListener("click", function(){
+  commit();
+  S.bg = S.glow.slice();
+  render(); scheduleExport();
+});
+
+function syncSizeInputs(){
+  document.getElementById("inw").value = S.wb;
+  document.getElementById("inh").value = S.hb;
+}
+function resizeCanvas(nw, nh){
+  if(nw === S.wb && nh === S.hb) return;
+  commit();
+  var oldW = S.W, oldH = S.H;
+  var oldBg = S.bg, oldGlow = S.glow;
+  S.wb = nw; S.hb = nh;
+  S.W = nw*9; S.H = nh*9;
+  var copyW = Math.min(oldW, S.W), copyH = Math.min(oldH, S.H);
+  var newBg = new Array(S.W*S.H).fill("000000");
+  var newGlow = new Array(S.W*S.H).fill("000000");
+  for(var r = 0; r < copyH; r++){
+    for(var c = 0; c < copyW; c++){
+      newBg[r*S.W+c] = oldBg[r*oldW+c];
+      newGlow[r*S.W+c] = oldGlow[r*oldW+c];
+    }
+  }
+  S.bg = newBg; S.glow = newGlow;
+  sel = null;
+  render(); scheduleExport(); updateStatus(); syncSizeInputs();
+}
+
+document.getElementById("btnsize").addEventListener("click", function(){
+  var w = parseInt(document.getElementById("inw").value, 10);
+  var h = parseInt(document.getElementById("inh").value, 10);
+  if(!(w >= 1) || !(h >= 1)) return;
+  resizeCanvas(Math.min(w, 100), Math.min(h, 100));
+});
+
+function syncColorUI(){
+  document.getElementById("colpicker").value = "#" + S.color;
+  document.getElementById("colpicker2").value = "#" + S.color2;
+  var swatches = document.querySelectorAll(".sw");
+  for(var i=0;i<swatches.length;i++){
+    swatches[i].classList.toggle("active", swatches[i].getAttribute("data-c") === S.color);
+    swatches[i].classList.toggle("active2", swatches[i].getAttribute("data-c") === S.color2);
+  }
+  updatePixelReadout();
+}
+
+var paletteEl = document.getElementById("palette");
+function padPalette(){
+  var need = PALETTE.length - S.palette.length;
+  if(need <= 0) return;
+  for(var i=0;i<PALETTE.length && need>0;i++){
+    if(S.palette.indexOf(PALETTE[i]) === -1){
+      S.palette.push(PALETTE[i]);
+      need--;
+    }
+  }
+  while(S.palette.length < PALETTE.length) S.palette.push("000000");
+}
+function buildPalette(){
+  padPalette();
+  paletteEl.innerHTML = "";
+  for(var p=0;p<S.palette.length;p++){
+    (function(col, pi){
+      var b = document.createElement("button");
+      var lastRight = 0, prevRight = S.color2;
+      var lastLeft = 0, prevLeft = S.color;
+      b.className = "sw";
+      b.setAttribute("data-c", col);
+      b.style.background = "#" + col;
+      b.title = "#" + col + " · L: primary · R: secondary · 2×L: set to primary · 2×R: set to secondary";
+      b.addEventListener("mouseenter", function(){ swatchHover = col; render(); });
+      b.addEventListener("mouseleave", function(){ swatchHover = null; render(); });
+      b.addEventListener("click", function(){
+        var now = Date.now();
+        if(now - lastLeft > 350) prevLeft = S.color;
+        lastLeft = now;
+        S.color = col;
+        if(S.tool === "picker") setTool("pen");
+        syncColorUI();
+      });
+      b.addEventListener("contextmenu", function(e){
+        e.preventDefault();
+        var now = Date.now();
+        if(now - lastRight < 350){
+          lastRight = 0;
+          commit();
+          S.color2 = prevRight;
+          S.palette[pi] = prevRight;
+          buildPalette();
+          syncColorUI();
+          return;
+        }
+        prevRight = S.color2;
+        lastRight = now;
+        S.color2 = col;
+        syncColorUI();
+      });
+      b.addEventListener("dblclick", function(e){
+        e.preventDefault();
+        commit();
+        S.color = prevLeft;
+        S.palette[pi] = prevLeft;
+        buildPalette();
+        syncColorUI();
+      });
+      paletteEl.appendChild(b);
+    })(S.palette[p], p);
+  }
+}
+S.palette = PALETTE.slice();
+buildPalette();
+
+document.getElementById("colpicker").addEventListener("input", function(){
+  S.color = this.value.replace("#","").toLowerCase();
+  syncColorUI();
+});
+
+document.getElementById("colpicker2").addEventListener("input", function(){
+  S.color2 = this.value.replace("#","").toLowerCase();
+  syncColorUI();
+});
+
+function swapColors(){
+  var t = S.color; S.color = S.color2; S.color2 = t;
+  syncColorUI();
+}
+
+document.getElementById("btnswap").addEventListener("click", swapColors);
+
+var SAVE_KEY = "swpaintable-project-v1";
+
+function chunkStr(s, n, count){
+  var arr = [];
+  for(var i=0;i<count;i++) arr.push(s.substr(i*n, n) || "000000");
+  return arr;
+}
+function serialize(){
+  return JSON.stringify({
+    v: 1,
+    wb: S.wb, hb: S.hb,
+    color: S.color, color2: S.color2, layer: S.layer,
+    palette: S.palette, font: S.font,
+    bg: S.bg.join(""), glow: S.glow.join("")
+  });
+}
+function syncLayerRadio(){
+  var radios = document.querySelectorAll("input[name=layer]");
+  for(var i=0;i<radios.length;i++) radios[i].checked = (radios[i].value === S.layer);
+}
+function deserialize(json){
+  var obj = JSON.parse(json);
+  if(!obj || !(obj.wb >= 1) || !(obj.hb >= 1)) throw new Error("bad project");
+  var wb = Math.max(1, Math.min(obj.wb, 100));
+  var hb = Math.max(1, Math.min(obj.hb, 100));
+  S.wb = wb; S.hb = hb;
+  S.W = wb*9; S.H = hb*9;
+  S.bg = chunkStr(obj.bg || "", 6, S.W*S.H);
+  S.glow = chunkStr(obj.glow || "", 6, S.W*S.H);
+  if(obj.color) S.color = obj.color;
+  if(obj.color2) S.color2 = obj.color2;
+  if(obj.layer === "bg" || obj.layer === "glow") S.layer = obj.layer; else S.layer = "bg";
+  if(Array.isArray(obj.palette) && obj.palette.length > 0) S.palette = obj.palette.slice();
+  if(obj.font === "f8" || obj.font === "f8b" || obj.font === "f8c" || obj.font === "f8d") S.font = obj.font; else S.font = "f8";
+  document.getElementById("fontsel").value = S.font;
+  S.glowPreview = (S.layer === "glow");
+  syncLayerRadio();
+  syncColorUI();
+  syncSizeInputs();
+  buildPalette();
+  render(); updateStatus(); scheduleExport();
+}
+
+document.getElementById("btnsave").addEventListener("click", function(){
+  var json = serialize();
+  try{ localStorage.setItem(SAVE_KEY, json); }catch(e){}
+  var blob = new Blob([json], { type: "application/json" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "paintable-project.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById("btnload").addEventListener("click", function(){
+  document.getElementById("fileload").click();
+});
+document.getElementById("fileload").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      deserialize(ev.target.result);
+      try{ localStorage.setItem(SAVE_KEY, ev.target.result); }catch(e){}
+    }catch(err){
+      alert("Could not load project file.");
+    }
+  };
+  reader.readAsText(f);
+  this.value = "";
+});
+
+document.getElementById("btnreset").addEventListener("click", function(){
+  if(!confirm("Reset everything? This clears the canvas and the saved project data in the browser, then restarts the editor.")) return;
+  try{ localStorage.removeItem(SAVE_KEY); }catch(e){}
+  location.reload();
+});
+
+function decodeToken(t){
+  t = String(t).trim().toUpperCase();
+  if(t === "" || t === "0") return "000000";
+  if(t === "X") return "ffffff";
+  if(t.length === 2) return "0000" + t;
+  if(t.length === 4) return "00" + t;
+  if(t.length === 6) return t.toLowerCase();
+  return "000000";
+}
+function childByName(el, name){
+  for(var i=0;i<el.childNodes.length;i++){
+    if(el.childNodes[i].nodeName === name) return el.childNodes[i];
+  }
+  return null;
+}
+
+document.getElementById("btnimportxml").addEventListener("click", function(){
+  document.getElementById("filexml").click();
+});
+document.getElementById("filexml").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    try{
+      var doc = new DOMParser().parseFromString(ev.target.result, "text/xml");
+      var cels = doc.getElementsByTagName("c");
+      var blocks = [];
+      for(var i=0;i<cels.length;i++){
+        var c = cels[i];
+        var d = c.getAttribute("d");
+        if(d !== "sign" && d !== "sign_na") continue;
+        var o = childByName(c, "o");
+        if(!o) continue;
+        var gc = o.getAttribute("gc");
+        if(gc === null || gc === undefined) continue;
+        var vp = childByName(o, "vp") || childByName(c, "vp");
+        var vx = 0, vy = 0, vz = 0;
+        if(vp){
+          vx = parseInt(vp.getAttribute("x"),10) || 0;
+          vy = parseInt(vp.getAttribute("y"),10) || 0;
+          vz = parseInt(vp.getAttribute("z"),10) || 0;
+        }
+        blocks.push({ vx: vx, vy: vy, vz: vz, gc: gc, gca: o.getAttribute("gca") });
+      }
+      if(!blocks.length){ alert("No paintable indicator/sign blocks found in the XML."); return; }
+      function modeOf(axis){
+        var cnt = {};
+        for(var mi=0;mi<blocks.length;mi++){
+          var v = blocks[mi][axis];
+          cnt[v] = (cnt[v] || 0) + 1;
+        }
+        var bestV = null, bestN = -1;
+        for(var k in cnt){
+          if(cnt[k] > bestN){ bestN = cnt[k]; bestV = parseInt(k,10); }
+        }
+        return { value: bestV, count: bestN };
+      }
+      var mx = modeOf("vx"), my = modeOf("vy"), mz = modeOf("vz");
+      var depth, dv;
+      if(mx.count >= my.count && mx.count >= mz.count){ depth = "vx"; dv = mx.value; }
+      else if(mz.count >= my.count){ depth = "vz"; dv = mz.value; }
+      else { depth = "vy"; dv = my.value; }
+      var kept = [];
+      for(i=0;i<blocks.length;i++){
+        if(blocks[i][depth] === dv) kept.push(blocks[i]);
+      }
+      if(!kept.length){ alert("Could not determine a valid block grid."); return; }
+      var vertKey, horizKey;
+      if(depth === "vx"){ vertKey = "vy"; horizKey = "vz"; }
+      else if(depth === "vy"){ vertKey = "vx"; horizKey = "vz"; }
+      else { vertKey = "vx"; horizKey = "vy"; }
+      var vlist = [], hlist = [];
+      for(i=0;i<kept.length;i++){
+        if(vlist.indexOf(kept[i][vertKey]) === -1) vlist.push(kept[i][vertKey]);
+        if(hlist.indexOf(kept[i][horizKey]) === -1) hlist.push(kept[i][horizKey]);
+      }
+      vlist.sort(function(a,b){return a-b;});
+      hlist.sort(function(a,b){return a-b;});
+      var wb = hlist.length, hb = vlist.length;
+      if(!wb || !hb || wb>100||hb>100){ alert("Could not determine a valid block grid."); return; }
+      commit();
+      S.wb = wb; S.hb = hb;
+      S.W = wb*9; S.H = hb*9;
+      S.bg = new Array(S.W*S.H).fill("000000");
+      S.glow = new Array(S.W*S.H).fill("000000");
+      for(i=0;i<kept.length;i++){
+        var b = kept[i];
+        var bX = hlist.indexOf(b[horizKey]);
+        var bY = vlist.indexOf(b[vertKey]);
+        var gct = b.gc.split(",");
+        var gcat = b.gca ? b.gca.split(",") : [];
+        for(var kk=0;kk<81;kk++){
+          var yy = Math.floor(kk/9), xx = kk%9;
+          var r = (S.hb-1-bY)*9+yy, c = S.W-1-(bX*9+xx);
+          S.bg[idx(r,c)] = decodeToken(gct[kk] || "");
+          S.glow[idx(r,c)] = decodeToken(gcat[kk] || "");
+        }
+      }
+      render(); updateStatus(); scheduleExport(); syncSizeInputs();
+    }catch(err){
+      alert("Could not parse the XML.");
+    }
+  };
+  reader.readAsText(f);
+  this.value = "";
+});
+document.getElementById("btnimport").addEventListener("click", function(){
+  document.getElementById("fileimport").click();
+});
+document.getElementById("fileimport").addEventListener("change", function(){
+  var f = this.files && this.files[0];
+  if(!f) return;
+  var reader = new FileReader();
+  reader.onload = function(ev){
+    var img = new Image();
+    img.onload = function(){
+      var tmp = document.createElement("canvas");
+      tmp.width = img.width; tmp.height = img.height;
+      var tctx = tmp.getContext("2d");
+      tctx.drawImage(img, 0, 0);
+      var data = tctx.getImageData(0,0,img.width,img.height).data;
+      var mode = document.getElementById("importmode").value;
+      if(mode === "expand"){
+        var nw = Math.ceil(img.width / 9), nh = Math.ceil(img.height / 9);
+        if(nw > 100 || nh > 100){
+          if(!confirm("Image is larger than the 100x100 block limit (" + nw + "x" + nh + " blocks). Only the top-left 100x100 blocks will be imported. Continue?")){
+            return;
+          }
+        }
+        if(nw !== S.wb || nh !== S.hb) resizeCanvas(Math.min(nw, 100), Math.min(nh, 100));
+        else commit();
+      } else {
+        commit();
+      }
+      var lay = layerNow();
+      for(var y=0;y<S.H;y++){
+        for(var x=0;x<S.W;x++){
+          var sx, sy;
+          if(mode === "expand"){
+            if(x >= img.width || y >= img.height) continue;
+            sx = x; sy = y;
+          } else {
+            sx = Math.min(img.width-1, Math.floor(x * img.width / S.W));
+            sy = Math.min(img.height-1, Math.floor(y * img.height / S.H));
+          }
+          var o = (sy*img.width + sx)*4;
+          var hex = [data[o],data[o+1],data[o+2]].map(function(v){
+            return v.toString(16).padStart(2,"0");
+          }).join("").toLowerCase();
+          lay[idx(y,x)] = hex;
+        }
+      }
+      var top = analyzePalette(data, img.width, img.height);
+      if(top.length){
+        S.palette = top.slice(0, PALETTE.length);
+        buildPalette(); syncColorUI();
+      }
+      render(); scheduleExport();
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(f);
+  this.value = "";
+});
+
+function analyzePalette(rgba, w, h){
+  var counts = {}, keys = [];
+  for(var i=0;i<w*h;i++){
+    var o = i*4;
+    var key = [rgba[o],rgba[o+1],rgba[o+2]].map(function(v){
+      return v.toString(16).padStart(2,"0");
+    }).join("");
+    if(counts[key]) counts[key]++;
+    else { counts[key] = 1; keys.push(key); }
+  }
+  keys.sort(function(a,b){ return counts[b] - counts[a]; });
+  var picked = [];
+  var minDist2 = 60*60;
+  for(var j=0;j<keys.length && picked.length < PALETTE.length;j++){
+    var c = colorRGB(keys[j]);
+    var ok = true;
+    for(var k=0;k<picked.length;k++){
+      var p = colorRGB(picked[k]);
+      var dr = c[0]-p[0], dg = c[1]-p[1], db = c[2]-p[2];
+      if(dr*dr + dg*dg + db*db < minDist2){ ok = false; break; }
+    }
+    if(ok) picked.push(keys[j]);
+  }
+  return picked;
+}
+
+var out = document.getElementById("out");
+function encodeColor(h, glow, darkenOn, f){
+  var rgb = colorRGB(h);
+  var r = rgb[0], g = rgb[1], b = rgb[2];
+  if(glow && darkenOn && f < 1){
+    r = Math.round(r*f); g = Math.round(g*f); b = Math.round(b*f);
+  }
+  if(r === 255 && g === 255 && b === 255) return "x";
+  if(r === 0 && g === 0 && b === 0) return glow ? "0" : "";
+  var R=hex2(r), G=hex2(g), B=hex2(b);
+  if(r === 0 && g === 0) return B;
+  if(r === 0) return G + B;
+  return R + G + B;
+}
+
+var MCSTART = '<c d="microprocessor"><o r="1,0,0,0,0,-1,0,1,0" sc="10"><microprocessor_definition width="2" length="1" id_counter="3" id_counter_node="2"><nodes><n id="1" component_id="1"><node mode="1"/></n><n id="2" component_id="3"><node><position x="1"/></node></n></nodes><group><data><inputs/><outputs/></data><components/><components_bridge><c><object id="1"><in1/><out1/></object></c><c type="1"><object id="3"><in1 component_id="1"/><out1/></object></c></components_bridge><groups/></group></microprocessor_definition><vp ';
+var MCEND = '/><logic_slots><slot/><slot/></logic_slots></o></c>';
+
+function generateXML(){
+  var wb = S.wb, hb = S.hb, W = S.W, H = S.H;
+  var type = document.getElementById("exporttype").value;
+  var useMcu = type === "indicator" && document.getElementById("optmcu").checked;
+  var darkenOn = document.getElementById("optdark").checked;
+  var f = parseFloat(document.getElementById("darkness").value) || 1;
+  var out2 = [];
+  out2.push('<?xml version="1.0" encoding="UTF-8"?><vehicle data_version="3" bodies_id="0"><authors/><bodies><body unique_id="0"><components>');
+  var mx = trunc(-hb/2), mz = trunc(-wb/2) - 1;
+  if(useMcu){
+    out2.push(MCSTART + 'x="' + mx + '" z="' + mz + '"' + MCEND);
+  }
+  var lx = mx + 1, lz = mz;
+  var links = [];
+  for(var bY=0; bY<hb; bY++){
+    for(var bX=0; bX<wb; bX++){
+      var gc = [], gca = [];
+      for(var y=0; y<9; y++){
+        for(var x=0; x<9; x++){
+          var r = (hb-1-bY)*9 + y;
+          var i = r*W + (W-1-(bX*9+x));
+          gc.push(encodeColor(S.bg[i], false, darkenOn, f));
+          if(type === "indicator") gca.push(encodeColor(S.glow[i], true, darkenOn, f));
+        }
+      }
+      var px = bY - trunc(hb/2), pz = bX - trunc(wb/2);
+      var vp = "<vp";
+      if(px !== 0) vp += ' x="' + px + '"';
+      if(pz !== 0) vp += ' z="' + pz + '"';
+      vp += "/>";
+      var slot;
+      if(type === "indicator"){
+        slot = useMcu ? '<slot editor_connected="1"/>' : '<slot/>';
+        out2.push('<c d="sign"><o r="1,0,0,0,1,0,0,0,1" sc="6" gc="' + gc.join(",") + '" gca="' + gca.join(",") + '">' + vp + '<logic_slots>' + slot + '</logic_slots></o></c>');
+      } else {
+        out2.push('<c d="sign_na"><o r="1,0,0,0,1,0,0,0,1" sc="6" gc="' + gc.join(",") + '">' + vp + '<logic_slots><slot/></logic_slots></o></c>');
+      }
+      if(useMcu){
+        links.push('<logic_node_link><voxel_pos_0 x="' + lx + '" z="' + lz + '"/><voxel_pos_1 x="' + px + '" z="' + pz + '"/></logic_node_link>');
+        links.push('<logic_node_link type="4"><voxel_pos_0 x="' + (lx-1) + '" z="' + (lz+1) + '"/><voxel_pos_1 x="' + px + '" z="' + pz + '"/></logic_node_link>');
+      }
+    }
+  }
+  out2.push('</components></body></bodies><logic_node_links>' + links.join("") + '</logic_node_links></vehicle>');
+  return out2.join("");
+}
+
+var exportTimer = null;
+function scheduleExport(){
+  clearTimeout(exportTimer);
+  exportTimer = setTimeout(function(){
+    out.value = generateXML();
+    out.scrollTop = 0;
+    updateStatus((out.value.length/1024).toFixed(1));
+  }, 300);
+}
+
+document.getElementById("optmcu").addEventListener("change", function(){ scheduleExport(); });
+document.getElementById("optdark").addEventListener("change", function(){ scheduleExport(); });
+document.getElementById("darkness").addEventListener("input", function(){ scheduleExport(); });
+document.getElementById("exporttype").addEventListener("change", function(){
+  syncExportControls();
+  scheduleExport();
+});
+function syncExportControls(){
+  var isInd = document.getElementById("exporttype").value === "indicator";
+  document.getElementById("optmcu").disabled = !isInd;
+  document.getElementById("optdark").disabled = !isInd;
+  document.getElementById("darkness").disabled = !isInd;
+}
+syncExportControls();
+
+document.getElementById("btngen").addEventListener("click", function(){
+  out.value = generateXML();
+  out.select();
+  updateStatus((out.value.length/1024).toFixed(1));
+  var done = function(){ out.select(); };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(out.value).then(done).catch(function(){ fallbackCopy(); });
+  } else { fallbackCopy(); }
+  function fallbackCopy(){
+    out.focus(); out.select();
+    document.execCommand("copy");
+  }
+});
+
+document.getElementById("btndl").addEventListener("click", function(){
+  var xml = out.value || generateXML();
+  var blob = new Blob([xml], { type: "application/xml" });
+  var a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "pies_out-" + S.wb + "x" + S.hb + ".xml";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(a.href);
+});
+
+document.getElementById("btnpng").addEventListener("click", function(){
+  var a = document.createElement("a");
+  a.href = off.toDataURL("image/png");
+  a.download = "paintable_" + S.wb + "x" + S.hb + ".png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+});
+
+function updateStatus(kb){
+  document.getElementById("stBlocks").innerHTML = S.wb + "&times;" + S.hb + " blocks";
+  document.getElementById("stPix").innerHTML = S.W + "&times;" + S.H + "&nbsp;px";
+  var g = document.getElementById("stXml");
+  g.textContent = kb ? (kb + "\u00a0KB") : "–";
+}
+
+var downKeys = {};
+document.addEventListener("keydown", function(e){
+  if(e.ctrlKey || e.metaKey){
+    var k = e.key.toLowerCase();
+    if(k === "z"){ e.preventDefault(); e.shiftKey ? redo() : undo(); }
+    else if(k === "y"){ e.preventDefault(); redo(); }
+    else if(k === "x" || k === "c" || k === "v"){
+      var t = e.target;
+      if(t && (t.tagName === "TEXTAREA" || t.tagName === "INPUT" || t.isContentEditable)) return;
+      e.preventDefault();
+      if(k === "x") clipboardCut();
+      else if(k === "c") clipboardCopy();
+      else clipboardPaste();
+    }
+    return;
+  }
+  var tgt = e.target;
+  if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
+  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", s:"select", t:"text", x:"swap", g:"raster" };
+  var st = map[e.key.toLowerCase()];
+  if(st === "swap"){ swapColors(); e.preventDefault(); }
+  else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
+  else if(st){ setTool(st); e.preventDefault(); }
+});
+document.addEventListener("keydown", function(e){
+  var tgt = e.target;
+  if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
+  if(e.shiftKey && !downKeys.Shift){
+    if(!S.glowPreview){ S.glowPreview = true; downKeys.Shift = true; render(); }
+  }
+});
+document.addEventListener("keyup", function(e){
+  if(e.key === "Shift" && downKeys.Shift){
+    downKeys.Shift = false;
+    S.glowPreview = (S.layer === "glow");
+    render();
+  }
+});
+
+window.addEventListener("resize", function(){ render(); });
+
+document.getElementById("zoomsel").addEventListener("change", function(){
+  var z = parseFloat(this.value);
+  zoom = isNaN(z) ? 1 : z;
+  render();
+});
+var zoomMults = [0, 0.125, 0.25, 0.5, 1, 2, 4];
+document.getElementById("btnzoomin").addEventListener("click", function(){
+  var idx = zoomMults.indexOf(zoom);
+  if(idx < zoomMults.length - 1) zoom = zoomMults[idx + 1];
+  document.getElementById("zoomsel").value = String(zoom);
+  render();
+});
+document.getElementById("btnzoomout").addEventListener("click", function(){
+  var idx = zoomMults.indexOf(zoom);
+  if(idx > 0) zoom = zoomMults[idx - 1];
+  document.getElementById("zoomsel").value = String(zoom);
+  render();
+});
+document.getElementById("stage").addEventListener("wheel", function(e){
+  e.preventDefault();
+  var idx = zoomMults.indexOf(zoom);
+  var next;
+  if(e.deltaY < 0) next = zoomMults[Math.min(idx + 1, zoomMults.length - 1)];
+  else next = zoomMults[Math.max(idx - 1, 0)];
+  if(next !== zoom){
+    zoom = next;
+    document.getElementById("zoomsel").value = String(zoom);
+    render();
+  }
+}, { passive:false });
+
+initLayers();
+syncColorUI();
+try{
+  var saved = localStorage.getItem(SAVE_KEY);
+  if(saved) deserialize(saved);
+}catch(e){}
+render();
+scheduleExport();
+updateStatus();
+syncSizeInputs();
+document.getElementById("zoomsel").value = String(zoom);
+document.getElementById("fontsel").value = S.font;
+setTool("pen");
+refreshEditBtns();
+
+var splash = document.getElementById("splash");
+function hideSplash(){ splash.classList.add("hidden"); setTimeout(function(){ splash.remove(); }, 500); }
+window.addEventListener("load", function(){ setTimeout(hideSplash, 250); });
+setTimeout(hideSplash, 1200);
+</script>
+</body>
+</html>
