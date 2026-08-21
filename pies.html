@@ -224,6 +224,10 @@
       <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
       <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
     </div>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </div>
   </div>
 
   <div class="center">
@@ -271,6 +275,7 @@
       <input type="file" id="fileimport" accept="image/*" style="display:none">
       <div class="row" style="margin-top:8px">
         <button class="btn" id="btnimportxml">XML</button>
+        <span id="xmlname" style="flex:1;min-width:0;font-size:11px;color:#ffffff;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
       </div>
       <input type="file" id="filexml" accept=".xml,text/xml,application/xml" style="display:none">
     </section>
@@ -459,7 +464,7 @@
         <h4>Import</h4>
         <ul>
           <li><b>Image</b> — paints a picture onto the active layer. <b>Stretch to canvas</b> fits the image to the whole project; <b>Expand canvas to fit</b> grows the project in whole blocks from the top-left (it warns if the result exceeds 100&times;100 blocks). Any format your browser can decode works (PNG, JPEG, GIF, WebP, BMP, AVIF); GIFs use the first frame. After an import the palette is rebuilt from the image's most frequent, distinct colors.</li>
-          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions and the <code>gc</code> (background) and <code>gca</code> (glow) pixel data.</li>
+          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions, the <code>gc</code> (background) and <code>gca</code> (glow) pixel data, and applies each block's rotation (<code>r</code>) so the imported image matches how it is displayed in-game.</li>
         </ul>
       </div>
 
@@ -1328,6 +1333,29 @@ addShiftButton("mvDown", 1, 0);
 addShiftButton("mvLeft", 0, -1);
 addShiftButton("mvRight", 0, 1);
 
+function rotateCanvas(dir){
+  commit();
+  var nW = S.H, nH = S.W;
+  var nb = new Array(nW*nH).fill("000000");
+  var ng = new Array(nW*nH).fill("000000");
+  for(var r = 0; r < nH; r++){
+    for(var c = 0; c < nW; c++){
+      var or, oc;
+      if(dir > 0){ or = S.H - 1 - c; oc = r; }
+      else { or = c; oc = S.W - 1 - r; }
+      nb[r*nW + c] = S.bg[or*S.W + oc];
+      ng[r*nW + c] = S.glow[or*S.W + oc];
+    }
+  }
+  S.bg = nb; S.glow = ng;
+  S.W = nW; S.H = nH;
+  S.wb = nW / 9; S.hb = nH / 9;
+  sel = null;
+  render(); scheduleExport(); syncSizeInputs(); updateStatus();
+}
+document.getElementById("btnrotcw").addEventListener("click", function(){ rotateCanvas(1); });
+document.getElementById("btnrotccw").addEventListener("click", function(){ rotateCanvas(-1); });
+
 var clipboard = null;
 function copyRegion(clear){
   if(!sel) return false;
@@ -1681,10 +1709,32 @@ function decodeToken(t){
   t = String(t).trim().toUpperCase();
   if(t === "" || t === "0") return "000000";
   if(t === "X") return "ffffff";
-  if(t.length === 2) return "0000" + t;
-  if(t.length === 4) return "00" + t;
+  if(t.length === 2) return ("0000" + t).toLowerCase();
+  if(t.length === 4) return ("00" + t).toLowerCase();
   if(t.length === 6) return t.toLowerCase();
   return "000000";
+}
+function rotGrid(arr, k){
+  k = ((k % 4) + 4) % 4;
+  if(k === 0 || !arr) return arr;
+  var n = 9, out = new Array(n*n), i, r, c, sr, sc;
+  for(i=0;i<n*n;i++){
+    r = Math.floor(i/n); c = i%n;
+    if(k === 1){ sr = c; sc = n-1-r; }
+    else if(k === 2){ sr = n-1-r; sc = n-1-c; }
+    else { sr = n-1-c; sc = r; }
+    out[i] = arr[sr*n + sc];
+  }
+  return out;
+}
+function flipGrid(arr){
+  if(!arr) return arr;
+  var n = 9, out = new Array(n*n), i, r, c;
+  for(i=0;i<n*n;i++){
+    r = Math.floor(i/n); c = i%n;
+    out[i] = arr[r*n + (n-1-c)];
+  }
+  return out;
 }
 function childByName(el, name){
   for(var i=0;i<el.childNodes.length;i++){
@@ -1699,8 +1749,12 @@ document.getElementById("btnimportxml").addEventListener("click", function(){
 document.getElementById("filexml").addEventListener("change", function(){
   var f = this.files && this.files[0];
   if(!f) return;
+  var xn = document.getElementById("xmlname");
+  xn.textContent = f.name;
+  xn.title = f.name;
   var reader = new FileReader();
   reader.onload = function(ev){
+    var fname = f.name;
     try{
       var doc = new DOMParser().parseFromString(ev.target.result, "text/xml");
       var cels = doc.getElementsByTagName("c");
@@ -1708,11 +1762,13 @@ document.getElementById("filexml").addEventListener("change", function(){
       for(var i=0;i<cels.length;i++){
         var c = cels[i];
         var d = c.getAttribute("d");
-        if(d !== "sign" && d !== "sign_na") continue;
+        var t = c.getAttribute("t");
         var o = childByName(c, "o");
         if(!o) continue;
+        var sc = o.getAttribute("sc");
         var gc = o.getAttribute("gc");
-        if(gc === null || gc === undefined) continue;
+        var isSign = (d === "sign" || d === "sign_na") || (d === null || d === undefined) && (sc && sc.indexOf(",") >= 0);
+        if(!isSign) continue;
         var vp = childByName(o, "vp") || childByName(c, "vp");
         var vx = 0, vy = 0, vz = 0;
         if(vp){
@@ -1720,13 +1776,26 @@ document.getElementById("filexml").addEventListener("change", function(){
           vy = parseInt(vp.getAttribute("y"),10) || 0;
           vz = parseInt(vp.getAttribute("z"),10) || 0;
         }
-        blocks.push({ vx: vx, vy: vy, vz: vz, gc: gc, gca: o.getAttribute("gca") });
+        blocks.push({ vx: vx, vy: vy, vz: vz, r: o.getAttribute("r"), gc: gc, gca: o.getAttribute("gca"), sc: sc, t: t });
       }
       if(!blocks.length){ alert("No paintable indicator/sign blocks found in the XML."); return; }
+      function faceKey(b){
+        var rs = (b.r || "1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
+        var nx = rs[3]||0, ny = rs[4]||0, nz = rs[5]||0;
+        var ax = Math.abs(nx)>=Math.abs(ny)&&Math.abs(nx)>=Math.abs(nz) ? "x" : (Math.abs(ny)>=Math.abs(nz) ? "y" : "z");
+        var sg = ax==="x" ? (nx<0?-1:1) : ax==="y" ? (ny<0?-1:1) : (nz<0?-1:1);
+        return ax + (sg<0 ? "-" : "+");
+      }
+      var fk = {};
+      for(var fi=0;fi<blocks.length;fi++){ var fk0 = faceKey(blocks[fi]); fk[fk0] = (fk[fk0]||0)+1; }
+      var bestFK = null, bestFN = -1;
+      for(var fk1 in fk){ if(fk[fk1] > bestFN){ bestFN = fk[fk1]; bestFK = fk1; } }
+      var signBlocks = [];
+      for(fi=0;fi<blocks.length;fi++){ if(faceKey(blocks[fi]) === bestFK) signBlocks.push(blocks[fi]); }
       function modeOf(axis){
         var cnt = {};
-        for(var mi=0;mi<blocks.length;mi++){
-          var v = blocks[mi][axis];
+        for(var mi=0;mi<signBlocks.length;mi++){
+          var v = signBlocks[mi][axis];
           cnt[v] = (cnt[v] || 0) + 1;
         }
         var bestV = null, bestN = -1;
@@ -1741,14 +1810,77 @@ document.getElementById("filexml").addEventListener("change", function(){
       else if(mz.count >= my.count){ depth = "vz"; dv = mz.value; }
       else { depth = "vy"; dv = my.value; }
       var kept = [];
-      for(i=0;i<blocks.length;i++){
-        if(blocks[i][depth] === dv) kept.push(blocks[i]);
+      for(i=0;i<signBlocks.length;i++){
+        if(signBlocks[i][depth] === dv) kept.push(signBlocks[i]);
       }
       if(!kept.length){ alert("Could not determine a valid block grid."); return; }
-      var vertKey, horizKey;
-      if(depth === "vx"){ vertKey = "vy"; horizKey = "vz"; }
-      else if(depth === "vy"){ vertKey = "vx"; horizKey = "vz"; }
-      else { vertKey = "vx"; horizKey = "vy"; }
+      var rCount = {};
+      for(i=0;i<kept.length;i++){ var rs = kept[i].r || "1,0,0,0,1,0,0,0,1"; rCount[rs] = (rCount[rs]||0)+1; }
+      var bestR = null, bestRN = -1;
+      for(var kr in rCount){ if(rCount[kr] > bestRN){ bestRN = rCount[kr]; bestR = kr; } }
+      var rv = (bestR||"1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
+      /* map every block into the sign's local frame (undo a rigid whole-sign rotation) so the picture matches the game */
+      var minX = kept[0].vx, maxX = kept[0].vx, minY = kept[0].vy, maxY = kept[0].vy, minZ = kept[0].vz, maxZ = kept[0].vz;
+      for(i=0;i<kept.length;i++){
+        var pk = kept[i];
+        if(pk.vx < minX) minX = pk.vx;
+        if(pk.vx > maxX) maxX = pk.vx;
+        if(pk.vy < minY) minY = pk.vy;
+        if(pk.vy > maxY) maxY = pk.vy;
+        if(pk.vz < minZ) minZ = pk.vz;
+        if(pk.vz > maxZ) maxZ = pk.vz;
+      }
+      var ccx = (minX+maxX)/2, ccy = (minY+maxY)/2, ccz = (minZ+maxZ)/2;
+      for(i=0;i<blocks.length;i++){
+        var pb = blocks[i];
+        var qx = pb.vx - ccx, qy = pb.vy - ccy, qz = pb.vz - ccz;
+        pb.vx = ccx + rv[0]*qx + rv[1]*qy + rv[2]*qz;
+        pb.vy = ccy + rv[3]*qx + rv[4]*qy + rv[5]*qz;
+        pb.vz = ccz + rv[6]*qx + rv[7]*qy + rv[8]*qz;
+        if(pb.r){
+          var pr = pb.r.split(",").map(parseFloat);
+          var nr = [];
+          for(var ri=0;ri<3;ri++) for(var rj=0;rj<3;rj++) nr[ri*3+rj] = pr[ri*3]*rv[rj*3] + pr[ri*3+1]*rv[rj*3+1] + pr[ri*3+2]*rv[rj*3+2];
+          pb.r = nr.join(",");
+        }
+      }
+      rCount = {};
+      for(i=0;i<kept.length;i++){ var rs2 = kept[i].r || "1,0,0,0,1,0,0,0,1"; rCount[rs2] = (rCount[rs2]||0)+1; }
+      bestR = null; bestRN = -1;
+      for(var kr2 in rCount){ if(rCount[kr2] > bestRN){ bestRN = rCount[kr2]; bestR = kr2; } }
+      rv = (bestR||"1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
+      /* reader stands on the +z side looking toward -z: rows follow -z downward (top = max z), columns follow +x rightward (left = min x); no count-based swapping */
+      var vertKey = "vz", horizKey = "vx";
+      var mirrorArr = false;
+      var fnx = rv[3]||0, fny = rv[4]||0, fnz = rv[5]||0;
+      var fa = Math.abs(fnx)>=Math.abs(fny)&&Math.abs(fnx)>=Math.abs(fnz) ? "x" : (Math.abs(fny)>=Math.abs(fnz) ? "y" : "z");
+      var fSign = fa==="x" ? (fnx<0?-1:1) : fa==="y" ? (fny<0?-1:1) : (fnz<0?-1:1);
+      var frx = 1, fry = 0, frz = 0;
+      if(fa === "x"){ frx = 0; fry = fSign > 0 ? -1 : 1; frz = 0; }
+      var r0x = rv[0]||0, r0y = rv[1]||0, r0z = rv[2]||0;
+      var kcx = fry*r0z - frz*r0y, kcy = frz*r0x - frx*r0z, kcz = frx*r0y - fry*r0x;
+      var kdom = 0; /* rigid rotations preserve the picture in the sign's local frame; tiles stay upright */
+      var upAxis, upSign;
+      var c3x = rv[6]||0, c3y = rv[7]||0, c3z = rv[8]||0;
+      upAxis = Math.abs(c3x)>=Math.abs(c3y)&&Math.abs(c3x)>=Math.abs(c3z) ? "x" : (Math.abs(c3y)>=Math.abs(c3z) ? "y" : "z");
+      upSign = fa === "y" ? -fSign : 1;
+      var topSmallest = mirrorArr;
+      if(upAxis === vertKey.substring(1)) topSmallest = upSign > 0;
+      var d3x = rv[6]||0, d3y = rv[7]||0, d3z = rv[8]||0;
+      var detD = rv[0]*(rv[4]*rv[8] - rv[5]*rv[7]) - rv[1]*(rv[3]*rv[8] - rv[5]*rv[6]) + rv[2]*(rv[3]*rv[7] - rv[4]*rv[6]);
+      for(i=0;i<kept.length;i++){
+        var kr2 = (kept[i].r || "1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
+        var b3x = kr2[6]||0, b3y = kr2[7]||0, b3z = kr2[8]||0;
+        var cx = d3y*b3z - d3z*b3y, cy = d3z*b3x - d3x*b3z, cz = d3x*b3y - d3y*b3x;
+        var sinA = cx*fnx + cy*fny + cz*fnz;
+        var cosA = d3x*b3x + d3y*b3y + d3z*b3z;
+        var ang = Math.atan2(sinA, cosA) * 180/Math.PI;
+        var rot = Math.round(-ang/90) % 4;
+        if(rot < 0) rot += 4;
+        kept[i].rot = (rot + kdom) % 4;
+        var detB = kr2[0]*(kr2[4]*kr2[8] - kr2[5]*kr2[7]) - kr2[1]*(kr2[3]*kr2[8] - kr2[5]*kr2[6]) + kr2[2]*(kr2[3]*kr2[7] - kr2[4]*kr2[6]);
+        kept[i].mirror = (detB * detD) < 0;
+      }
       var vlist = [], hlist = [];
       for(i=0;i<kept.length;i++){
         if(vlist.indexOf(kept[i][vertKey]) === -1) vlist.push(kept[i][vertKey]);
@@ -1769,13 +1901,60 @@ document.getElementById("filexml").addEventListener("change", function(){
         var bY = vlist.indexOf(b[vertKey]);
         var gct = b.gc.split(",");
         var gcat = b.gca ? b.gca.split(",") : [];
+        if(b.t === "1"){ gct = flipGrid(gct); if(gcat.length) gcat = flipGrid(gcat); }
+        if(b.mirror) gct = flipGrid(gct);
+        if(b.rot){ gct = rotGrid(gct, b.rot); if(gcat.length) gcat = rotGrid(gcat, b.rot); }
         for(var kk=0;kk<81;kk++){
           var yy = Math.floor(kk/9), xx = kk%9;
-          var r = (S.hb-1-bY)*9+yy, c = S.W-1-(bX*9+xx);
+          var r = (topSmallest ? bY : (S.hb-1-bY))*9+(8-yy), c = (mirrorArr ? (wb-1-bX) : bX)*9+xx;
           S.bg[idx(r,c)] = decodeToken(gct[kk] || "");
           S.glow[idx(r,c)] = decodeToken(gcat[kk] || "");
         }
       }
+      for(i=0;i<blocks.length;i++){
+        var xb = blocks[i];
+        if(xb[depth] !== dv) continue;
+        var done = false;
+        for(var ki=0;ki<kept.length;ki++){ if(kept[ki] === xb){ done = true; break; } }
+        if(done) continue;
+        var bX = hlist.indexOf(xb[horizKey]);
+        var bY = vlist.indexOf(xb[vertKey]);
+        if(bX < 0 || bY < 0) continue;
+        var kr3 = (xb.r || "1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
+        var b4x = kr3[6]||0, b4y = kr3[7]||0, b4z = kr3[8]||0;
+        var c4x = d3y*b4z - d3z*b4y, c4y = d3z*b4x - d3x*b4z, c4z = d3x*b4y - d3y*b4x;
+        var rot4 = Math.round(-Math.atan2(c4x*fnx + c4y*fny + c4z*fnz, d3x*b4x + d3y*b4y + d3z*b4z) * 180/Math.PI / 90) % 4;
+        if(rot4 < 0) rot4 += 4;
+        rot4 = (rot4 + kdom) % 4;
+        var det4 = kr3[0]*(kr3[4]*kr3[8] - kr3[5]*kr3[7]) - kr3[1]*(kr3[3]*kr3[8] - kr3[5]*kr3[6]) + kr3[2]*(kr3[3]*kr3[7] - kr3[4]*kr3[6]);
+        var mirror4 = (det4 * detD) < 0;
+        var gct4 = xb.gc ? xb.gc.split(",") : null;
+        var gcat4 = xb.gca ? xb.gca.split(",") : [];
+        if(gct4){
+          if(xb.t === "1") gct4 = flipGrid(gct4);
+          if(mirror4) gct4 = flipGrid(gct4);
+          if(rot4) gct4 = rotGrid(gct4, rot4);
+        } else {
+          var fill = null;
+          if(xb.sc){
+            var scp = xb.sc.split(",");
+            for(var si=1;si<scp.length;si++){
+              var tok = String(scp[si]).trim().toLowerCase();
+              if(/^[0-9a-f]{6}$/.test(tok)){ fill = tok; break; }
+            }
+          }
+          if(!fill) fill = "3a5e6e";
+          gct4 = new Array(81);
+          for(var fi4=0;fi4<81;fi4++) gct4[fi4] = fill;
+        }
+        for(var kk4=0;kk4<81;kk4++){
+          var yy4 = Math.floor(kk4/9), xx4 = kk4%9;
+          var r4 = (topSmallest ? bY : (S.hb-1-bY))*9+(8-yy4), c4b = (mirrorArr ? (wb-1-bX) : bX)*9+xx4;
+          S.bg[idx(r4,c4b)] = decodeToken(gct4[kk4] || "");
+          S.glow[idx(r4,c4b)] = decodeToken(gcat4[kk4] || "");
+        }
+      }
+      lastXmlName = fname;
       render(); updateStatus(); scheduleExport(); syncSizeInputs();
     }catch(err){
       alert("Could not parse the XML.");
@@ -1906,13 +2085,13 @@ function generateXML(){
       var gc = [], gca = [];
       for(var y=0; y<9; y++){
         for(var x=0; x<9; x++){
-          var r = (hb-1-bY)*9 + y;
-          var i = r*W + (W-1-(bX*9+x));
+          var r = bY*9 + (8-y);
+          var i = r*W + (bX*9+x);
           gc.push(encodeColor(S.bg[i], false, darkenOn, f));
           if(type === "indicator") gca.push(encodeColor(S.glow[i], true, darkenOn, f));
         }
       }
-      var px = bY - trunc(hb/2), pz = bX - trunc(wb/2);
+      var px = bX - trunc(wb/2), pz = (hb-1-bY) - trunc(hb/2);
       var vp = "<vp";
       if(px !== 0) vp += ' x="' + px + '"';
       if(pz !== 0) vp += ' z="' + pz + '"';
@@ -1994,11 +2173,21 @@ document.getElementById("btnpng").addEventListener("click", function(){
   document.body.removeChild(a);
 });
 
+var lastXmlName = null;
 function updateStatus(kb){
   document.getElementById("stBlocks").innerHTML = S.wb + "&times;" + S.hb + " blocks";
   document.getElementById("stPix").innerHTML = S.W + "&times;" + S.H + "&nbsp;px";
   var g = document.getElementById("stXml");
-  g.textContent = kb ? (kb + "\u00a0KB") : "–";
+  if(kb){
+    g.textContent = (lastXmlName ? lastXmlName + " \u00b7 " : "") + kb + "\u00a0KB";
+    g.title = lastXmlName || "";
+  } else if(lastXmlName){
+    g.textContent = lastXmlName;
+    g.title = lastXmlName;
+  } else {
+    g.textContent = "–";
+    g.title = "";
+  }
 }
 
 var downKeys = {};
