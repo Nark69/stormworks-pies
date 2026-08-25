@@ -213,20 +213,21 @@
     <button class="tool" id="btncut" title="Cut selection (Ctrl+X)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></button>
     <button class="tool" id="btncopyc" title="Copy selection (Ctrl+C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
     <button class="tool" id="btnpaste" title="Paste selection (Ctrl+V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
+    <button class="tool" data-tool="lock" title="Lock / unlock tile (K). Locked tiles cannot be painted and are skipped on XML export. XML import locks tiles that were not paintable signs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></button>
     <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
     <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
     <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
     <button class="tool" id="btnclear" title="Clear all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
     <h2>Move</h2>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </div>
     <div class="dpad">
       <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
       <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
       <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
       <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
-    </div>
-    <div style="display:flex;gap:4px">
-      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
-      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
     </div>
   </div>
 
@@ -418,6 +419,7 @@
           <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
           <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
           <tr><td>Select</td><td><kbd>S</kbd></td><td>Drag to select a region, then use Cut / Copy / Paste. Right click deselects.</td></tr>
+          <tr><td>Lock tile</td><td><kbd>K</kbd></td><td>Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a red tint, cannot be painted and are skipped on XML export.</td></tr>
           <tr><td>Grid</td><td><kbd>G</kbd></td><td>Toggle the pixel grid and the 9-pixel block guide.</td></tr>
         </table>
       </div>
@@ -465,14 +467,14 @@
         <h4>Import</h4>
         <ul>
           <li><b>Image</b> — paints a picture onto the active layer. <b>Stretch to canvas</b> fits the image to the whole project; <b>Expand canvas to fit</b> grows the project in whole blocks from the top-left (it warns if the result exceeds 100&times;100 blocks). Any format your browser can decode works (PNG, JPEG, GIF, WebP, BMP, AVIF); GIFs use the first frame. After an import the palette is rebuilt from the image's most frequent, distinct colors.</li>
-          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions, the <code>gc</code> (background) and <code>gca</code> (glow) pixel data, and applies each block's rotation (<code>r</code>) so the imported image matches how it is displayed in-game.</li>
+          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions, the <code>gc</code> (background) and <code>gca</code> (glow) pixel data, and applies each block's rotation (<code>r</code>) so the imported image matches how it is displayed in-game. Non-paintable blocks and empty spots become locked tiles (red); unlock them with the Lock tool to paint there.</li>
         </ul>
       </div>
 
       <div class="helpsec">
         <h4>Export</h4>
         <ul>
-          <li><b>Paintable Sign (bg only)</b> exports only the Background layer; <b>Paintable Indicator (bg + glow)</b> also exports the Glow layer.</li>
+          <li><b>Paintable Sign (bg only)</b> exports only the Background layer; <b>Paintable Indicator (bg + glow)</b> also exports the Glow layer. Locked tiles are skipped — no sign block is generated for them.</li>
           <li><b>Add control microcontroller</b> (indicators only) wires the blocks to a group-switch microcontroller.</li>
           <li><b>Darken glow</b> and the <b>Glow brightness</b> slider make the glow layer match the game's dimmed glow rendering.</li>
           <li><b>Download XML</b> saves <code>pies_out-WxH.xml</code>; <b>Generate &amp; Copy</b> fills the text field and copies it to the clipboard; <b>Save PNG</b> exports the current canvas as an image.</li>
@@ -494,7 +496,7 @@
         <h4>Keyboard shortcuts</h4>
         <table>
           <tr><th>Key</th><th>Action</th></tr>
-          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
+          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
           <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
           <tr><td><kbd>Shift</kbd> (hold)</td><td>Temporary glow preview</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
@@ -526,6 +528,13 @@ var painting = false;
 var panning = false, panLast = {x:0, y:0};
 var shapeAnchor = null;
 var sel = null;
+var lockDragMode = false;
+function tileOfCell(cell){ return { bX: Math.floor(cell.c/9), bY: Math.floor(cell.r/9) }; }
+function isTileLocked(bX,bY){ return isPixLocked((bY*9)*S.W + bX*9); }
+function setTileLocked(bX,bY,val){
+  if(bX<0||bX>=S.wb||bY<0||bY>=S.hb) return;
+  for(var dy=0;dy<9;dy++)for(var dx=0;dx<9;dx++) S.locked[(bY*9+dy)*S.W + bX*9+dx] = val;
+}
 var cs = 8;
 var zoom = 1;
 
@@ -940,12 +949,14 @@ function colorRGB(h){
 function initLayers(){
   S.bg = new Array(S.W*S.H).fill("000000");
   S.glow = new Array(S.W*S.H).fill("000000");
+  S.locked = new Array(S.W*S.H).fill(false);
 }
+function isPixLocked(i){ return !!(S.locked && S.locked[i]); }
 function layerNow(){
   return S.glowPreview ? S.glow : S.bg;
 }
 function snap(){
-  return { bg: S.bg.slice(), glow: S.glow.slice(), palette: S.palette.slice() };
+  return { bg: S.bg.slice(), glow: S.glow.slice(), palette: S.palette.slice(), locked: S.locked.slice() };
 }
 function commit(){
   undoStack.push(snap());
@@ -957,7 +968,7 @@ function undo(){
   if(!undoStack.length) return;
   redoStack.push(snap());
   var s = undoStack.pop();
-  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice();
+  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice(); S.locked = s.locked;
   render(); scheduleExport(); refreshEditBtns();
   buildPalette(); syncColorUI();
 }
@@ -965,7 +976,7 @@ function redo(){
   if(!redoStack.length) return;
   undoStack.push(snap());
   var s = redoStack.pop();
-  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice();
+  S.bg = s.bg; S.glow = s.glow; S.palette = s.palette.slice(); S.locked = s.locked;
   render(); scheduleExport(); refreshEditBtns();
   buildPalette(); syncColorUI();
 }
@@ -1027,6 +1038,20 @@ function render(){
     ctx.fillStyle = "rgba(160,160,160,0.6)";
     for(var b=9;b<S.W;b+=9) ctx.fillRect(b*cs, 0, 2, cv.height);
     for(var b2=9;b2<S.H;b2+=9) ctx.fillRect(0, b2*cs, cv.width, 2);
+  }
+  if(S.locked){
+    var ts = 9*cs;
+    ctx.fillStyle = "rgba(255,64,64,0.22)";
+    ctx.strokeStyle = "rgba(255,96,96,0.85)";
+    ctx.lineWidth = 1;
+    for(var tbY=0;tbY<S.hb;tbY++){
+      for(var tbX=0;tbX<S.wb;tbX++){
+        if(S.locked[(tbY*9)*S.W + tbX*9]){
+          ctx.fillRect(tbX*ts, tbY*ts, ts, ts);
+          ctx.strokeRect(tbX*ts+0.5, tbY*ts+0.5, ts-1, ts-1);
+        }
+      }
+    }
   }
   if(swatchHover){
     var layH = S.glowPreview ? S.glow : S.bg;
@@ -1112,6 +1137,7 @@ function cellFromEvent(e){
 }
 
 function paintAt(cell, color){
+  if(isPixLocked(idx(cell.r, cell.c))) return;
   var lay = layerNow();
   lay[idx(cell.r, cell.c)] = color;
 }
@@ -1136,16 +1162,19 @@ function bresPixels(r0,c0,r1,c1){
 
 function floodFill(cell, color){
   var lay = layerNow();
-  var target = lay[idx(cell.r, cell.c)];
+  var start = idx(cell.r, cell.c);
+  if(isPixLocked(start)) return;
+  var target = lay[start];
   if(target === color) return;
   var queue = [cell];
-  lay[idx(cell.r, cell.c)] = color;
+  lay[start] = color;
   while(queue.length){
     var p = queue.pop();
     var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
     for(var i=0;i<around.length;i++){
       var rr = around[i][0], cc = around[i][1];
       if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+      if(isPixLocked(idx(rr,cc))) continue;
       if(lay[idx(rr,cc)] === target){
         lay[idx(rr,cc)] = color;
         queue.push({r:rr,c:cc});
@@ -1198,6 +1227,12 @@ function onPointerDown(e){
       placeText(txt, cell.r, cell.c, (e.button === 2) ? S.color2 : S.color);
       scheduleExport();
     }
+  } else if(S.tool === "lock"){
+    var tb = tileOfCell(cell);
+    commit();
+    lockDragMode = !isTileLocked(tb.bX, tb.bY);
+    setTileLocked(tb.bX, tb.bY, lockDragMode);
+    scheduleExport();
   } else if(S.tool === "line" || S.tool === "rect"){
     commit();
     shapeAnchor = { r: cell.r, c: cell.c };
@@ -1233,6 +1268,10 @@ function onPointerMove(e){
   } else if(S.tool === "select" && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
     sel = normSel(shapeAnchor.r, shapeAnchor.c, cell.r, cell.c);
+  } else if(S.tool === "lock" && painting){
+    hoverR = cell.r; hoverC = cell.c;
+    var tb = tileOfCell(cell);
+    setTileLocked(tb.bX, tb.bY, lockDragMode);
   } else if((S.tool === "line" || S.tool === "rect") && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
   }
@@ -1257,7 +1296,7 @@ function onPointerUp(e){
         var lay = layerNow();
         for(var rr=a;rr<=b;rr++){
           for(var cc=cmin;cc<=cmax;cc++){
-            if(rr===a||rr===b||cc===cmin||cc===cmax) lay[idx(rr,cc)] = color;
+            if((rr===a||rr===b||cc===cmin||cc===cmax) && !isPixLocked(idx(rr,cc))) lay[idx(rr,cc)] = color;
           }
         }
       } else if(S.tool === "line"){
@@ -1309,6 +1348,7 @@ syncRasterBtn();
 document.getElementById("btnclear").addEventListener("click", function(){
   commit();
   S.bg.fill("000000"); S.glow.fill("000000");
+  if(S.locked) S.locked.fill(false);
   sel = null;
   render(); scheduleExport();
 });
@@ -1316,10 +1356,12 @@ document.getElementById("btnclear").addEventListener("click", function(){
 function shiftLayer(dr, dc){
   var lay = layerNow();
   var copy = lay.slice();
+  var lcopy = S.locked ? S.locked.slice() : null;
   var W = S.W, H = S.H;
   for(var r = 0; r < H; r++){
     for(var c = 0; c < W; c++){
       lay[idx(r,c)] = copy[idx((r - dr + H) % H, (c - dc + W) % W)];
+      if(lcopy) S.locked[idx(r,c)] = lcopy[idx((r - dr + H) % H, (c - dc + W) % W)];
     }
   }
 }
@@ -1340,6 +1382,7 @@ function rotateCanvas(dir){
   var nW = S.H, nH = S.W;
   var nb = new Array(nW*nH).fill("000000");
   var ng = new Array(nW*nH).fill("000000");
+  var nl = new Array(nW*nH).fill(false);
   for(var r = 0; r < nH; r++){
     for(var c = 0; c < nW; c++){
       var or, oc;
@@ -1347,9 +1390,10 @@ function rotateCanvas(dir){
       else { or = c; oc = S.W - 1 - r; }
       nb[r*nW + c] = S.bg[or*S.W + oc];
       ng[r*nW + c] = S.glow[or*S.W + oc];
+      nl[r*nW + c] = !!S.locked[or*S.W + oc];
     }
   }
-  S.bg = nb; S.glow = ng;
+  S.bg = nb; S.glow = ng; S.locked = nl;
   S.W = nW; S.H = nH;
   S.wb = nW / 9; S.hb = nH / 9;
   sel = null;
@@ -1367,7 +1411,7 @@ function copyRegion(clear){
   for(var r=0;r<h;r++){
     for(var c=0;c<w;c++){
       arr.push(lay[idx(sel.r0+r, sel.c0+c)]);
-      if(clear) lay[idx(sel.r0+r, sel.c0+c)] = "000000";
+      if(clear && !isPixLocked(idx(sel.r0+r, sel.c0+c))) lay[idx(sel.r0+r, sel.c0+c)] = "000000";
     }
   }
   clipboard = { arr: arr, w: w, h: h };
@@ -1392,7 +1436,7 @@ function clipboardPaste(){
   for(var r=0;r<clipboard.h;r++){
     for(var c=0;c<clipboard.w;c++){
       var rr = r0+r, cc = c0+c;
-      if(rr>=0 && rr<S.H && cc>=0 && cc<S.W){
+      if(rr>=0 && rr<S.H && cc>=0 && cc<S.W && !isPixLocked(idx(rr,cc))){
         lay[idx(rr,cc)] = clipboard.arr[r*clipboard.w+c];
       }
     }
@@ -1415,7 +1459,7 @@ function stampGlyph(font, gi, r0, c0, color, lay){
     for(var x2=0;x2<font.w;x2++){
       if(row & (0x80 >> x2)){
         var rr2=r0+y2, cc2=c0+x2;
-        if(rr2>=0 && rr2<S.H && cc2>=0 && cc2<S.W) lay[idx(rr2,cc2)] = color;
+        if(rr2>=0 && rr2<S.H && cc2>=0 && cc2<S.W && !isPixLocked(idx(rr2,cc2))) lay[idx(rr2,cc2)] = color;
       }
     }
   }
@@ -1509,18 +1553,21 @@ function resizeCanvas(nw, nh){
   commit();
   var oldW = S.W, oldH = S.H;
   var oldBg = S.bg, oldGlow = S.glow;
+  var oldLocked = S.locked || [];
   S.wb = nw; S.hb = nh;
   S.W = nw*9; S.H = nh*9;
   var copyW = Math.min(oldW, S.W), copyH = Math.min(oldH, S.H);
   var newBg = new Array(S.W*S.H).fill("000000");
   var newGlow = new Array(S.W*S.H).fill("000000");
+  var newLocked = new Array(S.W*S.H).fill(false);
   for(var r = 0; r < copyH; r++){
     for(var c = 0; c < copyW; c++){
       newBg[r*S.W+c] = oldBg[r*oldW+c];
       newGlow[r*S.W+c] = oldGlow[r*oldW+c];
+      newLocked[r*S.W+c] = !!oldLocked[r*oldW+c];
     }
   }
-  S.bg = newBg; S.glow = newGlow;
+  S.bg = newBg; S.glow = newGlow; S.locked = newLocked;
   sel = null;
   render(); scheduleExport(); updateStatus(); syncSizeInputs();
 }
@@ -1639,7 +1686,8 @@ function serialize(){
     wb: S.wb, hb: S.hb,
     color: S.color, color2: S.color2, layer: S.layer,
     palette: S.palette, font: S.font,
-    bg: S.bg.join(""), glow: S.glow.join("")
+    bg: S.bg.join(""), glow: S.glow.join(""),
+    locked: S.locked ? S.locked.map(function(b){ return b ? "1" : "0"; }).join("") : ""
   });
 }
 function syncLayerRadio(){
@@ -1655,6 +1703,9 @@ function deserialize(json){
   S.W = wb*9; S.H = hb*9;
   S.bg = chunkStr(obj.bg || "", 6, S.W*S.H);
   S.glow = chunkStr(obj.glow || "", 6, S.W*S.H);
+  S.locked = new Array(S.W*S.H).fill(false);
+  var lockStr = typeof obj.locked === "string" ? obj.locked : "";
+  for(var li=0;li<S.W*S.H;li++) S.locked[li] = lockStr.charAt(li) === "1";
   if(obj.color) S.color = obj.color;
   if(obj.color2) S.color2 = obj.color2;
   if(obj.layer === "bg" || obj.layer === "glow") S.layer = obj.layer; else S.layer = "bg";
@@ -1761,6 +1812,7 @@ document.getElementById("filexml").addEventListener("change", function(){
       var doc = new DOMParser().parseFromString(ev.target.result, "text/xml");
       var cels = doc.getElementsByTagName("c");
       var blocks = [];
+      var others = []; /* non-paintable blocks: their tiles get locked so export skips them */
       for(var i=0;i<cels.length;i++){
         var c = cels[i];
         var d = c.getAttribute("d");
@@ -1769,14 +1821,19 @@ document.getElementById("filexml").addEventListener("change", function(){
         if(!o) continue;
         var sc = o.getAttribute("sc");
         var gc = o.getAttribute("gc");
-        var isSign = (d === "sign" || d === "sign_na") || (d === null || d === undefined) && (sc && sc.indexOf(",") >= 0);
-        if(!isSign) continue;
+        /* a nameless component only counts as a paintable sign if it carries pixel data (gc);
+           otherwise it is a plain block -> its tile gets locked */
+        var isSign = (d === "sign" || d === "sign_na") || ((d === null || d === undefined) && gc && sc && sc.indexOf(",") >= 0);
         var vp = childByName(o, "vp") || childByName(c, "vp");
         var vx = 0, vy = 0, vz = 0;
         if(vp){
           vx = parseInt(vp.getAttribute("x"),10) || 0;
           vy = parseInt(vp.getAttribute("y"),10) || 0;
           vz = parseInt(vp.getAttribute("z"),10) || 0;
+        }
+        if(!isSign){
+          if(vp) others.push({ vx: vx, vy: vy, vz: vz, r: o.getAttribute("r") });
+          continue;
         }
         blocks.push({ vx: vx, vy: vy, vz: vz, r: o.getAttribute("r"), gc: gc, gca: o.getAttribute("gca"), sc: sc, t: t });
       }
@@ -1833,8 +1890,9 @@ document.getElementById("filexml").addEventListener("change", function(){
         if(pk.vz > maxZ) maxZ = pk.vz;
       }
       var ccx = (minX+maxX)/2, ccy = (minY+maxY)/2, ccz = (minZ+maxZ)/2;
-      for(i=0;i<blocks.length;i++){
-        var pb = blocks[i];
+      var movable = blocks.concat(others);
+      for(i=0;i<movable.length;i++){
+        var pb = movable[i];
         var qx = pb.vx - ccx, qy = pb.vy - ccy, qz = pb.vz - ccz;
         pb.vx = ccx + rv[0]*qx + rv[1]*qy + rv[2]*qz;
         pb.vy = ccy + rv[3]*qx + rv[4]*qy + rv[5]*qz;
@@ -1882,6 +1940,11 @@ document.getElementById("filexml").addEventListener("change", function(){
         if(vlist.indexOf(kept[i][vertKey]) === -1) vlist.push(kept[i][vertKey]);
         if(hlist.indexOf(kept[i][horizKey]) === -1) hlist.push(kept[i][horizKey]);
       }
+      /* the canvas also grows to cover non-paintable blocks so their tiles can be locked */
+      for(i=0;i<others.length;i++){
+        if(vlist.indexOf(others[i][vertKey]) === -1) vlist.push(others[i][vertKey]);
+        if(hlist.indexOf(others[i][horizKey]) === -1) hlist.push(others[i][horizKey]);
+      }
       vlist.sort(function(a,b){return a-b;});
       hlist.sort(function(a,b){return a-b;});
       var wb = hlist.length, hb = vlist.length;
@@ -1891,10 +1954,13 @@ document.getElementById("filexml").addEventListener("change", function(){
       S.W = wb*9; S.H = hb*9;
       S.bg = new Array(S.W*S.H).fill("000000");
       S.glow = new Array(S.W*S.H).fill("000000");
+      S.locked = new Array(S.W*S.H).fill(false);
+      var occupied = {};
       for(i=0;i<kept.length;i++){
         var b = kept[i];
         var bX = hlist.indexOf(b[horizKey]);
         var bY = vlist.indexOf(b[vertKey]);
+        occupied[bX + "," + bY] = true;
         var gct = b.gc.split(",");
         var gcat = b.gca ? b.gca.split(",") : [];
         if(b.t === "1"){ gct = flipGrid(gct); if(gcat.length) gcat = flipGrid(gcat); }
@@ -1907,15 +1973,29 @@ document.getElementById("filexml").addEventListener("change", function(){
           S.glow[idx(r,c)] = decodeToken(gcat[kk] || "");
         }
       }
+      /* recompute the sign plane in the transformed frame (positions were rotated above) */
+      var pAxis = null, pVal = null;
+      if(kept.length > 1){
+        var pcnt = { vx:{}, vy:{}, vz:{} };
+        for(i=0;i<kept.length;i++){
+          for(var pa in pcnt){ var pv2 = kept[i][pa]; pcnt[pa][pv2] = (pcnt[pa][pv2] || 0) + 1; }
+        }
+        for(pa in pcnt){
+          for(var pk3 in pcnt[pa]){
+            if(pcnt[pa][pk3] === kept.length){ pAxis = pa; pVal = parseFloat(pk3); }
+          }
+        }
+      }
       for(i=0;i<blocks.length;i++){
         var xb = blocks[i];
-        if(xb[depth] !== dv) continue;
+        if(pAxis === null || xb[pAxis] !== pVal) continue;
         var done = false;
         for(var ki=0;ki<kept.length;ki++){ if(kept[ki] === xb){ done = true; break; } }
         if(done) continue;
         var bX = hlist.indexOf(xb[horizKey]);
         var bY = vlist.indexOf(xb[vertKey]);
         if(bX < 0 || bY < 0) continue;
+        occupied[bX + "," + bY] = true;
         var kr3 = (xb.r || "1,0,0,0,1,0,0,0,1").split(",").map(parseFloat);
         var b4x = kr3[6]||0, b4y = kr3[7]||0, b4z = kr3[8]||0;
         var c4x = c3y*b4z - c3z*b4y, c4y = c3z*b4x - c3x*b4z, c4z = c3x*b4y - c3y*b4x;
@@ -1947,6 +2027,22 @@ document.getElementById("filexml").addEventListener("change", function(){
           var r4 = (topSmallest ? bY : (S.hb-1-bY))*9+(8-yy4), c4b = (mirrorArr ? (wb-1-bX) : bX)*9+xx4;
           S.bg[idx(r4,c4b)] = decodeToken(gct4[kk4] || "");
           S.glow[idx(r4,c4b)] = decodeToken(gcat4[kk4] || "");
+        }
+      }
+      /* lock every tile that was not a paintable sign (non-paintable blocks and air gaps):
+         black, not paintable, and skipped on export so the vehicle keeps its original shape */
+      for(var ty2=0;ty2<hb;ty2++){
+        for(var tx2=0;tx2<wb;tx2++){
+          if(occupied[tx2 + "," + ty2]) continue;
+          var tr0 = (topSmallest ? ty2 : (S.hb-1-ty2))*9;
+          var tc0 = (mirrorArr ? (wb-1-tx2) : tx2)*9;
+          for(var ly2=0;ly2<9;ly2++){
+            for(var lx2=0;lx2<9;lx2++){
+              S.locked[idx(tr0+ly2, tc0+lx2)] = true;
+              S.bg[idx(tr0+ly2, tc0+lx2)] = "000000";
+              S.glow[idx(tr0+ly2, tc0+lx2)] = "000000";
+            }
+          }
         }
       }
       lastXmlName = fname;
@@ -2001,7 +2097,7 @@ document.getElementById("fileimport").addEventListener("change", function(){
           var hex = [data[o],data[o+1],data[o+2]].map(function(v){
             return v.toString(16).padStart(2,"0");
           }).join("").toLowerCase();
-          lay[idx(y,x)] = hex;
+          if(!isPixLocked(idx(y,x))) lay[idx(y,x)] = hex;
         }
       }
       var top = analyzePalette(data, img.width, img.height);
@@ -2077,6 +2173,7 @@ function generateXML(){
   var links = [];
   for(var bY=0; bY<hb; bY++){
     for(var bX=0; bX<wb; bX++){
+      if(S.locked && S.locked[(bY*9)*W + bX*9]) continue; /* locked tile: no sign block exported */
       var gc = [], gca = [];
       for(var y=0; y<9; y++){
         for(var x=0; x<9; x++){
@@ -2203,7 +2300,7 @@ document.addEventListener("keydown", function(e){
   }
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", s:"select", t:"text", x:"swap", g:"raster" };
+  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
   var st = map[e.key.toLowerCase()];
   if(st === "swap"){ swapColors(); e.preventDefault(); }
   else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
