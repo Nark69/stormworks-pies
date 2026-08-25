@@ -1,0 +1,10 @@
+# Local Node.js runtime
+nodejs/
+
+# Ignore everything by default
+*
+
+# Allowlist
+!pies.html
+!LICENSE
+!.gitignore
