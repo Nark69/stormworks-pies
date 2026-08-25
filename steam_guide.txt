@@ -1,0 +1,48 @@
+[h1]PIES — Paintable Indicator Editor[/h1]
+[b]PIES[/b] (Paintable Indicator Editor) is a free, open-source pixel editor built specifically for Stormworks' paintable indicator signs. Design your mosaics on a real 9-px-per-block canvas and export them as a ready-to-spawn vehicle XML — complete with a microcontroller that auto-wires itself to every sign.
+
+This guide gives a quick overview of what the editor can do and how to get started.
+
+[h2]The editor at a glance[/h2]
+The screenshot below shows the editor with the built-in test pattern loaded: twelve colored letter tiles imported from a vehicle XML, including locked tiles from non-paintable blocks, the live XML output panel on the right, and the glow layer preview.
+
+>> INSERT SCREENSHOT HERE <<
+
+[h2]Made for the game[/h2]
+[list]
+[*]Canvas is measured in blocks (9×9 pixels each), up to 100 × 100 blocks
+[*]Export produces a vehicle XML you can paste straight into the workbench — including the microcontroller block, auto-placed and auto-wired to every sign with its logic links
+[*]Supports both sign (indicator, with glow layer + logic slots) and sign_na output
+[*]Imports remember the original orientation and placement: walls stay walls after re-export
+[/list]
+
+[h2]Full editing toolkit[/h2]
+[list]
+[*]Pencil, eraser, flood fill, eyedropper, line / rectangle / circle shapes, text with four bitmap fonts, select with cut / copy / paste
+[*]Separate background and glow layers, additive "both" preview — hold Shift for a quick glow peek
+[*]Move (wrap-around shift), 90° rotate, mirror left-right / top-bottom
+[*]500-step undo/redo and keyboard shortcuts for everything
+[/list]
+
+[h2]Import from the game[/h2]
+[list]
+[*]Load any vehicle XML containing paintable sign or indicator blocks — block positions, rotations, background and glow pixel data are reconstructed so the picture matches exactly what you see in-game
+[*]Non-paintable blocks and empty spots become locked tiles (red-tinted): they cannot be painted by accident and are skipped on export, so your vehicle keeps its original shape
+[*]Unlock any tile with the Lock tool to paint there
+[/list]
+
+[h2]Convenience[/h2]
+[list]
+[*]Live XML preview, one-click copy, file download, PNG snapshot of the canvas
+[*]Projects save/load as small JSON files, plus automatic browser save
+[*]Optional glow brightness darkening for better in-game contrast
+[/list]
+
+[h2]Getting started[/h2]
+[list=1]
+[*]Download pies.html from the GitHub repository (link in the comments section below)
+[*]Open it in any browser — no install, no server, fully offline
+[*]Paint or import, then copy the XML from the right-hand panel and paste it into your vehicle in the workbench
+[/list]
+
+Single HTML file, MIT licensed. Feedback and bug reports are welcome!

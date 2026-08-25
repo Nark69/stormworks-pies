@@ -419,6 +419,7 @@
           <tr><td>Eraser</td><td><kbd>E</kbd></td><td>Paint pixels black.</td></tr>
           <tr><td>Fill</td><td><kbd>F</kbd></td><td>Flood fill the connected region of the clicked pixel with the chosen color.</td></tr>
           <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
+          <tr><td>Quick pick</td><td><kbd>Ctrl</kbd> + click</td><td>Pick a color from the canvas with any tool active, without switching tools. Left click sets the primary color, right click the secondary.</td></tr>
           <tr><td>Line</td><td><kbd>L</kbd></td><td>Click and drag to draw a straight line.</td></tr>
           <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
           <tr><td>Circle</td><td><kbd>C</kbd></td><td>Click and hold to set the center, drag out and release to draw a circle outline with that radius.</td></tr>
@@ -472,7 +473,7 @@
         <h4>Import</h4>
         <ul>
           <li><b>Image</b> — paints a picture onto the active layer. <b>Stretch to canvas</b> fits the image to the whole project; <b>Expand canvas to fit</b> grows the project in whole blocks from the top-left (it warns if the result exceeds 100&times;100 blocks). Any format your browser can decode works (PNG, JPEG, GIF, WebP, BMP, AVIF); GIFs use the first frame. After an import the palette is rebuilt from the image's most frequent, distinct colors.</li>
-          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions, the <code>gc</code> (background) and <code>gca</code> (glow) pixel data, and applies each block's rotation (<code>r</code>) so the imported image matches how it is displayed in-game. Non-paintable blocks and empty spots become locked tiles (red); unlock them with the Lock tool to paint there.</li>
+          <li><b>XML</b> — rebuilds the project from a Stormworks vehicle XML that contains paintable sign or indicator blocks. It reads the block positions, the <code>gc</code> (background) and <code>gca</code> (glow) pixel data, and applies each block's rotation (<code>r</code>) so the imported image matches how it is displayed in-game. Non-paintable blocks and empty spots become locked tiles (red); unlock them with the Lock tool to paint there. The original orientation (wall, ceiling or floor) and placement are remembered and reproduced on export; rotating, mirroring or resizing the canvas afterwards returns to a centered floor mosaic.</li>
         </ul>
       </div>
 
@@ -1221,6 +1222,14 @@ function onPointerDown(e){
   }
   var cell = cellFromEvent(e);
   if(!cell) return;
+  if(e.ctrlKey && e.button !== 1){
+    /* ctrl-click picks the color under the cursor without switching tools */
+    var pickedC = layerNow()[idx(cell.r, cell.c)];
+    if(e.button === 2) S.color2 = pickedC; else S.color = pickedC;
+    syncColorUI();
+    render();
+    return;
+  }
   cv.setPointerCapture(e.pointerId);
   painting = true;
   shapeAnchor = null;
@@ -1373,6 +1382,7 @@ btnRaster.addEventListener("click", function(){
 syncRasterBtn();
 document.getElementById("btnclear").addEventListener("click", function(){
   commit();
+  S.importXform = null;
   S.bg.fill("000000"); S.glow.fill("000000");
   if(S.locked) S.locked.fill(false);
   sel = null;
@@ -1423,6 +1433,7 @@ function rotateCanvas(dir){
   S.W = nW; S.H = nH;
   S.wb = nW / 9; S.hb = nH / 9;
   sel = null;
+  S.importXform = null;
   render(); scheduleExport(); syncSizeInputs(); updateStatus();
 }
 document.getElementById("btnrotcw").addEventListener("click", function(){ rotateCanvas(1); });
@@ -1440,6 +1451,7 @@ function mirrorCanvas(horizontal){
   }
   S.bg = nb; S.glow = ng; S.locked = nl;
   sel = null;
+  S.importXform = null;
   render(); scheduleExport();
 }
 document.getElementById("btnmirh").addEventListener("click", function(){ mirrorCanvas(true); });
@@ -1594,6 +1606,7 @@ function syncSizeInputs(){
 function resizeCanvas(nw, nh){
   if(nw === S.wb && nh === S.hb) return;
   commit();
+  S.importXform = null;
   var oldW = S.W, oldH = S.H;
   var oldBg = S.bg, oldGlow = S.glow;
   var oldLocked = S.locked || [];
@@ -1730,7 +1743,8 @@ function serialize(){
     color: S.color, color2: S.color2, layer: S.layer,
     palette: S.palette, font: S.font,
     bg: S.bg.join(""), glow: S.glow.join(""),
-    locked: S.locked ? S.locked.map(function(b){ return b ? "1" : "0"; }).join("") : ""
+    locked: S.locked ? S.locked.map(function(b){ return b ? "1" : "0"; }).join("") : "",
+    xform: S.importXform || null
   });
 }
 function syncLayerRadio(){
@@ -1749,6 +1763,8 @@ function deserialize(json){
   S.locked = new Array(S.W*S.H).fill(false);
   var lockStr = typeof obj.locked === "string" ? obj.locked : "";
   for(var li=0;li<S.W*S.H;li++) S.locked[li] = lockStr.charAt(li) === "1";
+  S.importXform = (obj.xform && typeof obj.xform.rv === "string" && obj.xform.rv.split(",").length === 9)
+    ? { rv: obj.xform.rv, cx: +obj.xform.cx, cy: +obj.xform.cy, cz: +obj.xform.cz } : null;
   if(obj.color) S.color = obj.color;
   if(obj.color2) S.color2 = obj.color2;
   if(obj.layer === "bg" || obj.layer === "glow") S.layer = obj.layer; else S.layer = "bg";
@@ -1934,6 +1950,8 @@ document.getElementById("filexml").addEventListener("change", function(){
         if(pk.vz > maxZ) maxZ = pk.vz;
       }
       var ccx = (minX+maxX)/2, ccy = (minY+maxY)/2, ccz = (minZ+maxZ)/2;
+      /* remember the original placement and orientation so export reproduces walls/ceilings instead of flattening to a floor */
+      S.importXform = { rv: rv.join(","), cx: ccx, cy: ccy, cz: ccz };
       var movable = blocks.concat(others);
       for(i=0;i<movable.length;i++){
         var pb = movable[i];
@@ -2222,8 +2240,36 @@ function generateXML(){
   var f = parseFloat(document.getElementById("darkness").value) || 1;
   var out2 = [];
   out2.push('<?xml version="1.0" encoding="UTF-8"?><vehicle data_version="3" bodies_id="0"><authors/><bodies><body unique_id="0"><components>');
+  /* imported build: reproduce the original plane (wall/ceiling/floor) and placement instead of a centered floor mosaic */
+  var X = (S.importXform && typeof S.importXform.rv === "string") ? S.importXform : null;
+  var MT = null;
+  if(X){
+    var M = X.rv.split(",").map(parseFloat);
+    MT = [M[0],M[3],M[6], M[1],M[4],M[7], M[2],M[5],M[8]]; /* inverse rotation = transpose */
+  }
+  function xfTile(bX, bY){
+    /* canvas row 0 is the top row (= max z in the canonical frame); dy is always 0 (tile centers lie in the plane) */
+    var dx = bX - (wb-1)/2, dz = (hb-1)/2 - bY;
+    return [
+      Math.round(X.cx + MT[0]*dx + MT[2]*dz),
+      Math.round(X.cy + MT[3]*dx + MT[5]*dz),
+      Math.round(X.cz + MT[6]*dx + MT[8]*dz)
+    ];
+  }
   var mx = -trunc(wb/2), mz = -trunc(hb/2) - 1; /* below the bottom-left sign block: clear of the grid for every aspect ratio */
   if(useMcu){
+    if(X){
+      var bx0 = null, bz0 = null;
+      for(var pbY=0; pbY<hb; pbY++){
+        for(var pbX=0; pbX<wb; pbX++){
+          if(S.locked && S.locked[(pbY*9)*W + pbX*9]) continue;
+          var pp = xfTile(pbX, pbY);
+          if(bx0 === null || pp[0] < bx0) bx0 = pp[0];
+          if(bz0 === null || pp[2] < bz0) bz0 = pp[2];
+        }
+      }
+      if(bx0 !== null){ mx = bx0 - 1; mz = bz0 - 1; }
+    }
     out2.push(MCSTART + 'x="' + mx + '" z="' + mz + '"' + MCEND);
   }
   var lx = mx + 1, lz = mz;
@@ -2240,21 +2286,29 @@ function generateXML(){
           if(type === "indicator") gca.push(encodeColor(S.glow[i], true, darkenOn, f));
         }
       }
-      var px = bX - trunc(wb/2), pz = (hb-1-bY) - trunc(hb/2);
-      var vp = "<vp";
+      var vp = "<vp", px = 0, py = 0, pz = 0, rAttr = "1,0,0,0,1,0,0,0,1";
+      if(X){
+        var p3 = xfTile(bX, bY);
+        px = p3[0]; py = p3[1]; pz = p3[2];
+        rAttr = X.rv; /* original dominant orientation: keeps re-imports in the same frame */
+      } else {
+        px = bX - trunc(wb/2); pz = (hb-1-bY) - trunc(hb/2);
+      }
       if(px !== 0) vp += ' x="' + px + '"';
+      if(py !== 0) vp += ' y="' + py + '"';
       if(pz !== 0) vp += ' z="' + pz + '"';
       vp += "/>";
       var slot;
       if(type === "indicator"){
         slot = useMcu ? '<slot editor_connected="1"/>' : '<slot/>';
-        out2.push('<c d="sign"><o r="1,0,0,0,1,0,0,0,1" sc="6" gc="' + gc.join(",") + '" gca="' + gca.join(",") + '">' + vp + '<logic_slots>' + slot + '</logic_slots></o></c>');
+        out2.push('<c d="sign"><o r="' + rAttr + '" sc="6" gc="' + gc.join(",") + '" gca="' + gca.join(",") + '">' + vp + '<logic_slots>' + slot + '</logic_slots></o></c>');
       } else {
-        out2.push('<c d="sign_na"><o r="1,0,0,0,1,0,0,0,1" sc="6" gc="' + gc.join(",") + '">' + vp + '<logic_slots><slot/></logic_slots></o></c>');
+        out2.push('<c d="sign_na"><o r="' + rAttr + '" sc="6" gc="' + gc.join(",") + '">' + vp + '<logic_slots><slot/></logic_slots></o></c>');
       }
       if(useMcu){
-        links.push('<logic_node_link><voxel_pos_0 x="' + lx + '" z="' + lz + '"/><voxel_pos_1 x="' + px + '" z="' + pz + '"/></logic_node_link>');
-        links.push('<logic_node_link type="4"><voxel_pos_0 x="' + (lx-1) + '" z="' + (lz+1) + '"/><voxel_pos_1 x="' + px + '" z="' + pz + '"/></logic_node_link>');
+        var pyA = (X && py !== 0) ? ' y="' + py + '"' : "";
+        links.push('<logic_node_link><voxel_pos_0 x="' + lx + '" z="' + lz + '"/><voxel_pos_1 x="' + px + '"' + pyA + ' z="' + pz + '"/></logic_node_link>');
+        links.push('<logic_node_link type="4"><voxel_pos_0 x="' + (lx-1) + '" z="' + (lz+1) + '"/><voxel_pos_1 x="' + px + '"' + pyA + ' z="' + pz + '"/></logic_node_link>');
       }
     }
   }
