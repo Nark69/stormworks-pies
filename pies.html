@@ -217,9 +217,7 @@
     <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
     <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
     <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
-    <button class="tool" id="btnclear" title="Clear all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
-    <h2>Move</h2>
-    <div style="display:flex;gap:4px">
+     <div style="display:flex;gap:4px">
       <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
       <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
     </div>
@@ -233,6 +231,7 @@
       <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
       <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
     </div>
+    <button class="tool" id="btnclear" title="Clear all" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
   </div>
 
   <div class="center">
@@ -308,7 +307,7 @@
     </section>
 
     <section class="layers">
-      <h3>Glow<span class="q">?<span class="tip">The background shows while the block is off, the glow image when toggled on via logic. Hold <kbd>Shift</kbd> for a temporary "on" preview.</span></span></h3>
+      <h3>Glow<span class="q">?<span class="tip">The background shows while the block is off, the glow image when toggled on via logic.</span></span></h3>
       <div class="row">
         <label><input type="radio" name="layer" value="bg" checked> Background (off)</label>
         <label><input type="radio" name="layer" value="glow"> Glow (on)</label>
@@ -332,6 +331,11 @@
           <option value="f8c">8x8 Micro</option>
           <option value="f8d">8x8 Classic</option>
         </select>
+      </div>
+      <div class="row">
+        <span style="font-size:12px;color:var(--dim)">Spacing</span>
+        <input type="number" id="spacinginp" value="0" min="-8" max="32" step="1" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px;width:56px">
+        <span style="font-size:12px;color:var(--dim)">px</span>
       </div>
       <textarea id="textinput" rows="3" placeholder="Type text…"></textarea>
     </section>
@@ -420,7 +424,7 @@
           <tr><td>Fill</td><td><kbd>F</kbd></td><td>Flood fill the connected region of the clicked pixel with the chosen color.</td></tr>
           <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
           <tr><td>Quick pick</td><td><kbd>Ctrl</kbd> + click</td><td>Pick a color from the canvas with any tool active, without switching tools. Left click sets the primary color, right click the secondary.</td></tr>
-          <tr><td>Line</td><td><kbd>L</kbd></td><td>Click and drag to draw a straight line.</td></tr>
+          <tr><td>Line</td><td><kbd>L</kbd> <kbd>Shift</kbd></td><td>Click and drag to draw a straight line. Hold Shift to snap the angle to 45° increments.</td></tr>
           <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
           <tr><td>Circle</td><td><kbd>C</kbd></td><td>Click and hold to set the center, drag out and release to draw a circle outline with that radius.</td></tr>
           <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
@@ -454,7 +458,7 @@
         <h4>Glow (layers)</h4>
         <ul>
           <li><b>Background (off)</b> and <b>Glow (on)</b> select the active drawing layer; <b>Show both</b> blends both layers additively for visualization (it does not change the layer you draw on).</li>
-          <li>Holding <kbd>Shift</kbd> gives a temporary Glow-layer preview.</li>
+          <li>Use the keyboard shortcuts in the table above for quick access.</li>
           <li><b>Background → Glow</b> / <b>Glow → Background</b> copy one layer onto the other.</li>
         </ul>
       </div>
@@ -504,7 +508,6 @@
           <tr><th>Key</th><th>Action</th></tr>
           <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
           <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
-          <tr><td><kbd>Shift</kbd> (hold)</td><td>Temporary glow preview</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
           <tr><td><kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd></td><td>Cut / Copy / Paste selection</td></tr>
         </table>
@@ -521,7 +524,7 @@ var S = {
   bg: null, glow: null,
   color: "ffffff", color2: "ff0000",
   palette: null,
-  font: "f8",
+  font: "f8", spacing: 0,
   tool: "pen", layer: "bg", glowPreview: false, showGrid: true,
 };
 var cv = document.getElementById("cv");
@@ -1305,6 +1308,14 @@ function onPointerMove(e){
     setTileLocked(tb.bX, tb.bY, lockDragMode);
   } else if((S.tool === "line" || S.tool === "rect" || S.tool === "circle") && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
+    if(S.tool === "line" && e.shiftKey){
+      var dr = hoverR - shapeAnchor.r, dc = hoverC - shapeAnchor.c;
+      var dist = Math.hypot(dr, dc);
+      var ang = Math.atan2(dr, dc);
+      var snapped = Math.round(ang / (Math.PI/4)) * (Math.PI/4);
+      hoverR = Math.round(shapeAnchor.r + dist * Math.sin(snapped));
+      hoverC = Math.round(shapeAnchor.c + dist * Math.cos(snapped));
+    }
   }
   render();
 }
@@ -1520,17 +1531,19 @@ function stampGlyph(font, gi, r0, c0, color, lay){
   }
 }
 function textExtent(txt, font){
+  var adv = font.adv + S.spacing;
   var lines = txt.split("\n");
   var w = 0;
   for(var i=0;i<lines.length;i++){
-    var lw = lines[i].length * font.adv;
-    if(lines[i].length > 0) lw = (lines[i].length - 1) * font.adv + font.w;
+    var lw = lines[i].length * adv;
+    if(lines[i].length > 0) lw = (lines[i].length - 1) * adv + font.w;
     if(lw > w) w = lw;
   }
   return { w: w, h: lines.length * font.h };
 }
 function placeText(txt, r0, c0, color){
   var font = fontInfo(S.font);
+  var adv = font.adv + S.spacing;
   var lay = layerNow();
   var lines = txt.split("\n");
   var cy = r0;
@@ -1541,13 +1554,17 @@ function placeText(txt, r0, c0, color){
       if(ch >= 32 && ch <= 126){
         stampGlyph(font, (ch - 32) * font.pitch, cy, cx, color, lay);
       }
-      cx += font.adv;
+      cx += adv;
     }
     cy += font.h;
   }
 }
 document.getElementById("fontsel").addEventListener("change", function(){
   S.font = this.value;
+  render();
+});
+document.getElementById("spacinginp").addEventListener("input", function(){
+  S.spacing = parseInt(this.value) || 0;
   render();
 });
 
@@ -1741,7 +1758,7 @@ function serialize(){
     v: 1,
     wb: S.wb, hb: S.hb,
     color: S.color, color2: S.color2, layer: S.layer,
-    palette: S.palette, font: S.font,
+    palette: S.palette, font: S.font, spacing: S.spacing,
     bg: S.bg.join(""), glow: S.glow.join(""),
     locked: S.locked ? S.locked.map(function(b){ return b ? "1" : "0"; }).join("") : "",
     xform: S.importXform || null
@@ -1770,7 +1787,10 @@ function deserialize(json){
   if(obj.layer === "bg" || obj.layer === "glow") S.layer = obj.layer; else S.layer = "bg";
   if(Array.isArray(obj.palette) && obj.palette.length > 0) S.palette = obj.palette.slice();
   if(obj.font === "f8" || obj.font === "f8b" || obj.font === "f8c" || obj.font === "f8d") S.font = obj.font; else S.font = "f8";
-  document.getElementById("fontsel").value = S.font;
+  S.spacing = (typeof obj.spacing === "number") ? Math.max(-8, Math.min(obj.spacing, 32)) : 0;
+document.getElementById("fontsel").value = S.font;
+document.getElementById("spacinginp").value = S.spacing;
+  document.getElementById("spacinginp").value = S.spacing;
   S.glowPreview = (S.layer === "glow");
   syncLayerRadio();
   syncColorUI();
@@ -2420,16 +2440,6 @@ document.addEventListener("keydown", function(e){
 document.addEventListener("keydown", function(e){
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  if(e.shiftKey && !downKeys.Shift){
-    if(!S.glowPreview){ S.glowPreview = true; downKeys.Shift = true; render(); }
-  }
-});
-document.addEventListener("keyup", function(e){
-  if(e.key === "Shift" && downKeys.Shift){
-    downKeys.Shift = false;
-    S.glowPreview = (S.layer === "glow");
-    render();
-  }
 });
 
 window.addEventListener("resize", function(){ render(); });
