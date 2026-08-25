@@ -24,7 +24,7 @@
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
 -->
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -129,9 +129,8 @@
   }
   .q:hover .tip{display:block}
   .q .tip code{background:var(--panel2); padding:1px 4px; border-radius:4px; color:#bfe0b0}
-  .q .tip kbd{background:var(--panel2)}
-  .range{width:100%}
-  kbd{background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:0 4px; font-size:11px}
+.q .tip kbd{background:var(--panel2)}
+
   #splash{
     position:fixed; inset:0; z-index:1000; background:var(--bg);
     display:flex; align-items:center; justify-content:center;
@@ -208,6 +207,7 @@
     <button class="tool" data-tool="picker" title="Eyedropper (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 9-8.414 8.414A2 2 0 0 0 3 18.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 3.828 21h1.344a2 2 0 0 0 1.414-.586L15 12"/><path d="m18 9 .4.4a1 1 0 1 1-3 3l-3.8-3.8a1 1 0 1 1 3-3l.4.4 3.4-3.4a1 1 0 1 1 3 3z"/><path d="m2 22 .414-.414"/></svg></button>
     <button class="tool" data-tool="line" title="Line (L)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 2 22"/></svg></button>
     <button class="tool" data-tool="rect" title="Rectangle (R)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/></svg></button>
+    <button class="tool" data-tool="circle" title="Circle (C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/></svg></button>
     <button class="tool" data-tool="text" title="Text (T)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"/><path d="M4 7V5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2"/><path d="M9 20h6"/></svg></button>
     <button class="tool" data-tool="select" title="Select region (S)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 2v14a2 2 0 0 0 2 2h14"/><path d="M18 22V8a2 2 0 0 0-2-2H2"/></svg></button>
     <button class="tool" id="btncut" title="Cut selection (Ctrl+X)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></button>
@@ -228,6 +228,10 @@
       <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
       <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
       <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
+      <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
     </div>
   </div>
 
@@ -349,7 +353,7 @@
       <div class="row"><span style="font-size:12px;color:var(--dim)">Glow brightness</span></div>
       <input type="range" class="range" id="darkness" min="0.05" max="1" step="0.05" value="0.55">
       <div class="row" style="margin-top:8px">
-        <button class="btn" id="btndl">Download XML</button>
+        <button class="btn" id="btndl">Export XML</button>
         <button class="btn" id="btngen">Generate &amp; Copy</button>
       </div>
       <textarea id="out" readonly placeholder="The XML will appear here after generating …"></textarea>
@@ -417,6 +421,7 @@
           <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
           <tr><td>Line</td><td><kbd>L</kbd></td><td>Click and drag to draw a straight line.</td></tr>
           <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
+          <tr><td>Circle</td><td><kbd>C</kbd></td><td>Click and hold to set the center, drag out and release to draw a circle outline with that radius.</td></tr>
           <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
           <tr><td>Select</td><td><kbd>S</kbd></td><td>Drag to select a region, then use Cut / Copy / Paste. Right click deselects.</td></tr>
           <tr><td>Lock tile</td><td><kbd>K</kbd></td><td>Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a red tint, cannot be painted and are skipped on XML export.</td></tr>
@@ -430,7 +435,7 @@
           <li><b>Undo / Redo</b> (<kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd>) — every stroke or action is one undo step.</li>
           <li><b>Cut / Copy / Paste</b> (<kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd>) — operate on the current selection; paste inserts the copied region.</li>
           <li><b>Clear all</b> — empties both the Background and the Glow layer.</li>
-          <li><b>Move</b> — the arrow buttons shift the active layer by one pixel, wrapping around the edges.</li>
+          <li><b>Move</b> — the arrow buttons shift the active layer by one pixel, wrapping around the edges. The rotate buttons turn the whole canvas by 90°; the mirror buttons flip it left-right or top-bottom.</li>
         </ul>
       </div>
 
@@ -477,7 +482,7 @@
           <li><b>Paintable Sign (bg only)</b> exports only the Background layer; <b>Paintable Indicator (bg + glow)</b> also exports the Glow layer. Locked tiles are skipped — no sign block is generated for them.</li>
           <li><b>Add control microcontroller</b> (indicators only) wires the blocks to a group-switch microcontroller.</li>
           <li><b>Darken glow</b> and the <b>Glow brightness</b> slider make the glow layer match the game's dimmed glow rendering.</li>
-          <li><b>Download XML</b> saves <code>pies_out-WxH.xml</code>; <b>Generate &amp; Copy</b> fills the text field and copies it to the clipboard; <b>Save PNG</b> exports the current canvas as an image.</li>
+          <li><b>Export XML</b> saves <code>pies_out-WxH.xml</code>; <b>Generate &amp; Copy</b> fills the text field and copies it to the clipboard; <b>Save PNG</b> exports the current canvas as an image.</li>
         </ul>
         <p class="dim">Using the export in-game: place the file in <code>%appdata%/Stormworks/data/vehicles/</code>, load it in Stormworks as a vehicle, and copy the blocks with the in-game selection tool.</p>
       </div>
@@ -496,7 +501,7 @@
         <h4>Keyboard shortcuts</h4>
         <table>
           <tr><th>Key</th><th>Action</th></tr>
-          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
+          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
           <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
           <tr><td><kbd>Shift</kbd> (hold)</td><td>Temporary glow preview</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
@@ -1069,6 +1074,9 @@ function render(){
         (Math.abs(c1-c0)+1)*cs-2, (Math.abs(r1-r0)+1)*cs-2);
     } else if(S.tool === "line"){
       ctx.beginPath(); ctx.moveTo(c0*cs+cs/2, r0*cs+cs/2); ctx.lineTo(c1*cs+cs/2, r1*cs+cs/2); ctx.stroke();
+    } else if(S.tool === "circle"){
+      var crad = Math.round(Math.hypot(r1-r0, c1-c0));
+      ctx.beginPath(); ctx.arc(c0*cs+cs/2, r0*cs+cs/2, crad*cs, 0, Math.PI*2); ctx.stroke();
     }
     ctx.lineWidth = 1;
   }
@@ -1160,6 +1168,20 @@ function bresPixels(r0,c0,r1,c1){
   return out;
 }
 
+/* midpoint circle outline around center (r0,c0) with radius rad */
+function circlePixels(r0,c0,rad){
+  var out = [];
+  var x = rad, y = 0, err = 1 - rad;
+  while(x >= y){
+    out.push([r0+y,c0+x],[r0+x,c0+y],[r0+x,c0-y],[r0+y,c0-x],
+             [r0-y,c0-x],[r0-x,c0-y],[r0-x,c0+y],[r0-y,c0+x]);
+    y++;
+    if(err < 0) err += 2*y + 1;
+    else { x--; err += 2*(y - x) + 1; }
+  }
+  return out;
+}
+
 function floodFill(cell, color){
   var lay = layerNow();
   var start = idx(cell.r, cell.c);
@@ -1233,7 +1255,7 @@ function onPointerDown(e){
     lockDragMode = !isTileLocked(tb.bX, tb.bY);
     setTileLocked(tb.bX, tb.bY, lockDragMode);
     scheduleExport();
-  } else if(S.tool === "line" || S.tool === "rect"){
+  } else if(S.tool === "line" || S.tool === "rect" || S.tool === "circle"){
     commit();
     shapeAnchor = { r: cell.r, c: cell.c };
 
@@ -1268,11 +1290,11 @@ function onPointerMove(e){
   } else if(S.tool === "select" && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
     sel = normSel(shapeAnchor.r, shapeAnchor.c, cell.r, cell.c);
-  } else if(S.tool === "lock" && painting){
+  } else if(S.tool === "lock"){
     hoverR = cell.r; hoverC = cell.c;
     var tb = tileOfCell(cell);
     setTileLocked(tb.bX, tb.bY, lockDragMode);
-  } else if((S.tool === "line" || S.tool === "rect") && shapeAnchor){
+  } else if((S.tool === "line" || S.tool === "rect" || S.tool === "circle") && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
   }
   render();
@@ -1285,11 +1307,10 @@ function onPointerUp(e){
         hoverR >= 0 ? hoverR : shapeAnchor.r, hoverC >= 0 ? hoverC : shapeAnchor.c);
       shapeAnchor = null;
     }
-  } else if(S.tool === "line" || S.tool === "rect"){
+  } else if(S.tool === "line" || S.tool === "rect" || S.tool === "circle"){
     if(shapeAnchor){
       var r0=shapeAnchor.r,c0=shapeAnchor.c,r1=hoverR,c1=hoverC;
       var color = (e.button === 2) ? S.color2 : S.color;
-      if(S.tool === "eraser") color = "000000";
       if(S.tool === "rect"){
         commit();
         var a=Math.min(r0,r1), b=Math.max(r0,r1), cmin=Math.min(c0,c1), cmax=Math.max(c0,c1);
@@ -1303,6 +1324,11 @@ function onPointerUp(e){
         commit();
         var pts = bresPixels(r0,c0,r1,c1);
         for(var i=0;i<pts.length;i++) paintAt({r:pts[i][0],c:pts[i][1]}, color);
+      } else if(S.tool === "circle"){
+        commit();
+        var rad = Math.round(Math.hypot(r1-r0, c1-c0));
+        var cpts = circlePixels(r0, c0, rad);
+        for(var ci=0;ci<cpts.length;ci++) paintAt({r:cpts[ci][0],c:cpts[ci][1]}, color);
       }
       shapeAnchor = null;
     }
@@ -1401,6 +1427,23 @@ function rotateCanvas(dir){
 }
 document.getElementById("btnrotcw").addEventListener("click", function(){ rotateCanvas(1); });
 document.getElementById("btnrotccw").addEventListener("click", function(){ rotateCanvas(-1); });
+
+function mirrorCanvas(horizontal){
+  commit();
+  var nb = new Array(S.W*S.H), ng = new Array(S.W*S.H), nl = new Array(S.W*S.H);
+  for(var r = 0; r < S.H; r++){
+    for(var c = 0; c < S.W; c++){
+      var sr = horizontal ? r : S.H-1-r, sc = horizontal ? S.W-1-c : c;
+      var i = r*S.W + c, si = sr*S.W + sc;
+      nb[i] = S.bg[si]; ng[i] = S.glow[si]; nl[i] = !!S.locked[si];
+    }
+  }
+  S.bg = nb; S.glow = ng; S.locked = nl;
+  sel = null;
+  render(); scheduleExport();
+}
+document.getElementById("btnmirh").addEventListener("click", function(){ mirrorCanvas(true); });
+document.getElementById("btnmirv").addEventListener("click", function(){ mirrorCanvas(false); });
 
 var clipboard = null;
 function copyRegion(clear){
@@ -1745,6 +1788,7 @@ document.getElementById("fileload").addEventListener("change", function(){
       deserialize(ev.target.result);
       try{ localStorage.setItem(SAVE_KEY, ev.target.result); }catch(e){}
     }catch(err){
+      console.error(err);
       alert("Could not load project file.");
     }
   };
@@ -1961,7 +2005,19 @@ document.getElementById("filexml").addEventListener("change", function(){
         var bX = hlist.indexOf(b[horizKey]);
         var bY = vlist.indexOf(b[vertKey]);
         occupied[bX + "," + bY] = true;
-        var gct = b.gc.split(",");
+        var gct = b.gc ? b.gc.split(",") : [];
+        if(!gct.length){
+          /* sign block without pixel data: fall back to a color from sc, else the default fill */
+          var fill0 = "3a5e6e";
+          if(b.sc){
+            var scp0 = String(b.sc).split(",");
+            for(var si0=1;si0<scp0.length;si0++){
+              var tok0 = String(scp0[si0]).trim().toLowerCase();
+              if(/^[0-9a-f]{6}$/.test(tok0)){ fill0 = tok0; break; }
+            }
+          }
+          for(var fi0=0;fi0<81;fi0++) gct[fi0] = fill0;
+        }
         var gcat = b.gca ? b.gca.split(",") : [];
         if(b.t === "1"){ gct = flipGrid(gct); if(gcat.length) gcat = flipGrid(gcat); }
         if(b.mirror) gct = flipGrid(gct);
@@ -2048,6 +2104,7 @@ document.getElementById("filexml").addEventListener("change", function(){
       lastXmlName = fname;
       render(); updateStatus(); scheduleExport(); syncSizeInputs();
     }catch(err){
+      console.error(err);
       alert("Could not parse the XML.");
     }
   };
@@ -2300,7 +2357,7 @@ document.addEventListener("keydown", function(e){
   }
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
+  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
   var st = map[e.key.toLowerCase()];
   if(st === "swap"){ swapColors(); e.preventDefault(); }
   else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
