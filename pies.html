@@ -67,6 +67,7 @@
     border-radius:8px; padding:7px 12px; cursor:pointer; font-size:13px;
   }
   .btn:hover{border-color:var(--acc)}
+.btn.active{background:#263f33; color:#bfe0b0; border-color:#bfe0b0}
   .btn:disabled{opacity:.4; cursor:default}
   .btn.acc{background:#263f33; border-color:#bfe0b0}
   .center{flex:1; display:flex; flex-direction:column; min-width:0}
@@ -83,6 +84,10 @@
   .panel{
     width:300px; background:var(--panel); border-left:1px solid var(--line);
     padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;
+  }
+  .panelr{
+    width:56px; background:var(--panel); border-left:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 4px; overflow-y:auto;
   }
   section{border:1px solid var(--line); border-radius:10px; background:var(--panel2); padding:10px}
   section h3{margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); font-weight:600; position:relative}
@@ -202,7 +207,6 @@
 <main>
   <div class="toolcol">
     <button class="tool active" data-tool="pen" title="Pencil (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
-    <button class="tool" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21"/><path d="m5.082 11.09 8.828 8.828"/></svg></button>
     <button class="tool" data-tool="fill" title="Fill (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 7 6 2"/><path d="M18.992 12H2.041"/><path d="M21.145 18.38A3.34 3.34 0 0 1 20 16.5a3.3 3.3 0 0 1-1.145 1.88c-.575.46-.855 1.02-.855 1.595A2 2 0 0 0 20 22a2 2 0 0 0 2-2.025c0-.58-.285-1.13-.855-1.595"/><path d="m8.5 4.5 2.148-2.148a1.205 1.205 0 0 1 1.704 0l7.296 7.296a1.205 1.205 0 0 1 0 1.704l-7.592 7.592a3.615 3.615 0 0 1-5.112 0l-3.888-3.888a3.615 3.615 0 0 1 0-5.112L5.67 7.33"/></svg></button>
     <button class="tool" data-tool="picker" title="Eyedropper (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 9-8.414 8.414A2 2 0 0 0 3 18.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 3.828 21h1.344a2 2 0 0 0 1.414-.586L15 12"/><path d="m18 9 .4.4a1 1 0 1 1-3 3l-3.8-3.8a1 1 0 1 1 3-3l.4.4 3.4-3.4a1 1 0 1 1 3 3z"/><path d="m2 22 .414-.414"/></svg></button>
     <button class="tool" data-tool="line" title="Line (L)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 2 22"/></svg></button>
@@ -214,25 +218,6 @@
     <button class="tool" id="btncopyc" title="Copy selection (Ctrl+C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
     <button class="tool" id="btnpaste" title="Paste selection (Ctrl+V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
     <button class="tool" id="btnchecker" title="Fill selection with checker pattern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" fill="currentColor" opacity=".4"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8" fill="currentColor" opacity=".4"/></svg></button>
-    <button class="tool" data-tool="lock" title="Lock / unlock tile (K). Locked tiles cannot be painted and are skipped on XML export. XML import locks tiles that were not paintable signs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></button>
-    <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
-    <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
-    <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
-     <div style="display:flex;gap:4px">
-      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
-      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
-    </div>
-    <div class="dpad">
-      <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
-      <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
-      <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
-      <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
-    </div>
-    <div style="display:flex;gap:4px">
-      <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
-      <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
-    </div>
-    <button class="tool" id="btnclear" title="Clear all" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
   </div>
 
   <div class="center">
@@ -256,6 +241,28 @@
       </span>
       <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset app and clear all browser data</button></span>
     </div>
+  </div>
+
+  <div class="panelr">
+    <button class="tool" data-tool="lock" title="Lock / unlock tile (K). Locked tiles cannot be painted and are skipped on XML export. XML import locks tiles that were not paintable signs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></button>
+    <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
+    <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
+    <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+     <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </div>
+    <div class="dpad">
+      <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+      <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
+      <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
+      <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
+    </div>
+    <button class="tool" id="btnclear" title="Clear all" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
   </div>
 
   <aside class="panel">
@@ -301,6 +308,7 @@
         <input type="color" id="colpicker" value="#ffffff" class="cmini" title="Primary color (left click)">
         <input type="color" id="colpicker2" value="#ff0000" class="cmini" title="Secondary color (right click)">
         <button class="btn" id="btnswap" title="Swap colors (X)">⇄</button>
+        <button class="btn" id="btncheckerfill" title="Toggle checker pattern fill">⊞</button>
       </div>
       <div class="row" style="margin-top:6px;justify-content:flex-end">
         <span id="pixrgb">–</span>
@@ -421,13 +429,12 @@
         <table>
           <tr><th>Tool</th><th>Shortcut</th><th>Description</th></tr>
           <tr><td>Pencil</td><td><kbd>P</kbd></td><td>Paint pixels. Left click uses the primary color, right click the secondary color. Drag to paint a continuous line.</td></tr>
-          <tr><td>Eraser</td><td><kbd>E</kbd></td><td>Paint pixels black.</td></tr>
           <tr><td>Fill</td><td><kbd>F</kbd></td><td>Flood fill the connected region of the clicked pixel with the chosen color.</td></tr>
           <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
           <tr><td>Quick pick</td><td><kbd>Ctrl</kbd> + click</td><td>Pick a color from the canvas with any tool active, without switching tools. Left click sets the primary color, right click the secondary.</td></tr>
           <tr><td>Line</td><td><kbd>L</kbd> <kbd>Shift</kbd></td><td>Click and drag to draw a straight line. Hold Shift to snap the angle to 45° increments.</td></tr>
-          <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
-          <tr><td>Circle</td><td><kbd>C</kbd></td><td>Click and hold to set the center, drag out and release to draw a circle outline with that radius.</td></tr>
+          <tr><td>Rectangle</td><td><kbd>R</kbd> <kbd>Alt</kbd></td><td>Click and drag to draw a rectangle outline. Hold Alt to fill the shape.</td></tr>
+          <tr><td>Circle</td><td><kbd>C</kbd> <kbd>Shift</kbd> <kbd>Alt</kbd></td><td>Click and drag to draw an ellipse. Hold Shift to constrain to a circle. Hold Alt to fill the shape.</td></tr>
           <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
           <tr><td>Select</td><td><kbd>S</kbd></td><td>Drag to select a region, then use Cut / Copy / Paste. Right click deselects.</td></tr>
           <tr><td>Lock tile</td><td><kbd>K</kbd></td><td>Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a red tint, cannot be painted and are skipped on XML export.</td></tr>
@@ -507,7 +514,7 @@
         <h4>Keyboard shortcuts</h4>
         <table>
           <tr><th>Key</th><th>Action</th></tr>
-          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
+          <tr><td><kbd>P</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
           <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
           <tr><td><kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd></td><td>Cut / Copy / Paste selection</td></tr>
@@ -525,7 +532,7 @@ var S = {
   bg: null, glow: null,
   color: "ffffff", color2: "ff0000",
   palette: null,
-  font: "f8", spacing: 0,
+  font: "f8", spacing: 0, checkerFill: false,
   tool: "pen", layer: "bg", glowPreview: false, showGrid: true,
 };
 var cv = document.getElementById("cv");
@@ -537,6 +544,9 @@ var lastC = -1, lastR = -1;
 var painting = false;
 var panning = false, panLast = {x:0, y:0};
 var shapeAnchor = null;
+var shapeFilled = false;
+var lastShiftKey = false;
+var lastAltKey = false;
 var sel = null;
 var lockDragMode = false;
 function tileOfCell(cell){ return { bX: Math.floor(cell.c/9), bY: Math.floor(cell.r/9) }; }
@@ -1080,8 +1090,16 @@ function render(){
     } else if(S.tool === "line"){
       ctx.beginPath(); ctx.moveTo(c0*cs+cs/2, r0*cs+cs/2); ctx.lineTo(c1*cs+cs/2, r1*cs+cs/2); ctx.stroke();
     } else if(S.tool === "circle"){
-      var crad = Math.round(Math.hypot(r1-r0, c1-c0));
-      ctx.beginPath(); ctx.arc(c0*cs+cs/2, r0*cs+cs/2, crad*cs, 0, Math.PI*2); ctx.stroke();
+      var ccr = Math.min(r0,r1), ccr2 = Math.max(r0,r1);
+      var ccc = Math.min(c0,c1), ccc2 = Math.max(c0,c1);
+      var cctrR = (ccr+ccr2)/2, cctrC = (ccc+ccc2)/2;
+      var crx = (ccc2-ccc)/2, cry = (ccr2-ccr)/2;
+      if(lastShiftKey){ var crv = Math.min(crx,cry); crx = crv; cry = crv; }
+      ctx.beginPath(); ctx.ellipse(cctrC*cs+cs/2, cctrR*cs+cs/2, Math.max(crx*cs,0.5), Math.max(cry*cs,0.5), 0, 0, Math.PI*2); ctx.stroke();
+      if(crx === cry && crx > 0){
+        ctx.beginPath(); ctx.moveTo(cctrC*cs+cs/2,(cctrR-cry)*cs+cs/2); ctx.lineTo(cctrC*cs+cs/2,(cctrR+cry)*cs+cs/2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo((cctrC-crx)*cs+cs/2,cctrR*cs+cs/2); ctx.lineTo((cctrC+crx)*cs+cs/2,cctrR*cs+cs/2); ctx.stroke();
+      }
     }
     ctx.lineWidth = 1;
   }
@@ -1151,6 +1169,7 @@ function cellFromEvent(e){
 }
 
 function paintAt(cell, color){
+  if(cell.r<0||cell.r>=S.H||cell.c<0||cell.c>=S.W) return;
   if(isPixLocked(idx(cell.r, cell.c))) return;
   var lay = layerNow();
   lay[idx(cell.r, cell.c)] = color;
@@ -1177,6 +1196,7 @@ function bresPixels(r0,c0,r1,c1){
 /* midpoint circle outline around center (r0,c0) with radius rad */
 function circlePixels(r0,c0,rad){
   var out = [];
+  if(rad<=0){ out.push([r0,c0]); return out; }
   var x = rad, y = 0, err = 1 - rad;
   while(x >= y){
     out.push([r0+y,c0+x],[r0+x,c0+y],[r0+x,c0-y],[r0+y,c0-x],
@@ -1187,24 +1207,90 @@ function circlePixels(r0,c0,rad){
   }
   return out;
 }
+/* midpoint ellipse outline - traces continuous boundary */
+function ellipsePixels(r0,c0,rx,ry){
+  if(rx===ry) return circlePixels(r0,c0,rx);
+  var out = [];
+  if(rx<=0&&ry<=0){ out.push([r0,c0]); return out; }
+  if(rx<=0){ for(var y=-ry;y<=ry;y++) out.push([r0+y,c0]); return out; }
+  if(ry<=0){ for(var x=-rx;x<=rx;x++) out.push([r0,c0+x]); return out; }
+  var rx2=rx*rx, ry2=ry*ry;
+  var twoRx2=2*rx2, twoRy2=2*ry2;
+  var p;
+  var x=0, y=ry;
+  var px=0, py=twoRx2*y;
+  // region 1
+  p = Math.round(ry2 - rx2*ry + 0.25*rx2);
+  while(px < py){
+    push4(out,r0,c0,x,y);
+    x++; px += twoRy2;
+    if(p < 0) p += ry2 + px;
+    else{ y--; py -= twoRx2; p += ry2 + px - py; }
+  }
+  // region 2
+  p = Math.round(ry2*(x+0.5)*(x+0.5) + rx2*(y-1)*(y-1) - rx2*ry2);
+  while(y >= 0){
+    push4(out,r0,c0,x,y);
+    y--; py -= twoRx2;
+    if(p > 0) p += rx2 - py;
+    else{ x++; px += twoRy2; p += rx2 - py + px; }
+  }
+  return out;
+}
+function push4(out,r0,c0,x,y){
+  out.push([r0+y,c0+x],[r0+y,c0-x],[r0-y,c0+x],[r0-y,c0-x]);
+}
+/* filled circle: all pixels inside radius */
+
+/* filled ellipse */
+function filledEllipsePixels(r0,c0,rx,ry){
+  var out = [];
+  for(var rr=-ry;rr<=ry;rr++){
+    for(var cc=-rx;cc<=rx;cc++){
+      if(rx*rx*rr*rr+ry*ry*cc*cc <= rx*rx*ry*ry) out.push([r0+rr,c0+cc]);
+    }
+  }
+  return out;
+}
 
 function floodFill(cell, color){
   var lay = layerNow();
   var start = idx(cell.r, cell.c);
   if(isPixLocked(start)) return;
   var target = lay[start];
-  if(target === color) return;
-  var queue = [cell];
-  lay[start] = color;
-  while(queue.length){
-    var p = queue.pop();
-    var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
-    for(var i=0;i<around.length;i++){
-      var rr = around[i][0], cc = around[i][1];
-      if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
-      if(isPixLocked(idx(rr,cc))) continue;
-      if(lay[idx(rr,cc)] === target){
-        lay[idx(rr,cc)] = color;
+  var checker = S.checkerFill;
+  if(checker){
+    var chk = ((cell.r+cell.c)%2===0) ? S.color : S.color2;
+    if(target === chk) return;
+    var queue = [cell];
+    lay[start] = chk;
+    while(queue.length){
+      var p = queue.pop();
+      var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
+      for(var i=0;i<around.length;i++){
+        var rr = around[i][0], cc = around[i][1];
+        if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+        var ii = idx(rr,cc);
+        if(isPixLocked(ii)) continue;
+        if(lay[ii] !== target) continue;
+        lay[ii] = ((rr+cc)%2===0) ? S.color : S.color2;
+        queue.push({r:rr,c:cc});
+      }
+    }
+  } else {
+    if(target === color) return;
+    var queue = [cell];
+    lay[start] = color;
+    while(queue.length){
+      var p = queue.pop();
+      var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
+      for(var i=0;i<around.length;i++){
+        var rr = around[i][0], cc = around[i][1];
+        if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+        var ii = idx(rr,cc);
+        if(isPixLocked(ii)) continue;
+        if(lay[ii] !== target) continue;
+        lay[ii] = color;
         queue.push({r:rr,c:cc});
       }
     }
@@ -1217,6 +1303,7 @@ function normSel(r0,c0,r1,c1){
 
 function onPointerDown(e){
   e.preventDefault();
+  lastShiftKey = e.shiftKey;
   if(e.button === 1){
     if(zoom > 1){
       panning = true;
@@ -1239,8 +1326,7 @@ function onPointerDown(e){
   painting = true;
   shapeAnchor = null;
   var color = (e.button === 2) ? S.color2 : S.color;
-  if(S.tool === "eraser") color = "000000";
-  if(S.tool === "pen" || S.tool === "eraser"){
+  if(S.tool === "pen"){
     commit();
     paintAt(cell, color);
     lastR = cell.r; lastC = cell.c;
@@ -1277,6 +1363,7 @@ function onPointerDown(e){
   render();
 }
 function onPointerMove(e){
+  lastShiftKey = e.shiftKey;
   if(panning){
     var stage = document.querySelector(".stage");
     stage.scrollLeft -= (e.clientX - panLast.x);
@@ -1293,8 +1380,7 @@ function onPointerMove(e){
   var cell = cellFromEvent(e);
   if(!cell || !painting) return;
   var color = (e.buttons === 2) ? S.color2 : S.color;
-  if(S.tool === "eraser") color = "000000";
-  if(S.tool === "pen" || S.tool === "eraser"){
+  if(S.tool === "pen"){
     hoverR = cell.r; hoverC = cell.c;
     if(lastR >= 0 && lastC >= 0){
       var pts = bresPixels(lastR,lastC,cell.r,cell.c);
@@ -1323,6 +1409,7 @@ function onPointerMove(e){
 }
 function onPointerUp(e){
   if(panning){ panning = false; return; }
+  shapeFilled = lastAltKey;
   if(S.tool === "select"){
     if(shapeAnchor){
       sel = normSel(shapeAnchor.r, shapeAnchor.c,
@@ -1339,7 +1426,10 @@ function onPointerUp(e){
         var lay = layerNow();
         for(var rr=a;rr<=b;rr++){
           for(var cc=cmin;cc<=cmax;cc++){
-            if((rr===a||rr===b||cc===cmin||cc===cmax) && !isPixLocked(idx(rr,cc))) lay[idx(rr,cc)] = color;
+            if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+            if((!shapeFilled && (rr===a||rr===b||cc===cmin||cc===cmax)) || shapeFilled){
+              if(!isPixLocked(idx(rr,cc))) lay[idx(rr,cc)] = (shapeFilled && S.checkerFill) ? ((rr+cc)%2===0 ? S.color : S.color2) : color;
+            }
           }
         }
       } else if(S.tool === "line"){
@@ -1348,9 +1438,21 @@ function onPointerUp(e){
         for(var i=0;i<pts.length;i++) paintAt({r:pts[i][0],c:pts[i][1]}, color);
       } else if(S.tool === "circle"){
         commit();
-        var rad = Math.round(Math.hypot(r1-r0, c1-c0));
-        var cpts = circlePixels(r0, c0, rad);
-        for(var ci=0;ci<cpts.length;ci++) paintAt({r:cpts[ci][0],c:cpts[ci][1]}, color);
+        var pts;
+        var cr = Math.min(r0,r1), cr2 = Math.max(r0,r1);
+        var cc = Math.min(c0,c1), cc2 = Math.max(c0,c1);
+        var ctrR = (cr+cr2)/2, ctrC = (cc+cc2)/2;
+        var rx = (cc2-cc) / 2, ry = (cr2-cr) / 2;
+        if(lastShiftKey){ var rad = Math.min(rx,ry); rx = rad; ry = rad; }
+        if(shapeFilled){
+          pts = filledEllipsePixels(Math.round(ctrR), Math.round(ctrC), Math.round(rx), Math.round(ry));
+        } else {
+          pts = ellipsePixels(Math.round(ctrR), Math.round(ctrC), Math.round(rx), Math.round(ry));
+        }
+        for(var ci=0;ci<pts.length;ci++){
+          var pr=pts[ci][0], pc=pts[ci][1];
+          paintAt({r:pr,c:pc}, (shapeFilled && S.checkerFill) ? ((pr+pc)%2===0 ? S.color : S.color2) : color);
+        }
       }
       shapeAnchor = null;
     }
@@ -1758,6 +1860,10 @@ function swapColors(){
 }
 
 document.getElementById("btnswap").addEventListener("click", swapColors);
+document.getElementById("btncheckerfill").addEventListener("click", function(){
+  S.checkerFill = !S.checkerFill;
+  this.classList.toggle("active", S.checkerFill);
+});
 
 var SAVE_KEY = "swpaintable-project-v1";
 
@@ -2426,7 +2532,6 @@ function updateStatus(kb){
   }
 }
 
-var downKeys = {};
 document.addEventListener("keydown", function(e){
   if(e.ctrlKey || e.metaKey){
     var k = e.key.toLowerCase();
@@ -2444,18 +2549,23 @@ document.addEventListener("keydown", function(e){
   }
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
+  var map = { p:"pen", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
   var st = map[e.key.toLowerCase()];
   if(st === "swap"){ swapColors(); e.preventDefault(); }
   else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
   else if(st){ setTool(st); e.preventDefault(); }
 });
 document.addEventListener("keydown", function(e){
+  if(e.key === "Alt") lastAltKey = true;
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
 });
+document.addEventListener("keyup", function(e){
+  if(e.key === "Alt") lastAltKey = false;
+});
 
 window.addEventListener("resize", function(){ render(); });
+window.addEventListener("beforeunload", function(e){ e.preventDefault(); e.returnValue = ""; });
 
 document.getElementById("zoomsel").addEventListener("change", function(){
   var z = parseFloat(this.value);
