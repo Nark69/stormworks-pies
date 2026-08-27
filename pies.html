@@ -111,7 +111,7 @@
     border-radius:6px; padding:6px 8px; width:70px; font-size:13px;
   }
   input[type=color]{width:100%; height:38px; border:none; background:none; cursor:pointer; padding:0}
-  input[type=color].cmini{width:36px!important; height:28px}
+  
   textarea{
     width:100%; height:3.2em; resize:vertical; background:#0d0f14; color:#bfe0b0;
     border:1px solid var(--line); border-radius:8px; padding:8px; font:11px/1.4 Consolas,monospace;
@@ -172,7 +172,7 @@
   .licitem:last-of-type{border-bottom:none; padding-bottom:0}
   .licitem b{color:var(--text); font-size:13px}
   .licitem span{line-height:1.5}
-  .licitem .lictag{color:var(--acc2); font-weight:600}
+  .licitem .lictag{color:var(--acc); font-weight:600}
   #helpmodal .licbox{width:min(720px, 94vw)}
   .helpsec{display:flex; flex-direction:column; gap:6px}
   .helpsec h4{color:var(--text); font-size:13px; margin:0}
@@ -184,7 +184,7 @@
   kbd{background:var(--panel2); border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; font-family:Consolas,monospace; font-size:11px}
   .helpsec .dim{color:var(--dim)}
   .licitem .licsrc{font-family:Consolas,monospace; font-size:11px; color:var(--dim); word-break:break-all}
-  .licitem a{color:var(--acc2); text-decoration:none}
+  .licitem a{color:var(--acc); text-decoration:none}
   .licitem a:hover{text-decoration:underline}
   .licnote{font-size:11px; color:var(--dim); opacity:.8}
 </style>
@@ -239,7 +239,7 @@
         </select>
         <button class="btn" id="btnzoomin" title="Zoom in">+</button>
       </span>
-      <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset app and clear all browser data</button></span>
+      <span style="margin-left:auto;display:flex;gap:6px;align-items:center"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset</button></span>
     </div>
   </div>
 
@@ -276,6 +276,15 @@
     </section>
 
     <section>
+      <h3>Dimensions<span class="q">?<span class="tip">One block = 9&times;9 pixels. Existing pixels are kept at the top-left; new space is added as black.</span></span></h3>
+      <div class="row">
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Width</span><input type="number" id="inw" min="1" max="100" value="8"></span>
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Height</span><input type="number" id="inh" min="1" max="100" value="8"></span>
+        <button class="btn" id="btnsize">Apply</button>
+      </div>
+    </section>
+
+    <section>
       <h3>Import<span class="q">?<span class="tip">Image import paints onto the active layer (Background or Glow). Stretch fits the image to the canvas; Expand grows the canvas in whole blocks (top-left). The XML import rebuilds the canvas from a vehicle XML with paintable indicators/signs: it detects the dominant wall plane (ignores stray blocks) and reads <code>gc</code> background + <code>gca</code> glow.</span></span></h3>
       <div class="row">
         <button class="btn" id="btnimport">Image</button>
@@ -293,20 +302,13 @@
     </section>
 
     <section>
-      <h3>Dimensions<span class="q">?<span class="tip">One block = 9&times;9 pixels. Existing pixels are kept at the top-left; new space is added as black.</span></span></h3>
-      <div class="row">
-        <span style="display:inline-flex;gap:4px;align-items:center"><span>Width</span><input type="number" id="inw" min="1" max="100" value="8"></span>
-        <span style="display:inline-flex;gap:4px;align-items:center"><span>Height</span><input type="number" id="inh" min="1" max="100" value="8"></span>
-        <button class="btn" id="btnsize">Apply</button>
-      </div>
-    </section>
-
-    <section>
       <h3>Color<span class="q">?<span class="tip">Left click paints the primary color, right click the secondary one. Left click a palette swatch to pick it as primary, right click to pick as secondary. Double-left-click a swatch to set it to the current primary color, double-right-click to set it to the secondary color.</span></span></h3>
       <div class="palette" id="palette"></div>
       <div class="row" style="margin-top:8px;align-items:center">
-        <input type="color" id="colpicker" value="#ffffff" class="cmini" title="Primary color (left click)">
-        <input type="color" id="colpicker2" value="#ff0000" class="cmini" title="Secondary color (right click)">
+        <div id="colswatch1" style="width:36px;height:28px;border:1px solid var(--line);border-radius:4px;background:#ffffff;cursor:pointer" title="Primary color (left click)" onclick="document.getElementById('colpick1').click()"></div>
+        <input type="color" id="colpick1" value="#ffffff" style="display:none">
+        <div id="colswatch2" style="width:36px;height:28px;border:1px solid var(--line);border-radius:4px;background:#ff0000;cursor:pointer" title="Secondary color (right click)" onclick="document.getElementById('colpick2').click()"></div>
+        <input type="color" id="colpick2" value="#ff0000" style="display:none">
         <button class="btn" id="btnswap" title="Swap colors (X)">⇄</button>
         <button class="btn" id="btncheckerfill" title="Toggle checker pattern fill">⊞</button>
       </div>
@@ -371,14 +373,19 @@
       </div>
       <textarea id="out" readonly placeholder="The XML will appear here after generating …"></textarea>
     </section>
-    <div style="margin-top:auto; text-align:right; font-size:11px; color:var(--dim)">2026 by Nark</div>
+    <div id="narkfoot" style="margin-top:auto; text-align:right; font-size:11px; color:var(--dim);cursor:default">2026 by Nark</div>
   </aside>
 </main>
 
 <div id="licmodal" class="licmodal hidden">
   <div class="licbox">
-    <div class="lichead">Bundled fonts &amp; licenses<button class="btn licx" id="licclose" title="Close">×</button></div>
+    <div class="lichead">Credits, bundled Fonts &amp; Licenses<button class="btn licx" id="licclose" title="Close">×</button></div>
     <div class="licbody">
+      <div class="licitem">
+        <b>Stormworks: Build and Rescue</b>
+        <span>A creative vehicle-building and rescue simulation game by Geometa.</span>
+        <span class="licsrc"><a href="https://store.steampowered.com/app/573090/Stormworks_Build_and_Rescue/" target="_blank" rel="noopener">Steam</a></span>
+      </div>
       <div class="licitem">
         <b>Standard · 8x8</b>
         <span>IBM PC / VGA 8x8 font, collected by Daniel Hepper (dhepper/font8x8), originally derived from public domain IBM VGA fonts (Marcel Sondaar / IBM).</span>
@@ -1473,6 +1480,7 @@ cv.addEventListener("pointerleave", onPointerLeave);
 cv.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 
 function setTool(t){
+  if(S.tool === t){ t = "pen"; }
   S.tool = t;
   var btns = document.querySelectorAll("[data-tool]");
   for(var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-tool") === t);
@@ -1769,8 +1777,8 @@ document.getElementById("btnsize").addEventListener("click", function(){
 });
 
 function syncColorUI(){
-  document.getElementById("colpicker").value = "#" + S.color;
-  document.getElementById("colpicker2").value = "#" + S.color2;
+  document.getElementById("colswatch1").style.background = "#" + S.color;
+  document.getElementById("colswatch2").style.background = "#" + S.color2;
   var swatches = document.querySelectorAll(".sw");
   for(var i=0;i<swatches.length;i++){
     swatches[i].classList.toggle("active", swatches[i].getAttribute("data-c") === S.color);
@@ -1845,12 +1853,12 @@ function buildPalette(){
 S.palette = PALETTE.slice();
 buildPalette();
 
-document.getElementById("colpicker").addEventListener("input", function(){
+document.getElementById("colpick1").addEventListener("input", function(){
   S.color = this.value.replace("#","").toLowerCase();
   syncColorUI();
 });
 
-document.getElementById("colpicker2").addEventListener("input", function(){
+document.getElementById("colpick2").addEventListener("input", function(){
   S.color2 = this.value.replace("#","").toLowerCase();
   syncColorUI();
 });
@@ -2609,6 +2617,8 @@ render();
 scheduleExport();
 updateStatus();
 syncSizeInputs();
+var _nf = document.getElementById("narkfoot");
+if(_nf){ var _d = new Date(); _nf.title = _d.getFullYear().toString() + String(_d.getMonth()+1).padStart(2,"0") + String(_d.getDate()).padStart(2,"0") + String(_d.getHours()).padStart(2,"0") + String(_d.getMinutes()).padStart(2,"0"); }
 document.getElementById("zoomsel").value = String(zoom);
 document.getElementById("fontsel").value = S.font;
 setTool("pen");

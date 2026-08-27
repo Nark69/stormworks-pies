@@ -42,7 +42,7 @@ Pick a color from the canvas: left click sets the primary color, right click the
 Pick a color from the canvas with any tool active, without switching tools. Left click sets the primary color, right click the secondary.
 
 ### Line (L)
-Click and drag to draw a straight line. Hold **Shift** to snap the angle to 45° increments. A crosshair preview is shown when drawing a perfect circle.
+Click and drag to draw a straight line. Hold **Shift** to snap the angle to 45° increments.
 
 ### Rectangle (R)
 Click and drag to draw a rectangle outline. Hold **Alt** to fill the shape. Checker pattern fill is respected when active.
