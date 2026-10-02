@@ -67,7 +67,6 @@
     border-radius:8px; padding:7px 12px; cursor:pointer; font-size:13px;
   }
   .btn:hover{border-color:var(--acc)}
-.btn.active{background:#263f33; color:#bfe0b0; border-color:#bfe0b0}
   .btn:disabled{opacity:.4; cursor:default}
   .btn.acc{background:#263f33; border-color:#bfe0b0}
   .center{flex:1; display:flex; flex-direction:column; min-width:0}
@@ -84,10 +83,6 @@
   .panel{
     width:300px; background:var(--panel); border-left:1px solid var(--line);
     padding:12px; overflow-y:auto; display:flex; flex-direction:column; gap:14px;
-  }
-  .panelr{
-    width:56px; background:var(--panel); border-left:1px solid var(--line);
-    display:flex; flex-direction:column; align-items:center; gap:6px; padding:8px 4px; overflow-y:auto;
   }
   section{border:1px solid var(--line); border-radius:10px; background:var(--panel2); padding:10px}
   section h3{margin:0 0 8px; font-size:11px; text-transform:uppercase; letter-spacing:1px; color:var(--dim); font-weight:600; position:relative}
@@ -111,7 +106,7 @@
     border-radius:6px; padding:6px 8px; width:70px; font-size:13px;
   }
   input[type=color]{width:100%; height:38px; border:none; background:none; cursor:pointer; padding:0}
-  
+  input[type=color].cmini{width:36px!important; height:28px}
   textarea{
     width:100%; height:3.2em; resize:vertical; background:#0d0f14; color:#bfe0b0;
     border:1px solid var(--line); border-radius:8px; padding:8px; font:11px/1.4 Consolas,monospace;
@@ -172,7 +167,7 @@
   .licitem:last-of-type{border-bottom:none; padding-bottom:0}
   .licitem b{color:var(--text); font-size:13px}
   .licitem span{line-height:1.5}
-  .licitem .lictag{color:var(--acc); font-weight:600}
+  .licitem .lictag{color:var(--acc2); font-weight:600}
   #helpmodal .licbox{width:min(720px, 94vw)}
   .helpsec{display:flex; flex-direction:column; gap:6px}
   .helpsec h4{color:var(--text); font-size:13px; margin:0}
@@ -184,7 +179,7 @@
   kbd{background:var(--panel2); border:1px solid var(--line); border-bottom-width:2px; border-radius:4px; padding:0 5px; font-family:Consolas,monospace; font-size:11px}
   .helpsec .dim{color:var(--dim)}
   .licitem .licsrc{font-family:Consolas,monospace; font-size:11px; color:var(--dim); word-break:break-all}
-  .licitem a{color:var(--acc); text-decoration:none}
+  .licitem a{color:var(--acc2); text-decoration:none}
   .licitem a:hover{text-decoration:underline}
   .licnote{font-size:11px; color:var(--dim); opacity:.8}
 </style>
@@ -200,13 +195,14 @@
 </div>
 
 <header>
-  <h1 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="#bfe0b0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:20px;height:20px;flex:none"><path d="M2 19h8"/><path d="M3 19v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5"/><path d="M3 13c.5-.5 1-.5 1.5 0s1 .5 1.5 0 1 .5 1.5 0 1 .5 1.5 0"/><path d="M3 13v1.5M6 13v1M9 13v1.5"/><path d="M6 9v4"/><path d="M6 7v2"/><path d="M13 18h9"/><path d="M14 18v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6"/><path d="M14 11c.6-.6 1.2-.6 1.8 0s1.2.6 1.8 0 1.2-.6 1.8 0 1.2.6 1.8 0"/><path d="M14 11v1.5M16.5 11v1M19 11v1.5M21 11v1"/><path d="M18 7v4"/><path d="M18 5v2"/></svg><span style="color:#bfe0b0;font-size:22px;font-weight:700;margin-right:4px">PIES</span> Paintable Indicator Editor for Stormworks <span style="font-size:12px;color:var(--dim);font-weight:normal">v1.0</span></h1>
+  <h1 style="display:flex;align-items:center;gap:8px"><svg viewBox="0 0 24 24" fill="none" stroke="#bfe0b0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:20px;height:20px;flex:none"><path d="M2 19h8"/><path d="M3 19v-5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v5"/><path d="M3 13c.5-.5 1-.5 1.5 0s1 .5 1.5 0 1 .5 1.5 0 1 .5 1.5 0"/><path d="M3 13v1.5M6 13v1M9 13v1.5"/><path d="M6 9v4"/><path d="M6 7v2"/><path d="M13 18h9"/><path d="M14 18v-6a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v6"/><path d="M14 11c.6-.6 1.2-.6 1.8 0s1.2.6 1.8 0 1.2-.6 1.8 0 1.2.6 1.8 0"/><path d="M14 11v1.5M16.5 11v1M19 11v1.5M21 11v1"/><path d="M18 7v4"/><path d="M18 5v2"/></svg><span style="color:#bfe0b0;font-size:22px;font-weight:700;margin-right:4px">PIES</span> Paintable Indicator Editor for Stormworks <span style="font-size:12px;color:var(--dim);font-weight:normal">v0.9</span></h1>
   <span style="margin-left:auto;display:flex;gap:6px;align-items:center"><button class="btn" id="btnhelp" title="Open the help screen">Help</button><button class="btn" id="btnlicenses" title="Show license info for the bundled pixel fonts">Credits</button></span>
 </header>
 
 <main>
   <div class="toolcol">
     <button class="tool active" data-tool="pen" title="Pencil (P)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"/><path d="m15 5 4 4"/></svg></button>
+    <button class="tool" data-tool="eraser" title="Eraser (E)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 21H8a2 2 0 0 1-1.42-.587l-3.994-3.999a2 2 0 0 1 0-2.828l10-10a2 2 0 0 1 2.829 0l5.999 6a2 2 0 0 1 0 2.828L12.834 21"/><path d="m5.082 11.09 8.828 8.828"/></svg></button>
     <button class="tool" data-tool="fill" title="Fill (F)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 7 6 2"/><path d="M18.992 12H2.041"/><path d="M21.145 18.38A3.34 3.34 0 0 1 20 16.5a3.3 3.3 0 0 1-1.145 1.88c-.575.46-.855 1.02-.855 1.595A2 2 0 0 0 20 22a2 2 0 0 0 2-2.025c0-.58-.285-1.13-.855-1.595"/><path d="m8.5 4.5 2.148-2.148a1.205 1.205 0 0 1 1.704 0l7.296 7.296a1.205 1.205 0 0 1 0 1.704l-7.592 7.592a3.615 3.615 0 0 1-5.112 0l-3.888-3.888a3.615 3.615 0 0 1 0-5.112L5.67 7.33"/></svg></button>
     <button class="tool" data-tool="picker" title="Eyedropper (I)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 9-8.414 8.414A2 2 0 0 0 3 18.828v1.344a2 2 0 0 1-.586 1.414A2 2 0 0 1 3.828 21h1.344a2 2 0 0 0 1.414-.586L15 12"/><path d="m18 9 .4.4a1 1 0 1 1-3 3l-3.8-3.8a1 1 0 1 1 3-3l.4.4 3.4-3.4a1 1 0 1 1 3 3z"/><path d="m2 22 .414-.414"/></svg></button>
     <button class="tool" data-tool="line" title="Line (L)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 2 22"/></svg></button>
@@ -217,7 +213,26 @@
     <button class="tool" id="btncut" title="Cut selection (Ctrl+X)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg></button>
     <button class="tool" id="btncopyc" title="Copy selection (Ctrl+C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
     <button class="tool" id="btnpaste" title="Paste selection (Ctrl+V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
-    <button class="tool" id="btnchecker" title="Fill selection with checker pattern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" fill="currentColor" opacity=".4"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8" fill="currentColor" opacity=".4"/></svg></button>
+    <button class="tool" data-tool="lock" title="Lock / unlock tile (K). Locked tiles cannot be painted and are skipped on XML export. XML import locks tiles that were not paintable signs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></button>
+    <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
+    <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
+    <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
+    <button class="tool" id="btnclear" title="Clear all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
+    <h2>Move</h2>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
+      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
+    </div>
+    <div class="dpad">
+      <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
+      <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
+      <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
+      <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
+      <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
+    </div>
   </div>
 
   <div class="center">
@@ -239,49 +254,19 @@
         </select>
         <button class="btn" id="btnzoomin" title="Zoom in">+</button>
       </span>
-      <span style="margin-left:auto;display:flex;gap:6px;align-items:center"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset</button></span>
+      <span style="margin-left:auto;display:flex;gap:6px"><button class="btn" id="btnreset" title="Reset everything: clears the canvas and the saved project data in the browser">Debug: Reset app and clear all browser data</button></span>
     </div>
-  </div>
-
-  <div class="panelr">
-    <button class="tool" data-tool="lock" title="Lock / unlock tile (K). Locked tiles cannot be painted and are skipped on XML export. XML import locks tiles that were not paintable signs."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="16" r="1"/><rect x="3" y="10" width="18" height="12" rx="2"/><path d="M7 10V7a5 5 0 0 1 10 0v3"/></svg></button>
-    <button class="tool" id="btnundo" title="Undo (Ctrl+Z)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5a5.5 5.5 0 0 1-5.5 5.5H11"/></svg></button>
-    <button class="tool" id="btnredo" title="Redo (Ctrl+Y)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H9.5A5.5 5.5 0 0 0 4 14.5A5.5 5.5 0 0 0 9.5 20H13"/></svg></button>
-    <button class="tool" id="btnraster" title="Toggle grid (G)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M3 15h18"/><path d="M9 3v18"/><path d="M15 3v18"/></svg></button>
-     <div style="display:flex;gap:4px">
-      <button class="tool sm" id="btnrotccw" title="Rotate canvas 90° counter-clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 9-9c-2.52 0-4.93 1-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></button>
-      <button class="tool sm" id="btnrotcw" title="Rotate canvas 90° clockwise"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg></button>
-    </div>
-    <div class="dpad">
-      <button class="tool sm" id="mvLeft" title="Shift image left (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg></button>
-      <button class="tool sm" id="mvRight" title="Shift image right (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg></button>
-      <button class="tool sm" id="mvUp" title="Shift image up (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12 7-7 7 7"/><path d="M12 19V5"/></svg></button>
-      <button class="tool sm" id="mvDown" title="Shift image down (wrap)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></button>
-    </div>
-    <div style="display:flex;gap:4px">
-      <button class="tool sm" id="btnmirh" title="Mirror left-right"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m18 7 4 4-4 4"/><path d="m6 7-4 4 4 4"/><path d="M12 3v18"/></svg></button>
-      <button class="tool sm" id="btnmirv" title="Mirror top-bottom"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m7 18 4 4 4-4"/><path d="m7 6 4-4 4 4"/><path d="M3 12h18"/></svg></button>
-    </div>
-    <button class="tool" id="btnclear" title="Clear all" style="margin-top:6px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
   </div>
 
   <aside class="panel">
     <section>
       <h3>Project<span class="q">?<span class="tip">Save stores the project in the browser and downloads a .json file; Load restores from a file. The last saved project is restored automatically when the page opens.</span></span></h3>
       <div class="row">
+        <button class="btn" id="btnnew">New</button>
         <button class="btn" id="btnsave">Save</button>
         <button class="btn" id="btnload">Load</button>
       </div>
       <input type="file" id="fileload" accept=".json,application/json" style="display:none">
-    </section>
-
-    <section>
-      <h3>Dimensions<span class="q">?<span class="tip">One block = 9&times;9 pixels. Existing pixels are kept at the top-left; new space is added as black.</span></span></h3>
-      <div class="row">
-        <span style="display:inline-flex;gap:4px;align-items:center"><span>Width</span><input type="number" id="inw" min="1" max="100" value="8"></span>
-        <span style="display:inline-flex;gap:4px;align-items:center"><span>Height</span><input type="number" id="inh" min="1" max="100" value="8"></span>
-        <button class="btn" id="btnsize">Apply</button>
-      </div>
     </section>
 
     <section>
@@ -302,15 +287,21 @@
     </section>
 
     <section>
+      <h3>Dimensions<span class="q">?<span class="tip">One block = 9&times;9 pixels. Existing pixels are kept at the top-left; new space is added as black.</span></span></h3>
+      <div class="row">
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Width</span><input type="number" id="inw" min="1" max="100" value="8"></span>
+        <span style="display:inline-flex;gap:4px;align-items:center"><span>Height</span><input type="number" id="inh" min="1" max="100" value="8"></span>
+        <button class="btn" id="btnsize">Apply</button>
+      </div>
+    </section>
+
+    <section>
       <h3>Color<span class="q">?<span class="tip">Left click paints the primary color, right click the secondary one. Left click a palette swatch to pick it as primary, right click to pick as secondary. Double-left-click a swatch to set it to the current primary color, double-right-click to set it to the secondary color.</span></span></h3>
       <div class="palette" id="palette"></div>
       <div class="row" style="margin-top:8px;align-items:center">
-        <div id="colswatch1" style="width:36px;height:28px;border:1px solid var(--line);border-radius:4px;background:#ffffff;cursor:pointer" title="Primary color (left click)" onclick="document.getElementById('colpick1').click()"></div>
-        <input type="color" id="colpick1" value="#ffffff" style="display:none">
-        <div id="colswatch2" style="width:36px;height:28px;border:1px solid var(--line);border-radius:4px;background:#ff0000;cursor:pointer" title="Secondary color (right click)" onclick="document.getElementById('colpick2').click()"></div>
-        <input type="color" id="colpick2" value="#ff0000" style="display:none">
+        <input type="color" id="colpicker" value="#ffffff" class="cmini" title="Primary color (left click)">
+        <input type="color" id="colpicker2" value="#ff0000" class="cmini" title="Secondary color (right click)">
         <button class="btn" id="btnswap" title="Swap colors (X)">⇄</button>
-        <button class="btn" id="btncheckerfill" title="Toggle checker pattern fill">⊞</button>
       </div>
       <div class="row" style="margin-top:6px;justify-content:flex-end">
         <span id="pixrgb">–</span>
@@ -318,7 +309,7 @@
     </section>
 
     <section class="layers">
-      <h3>Glow<span class="q">?<span class="tip">The background shows while the block is off, the glow image when toggled on via logic.</span></span></h3>
+      <h3>Glow<span class="q">?<span class="tip">The background shows while the block is off, the glow image when toggled on via logic. Hold <kbd>Shift</kbd> for a temporary "on" preview.</span></span></h3>
       <div class="row">
         <label><input type="radio" name="layer" value="bg" checked> Background (off)</label>
         <label><input type="radio" name="layer" value="glow"> Glow (on)</label>
@@ -342,11 +333,6 @@
           <option value="f8c">8x8 Micro</option>
           <option value="f8d">8x8 Classic</option>
         </select>
-      </div>
-      <div class="row">
-        <span style="font-size:12px;color:var(--dim)">Spacing</span>
-        <input type="number" id="spacinginp" value="0" min="-8" max="32" step="1" style="background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:6px;padding:6px;font-size:12px;width:56px">
-        <span style="font-size:12px;color:var(--dim)">px</span>
       </div>
       <textarea id="textinput" rows="3" placeholder="Type text…"></textarea>
     </section>
@@ -373,19 +359,14 @@
       </div>
       <textarea id="out" readonly placeholder="The XML will appear here after generating …"></textarea>
     </section>
-    <div id="narkfoot" style="margin-top:auto; text-align:right; font-size:11px; color:var(--dim);cursor:default">2026 by Nark</div>
+    <div style="margin-top:auto; text-align:right; font-size:11px; color:var(--dim)">2026 by Nark</div>
   </aside>
 </main>
 
 <div id="licmodal" class="licmodal hidden">
   <div class="licbox">
-    <div class="lichead">Credits, bundled Fonts &amp; Licenses<button class="btn licx" id="licclose" title="Close">×</button></div>
+    <div class="lichead">Bundled fonts &amp; licenses<button class="btn licx" id="licclose" title="Close">×</button></div>
     <div class="licbody">
-      <div class="licitem">
-        <b>Stormworks: Build and Rescue</b>
-        <span>A creative vehicle-building and rescue simulation game by Geometa.</span>
-        <span class="licsrc"><a href="https://store.steampowered.com/app/573090/Stormworks_Build_and_Rescue/" target="_blank" rel="noopener">Steam</a></span>
-      </div>
       <div class="licitem">
         <b>Standard · 8x8</b>
         <span>IBM PC / VGA 8x8 font, collected by Daniel Hepper (dhepper/font8x8), originally derived from public domain IBM VGA fonts (Marcel Sondaar / IBM).</span>
@@ -417,7 +398,6 @@
         <span class="licsrc"><a href="https://github.com/lucide-icons/lucide" target="_blank" rel="noopener">github.com/lucide-icons/lucide</a></span>
       </div>
       <div class="licnote">The editor itself is released under the MIT License (see the file header). Fonts and icons are separate works licensed as listed above.</div>
-      <div class="licnote">— Dedicated to Tajin's Stormworks Toolbox and Pony IDE —</div>
     </div>
   </div>
 </div>
@@ -437,12 +417,12 @@
         <table>
           <tr><th>Tool</th><th>Shortcut</th><th>Description</th></tr>
           <tr><td>Pencil</td><td><kbd>P</kbd></td><td>Paint pixels. Left click uses the primary color, right click the secondary color. Drag to paint a continuous line.</td></tr>
+          <tr><td>Eraser</td><td><kbd>E</kbd></td><td>Paint pixels black.</td></tr>
           <tr><td>Fill</td><td><kbd>F</kbd></td><td>Flood fill the connected region of the clicked pixel with the chosen color.</td></tr>
           <tr><td>Eyedropper</td><td><kbd>I</kbd></td><td>Pick a color from the canvas: left click sets the primary color, right click the secondary. Switches back to the Pencil tool afterwards.</td></tr>
-          <tr><td>Quick pick</td><td><kbd>Ctrl</kbd> + click</td><td>Pick a color from the canvas with any tool active, without switching tools. Left click sets the primary color, right click the secondary.</td></tr>
-          <tr><td>Line</td><td><kbd>L</kbd> <kbd>Shift</kbd></td><td>Click and drag to draw a straight line. Hold Shift to snap the angle to 45° increments.</td></tr>
-          <tr><td>Rectangle</td><td><kbd>R</kbd> <kbd>Alt</kbd></td><td>Click and drag to draw a rectangle outline. Hold Alt to fill the shape.</td></tr>
-          <tr><td>Circle</td><td><kbd>C</kbd> <kbd>Shift</kbd> <kbd>Alt</kbd></td><td>Click and drag to draw an ellipse. Hold Shift to constrain to a circle. Hold Alt to fill the shape.</td></tr>
+          <tr><td>Line</td><td><kbd>L</kbd></td><td>Click and drag to draw a straight line.</td></tr>
+          <tr><td>Rectangle</td><td><kbd>R</kbd></td><td>Click and drag to draw a rectangle outline.</td></tr>
+          <tr><td>Circle</td><td><kbd>C</kbd></td><td>Click and hold to set the center, drag out and release to draw a circle outline with that radius.</td></tr>
           <tr><td>Text</td><td><kbd>T</kbd></td><td>Type in the Text panel, then click the canvas to place the text. Left click uses the primary color, right click the secondary. Newlines place lines below each other.</td></tr>
           <tr><td>Select</td><td><kbd>S</kbd></td><td>Drag to select a region, then use Cut / Copy / Paste. Right click deselects.</td></tr>
           <tr><td>Lock tile</td><td><kbd>K</kbd></td><td>Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a red tint, cannot be painted and are skipped on XML export.</td></tr>
@@ -474,7 +454,7 @@
         <h4>Glow (layers)</h4>
         <ul>
           <li><b>Background (off)</b> and <b>Glow (on)</b> select the active drawing layer; <b>Show both</b> blends both layers additively for visualization (it does not change the layer you draw on).</li>
-          <li>Use the keyboard shortcuts in the table above for quick access.</li>
+          <li>Holding <kbd>Shift</kbd> gives a temporary Glow-layer preview.</li>
           <li><b>Background → Glow</b> / <b>Glow → Background</b> copy one layer onto the other.</li>
         </ul>
       </div>
@@ -522,8 +502,9 @@
         <h4>Keyboard shortcuts</h4>
         <table>
           <tr><th>Key</th><th>Action</th></tr>
-          <tr><td><kbd>P</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
+          <tr><td><kbd>P</kbd> <kbd>E</kbd> <kbd>F</kbd> <kbd>I</kbd> <kbd>L</kbd> <kbd>R</kbd> <kbd>C</kbd> <kbd>S</kbd> <kbd>T</kbd> <kbd>K</kbd> <kbd>G</kbd></td><td>Select tool / toggle grid</td></tr>
           <tr><td><kbd>X</kbd></td><td>Swap primary and secondary color</td></tr>
+          <tr><td><kbd>Shift</kbd> (hold)</td><td>Temporary glow preview</td></tr>
           <tr><td><kbd>Ctrl+Z</kbd> / <kbd>Ctrl+Y</kbd></td><td>Undo / Redo</td></tr>
           <tr><td><kbd>Ctrl+X</kbd> / <kbd>Ctrl+C</kbd> / <kbd>Ctrl+V</kbd></td><td>Cut / Copy / Paste selection</td></tr>
         </table>
@@ -540,7 +521,7 @@ var S = {
   bg: null, glow: null,
   color: "ffffff", color2: "ff0000",
   palette: null,
-  font: "f8", spacing: 0, checkerFill: false,
+  font: "f8",
   tool: "pen", layer: "bg", glowPreview: false, showGrid: true,
 };
 var cv = document.getElementById("cv");
@@ -552,9 +533,6 @@ var lastC = -1, lastR = -1;
 var painting = false;
 var panning = false, panLast = {x:0, y:0};
 var shapeAnchor = null;
-var shapeFilled = false;
-var lastShiftKey = false;
-var lastAltKey = false;
 var sel = null;
 var lockDragMode = false;
 function tileOfCell(cell){ return { bX: Math.floor(cell.c/9), bY: Math.floor(cell.r/9) }; }
@@ -1098,16 +1076,8 @@ function render(){
     } else if(S.tool === "line"){
       ctx.beginPath(); ctx.moveTo(c0*cs+cs/2, r0*cs+cs/2); ctx.lineTo(c1*cs+cs/2, r1*cs+cs/2); ctx.stroke();
     } else if(S.tool === "circle"){
-      var ccr = Math.min(r0,r1), ccr2 = Math.max(r0,r1);
-      var ccc = Math.min(c0,c1), ccc2 = Math.max(c0,c1);
-      var cctrR = (ccr+ccr2)/2, cctrC = (ccc+ccc2)/2;
-      var crx = (ccc2-ccc)/2, cry = (ccr2-ccr)/2;
-      if(lastShiftKey){ var crv = Math.min(crx,cry); crx = crv; cry = crv; }
-      ctx.beginPath(); ctx.ellipse(cctrC*cs+cs/2, cctrR*cs+cs/2, Math.max(crx*cs,0.5), Math.max(cry*cs,0.5), 0, 0, Math.PI*2); ctx.stroke();
-      if(crx === cry && crx > 0){
-        ctx.beginPath(); ctx.moveTo(cctrC*cs+cs/2,(cctrR-cry)*cs+cs/2); ctx.lineTo(cctrC*cs+cs/2,(cctrR+cry)*cs+cs/2); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo((cctrC-crx)*cs+cs/2,cctrR*cs+cs/2); ctx.lineTo((cctrC+crx)*cs+cs/2,cctrR*cs+cs/2); ctx.stroke();
-      }
+      var crad = Math.round(Math.hypot(r1-r0, c1-c0));
+      ctx.beginPath(); ctx.arc(c0*cs+cs/2, r0*cs+cs/2, crad*cs, 0, Math.PI*2); ctx.stroke();
     }
     ctx.lineWidth = 1;
   }
@@ -1161,8 +1131,7 @@ function updatePixelReadout(){
   var h = (hoverR < 0 || hoverC < 0 || hoverR >= S.H || hoverC >= S.W) ? S.color : (S.glowPreview ? S.glow : S.bg)[idx(hoverR, hoverC)];
   var c = colorRGB(h);
   function p3(n){ var s = String(n); while(s.length < 3) s = "0" + s; return s; }
-  el.innerHTML = '<span style="color:var(--dim)">' + (hoverR < 0 || hoverC < 0 ? '-' : 'x:' + String(hoverC).padStart(2,'0') + ' y:' + String(hoverR).padStart(2,'0')) + '</span>' +
-    '<span class="pxsw" style="background:#' + h + '"></span>' +
+  el.innerHTML = '<span class="pxsw" style="background:#' + h + '"></span>' +
     '<span class="pxhex">#' + h.toUpperCase() + '</span>' +
     '<span class="pxdec">' + p3(c[0]) + ',' + p3(c[1]) + ',' + p3(c[2]) + '</span>';
 }
@@ -1177,7 +1146,6 @@ function cellFromEvent(e){
 }
 
 function paintAt(cell, color){
-  if(cell.r<0||cell.r>=S.H||cell.c<0||cell.c>=S.W) return;
   if(isPixLocked(idx(cell.r, cell.c))) return;
   var lay = layerNow();
   lay[idx(cell.r, cell.c)] = color;
@@ -1204,7 +1172,6 @@ function bresPixels(r0,c0,r1,c1){
 /* midpoint circle outline around center (r0,c0) with radius rad */
 function circlePixels(r0,c0,rad){
   var out = [];
-  if(rad<=0){ out.push([r0,c0]); return out; }
   var x = rad, y = 0, err = 1 - rad;
   while(x >= y){
     out.push([r0+y,c0+x],[r0+x,c0+y],[r0+x,c0-y],[r0+y,c0-x],
@@ -1215,90 +1182,24 @@ function circlePixels(r0,c0,rad){
   }
   return out;
 }
-/* midpoint ellipse outline - traces continuous boundary */
-function ellipsePixels(r0,c0,rx,ry){
-  if(rx===ry) return circlePixels(r0,c0,rx);
-  var out = [];
-  if(rx<=0&&ry<=0){ out.push([r0,c0]); return out; }
-  if(rx<=0){ for(var y=-ry;y<=ry;y++) out.push([r0+y,c0]); return out; }
-  if(ry<=0){ for(var x=-rx;x<=rx;x++) out.push([r0,c0+x]); return out; }
-  var rx2=rx*rx, ry2=ry*ry;
-  var twoRx2=2*rx2, twoRy2=2*ry2;
-  var p;
-  var x=0, y=ry;
-  var px=0, py=twoRx2*y;
-  // region 1
-  p = Math.round(ry2 - rx2*ry + 0.25*rx2);
-  while(px < py){
-    push4(out,r0,c0,x,y);
-    x++; px += twoRy2;
-    if(p < 0) p += ry2 + px;
-    else{ y--; py -= twoRx2; p += ry2 + px - py; }
-  }
-  // region 2
-  p = Math.round(ry2*(x+0.5)*(x+0.5) + rx2*(y-1)*(y-1) - rx2*ry2);
-  while(y >= 0){
-    push4(out,r0,c0,x,y);
-    y--; py -= twoRx2;
-    if(p > 0) p += rx2 - py;
-    else{ x++; px += twoRy2; p += rx2 - py + px; }
-  }
-  return out;
-}
-function push4(out,r0,c0,x,y){
-  out.push([r0+y,c0+x],[r0+y,c0-x],[r0-y,c0+x],[r0-y,c0-x]);
-}
-/* filled circle: all pixels inside radius */
-
-/* filled ellipse */
-function filledEllipsePixels(r0,c0,rx,ry){
-  var out = [];
-  for(var rr=-ry;rr<=ry;rr++){
-    for(var cc=-rx;cc<=rx;cc++){
-      if(rx*rx*rr*rr+ry*ry*cc*cc <= rx*rx*ry*ry) out.push([r0+rr,c0+cc]);
-    }
-  }
-  return out;
-}
 
 function floodFill(cell, color){
   var lay = layerNow();
   var start = idx(cell.r, cell.c);
   if(isPixLocked(start)) return;
   var target = lay[start];
-  var checker = S.checkerFill;
-  if(checker){
-    var chk = ((cell.r+cell.c)%2===0) ? S.color : S.color2;
-    if(target === chk) return;
-    var queue = [cell];
-    lay[start] = chk;
-    while(queue.length){
-      var p = queue.pop();
-      var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
-      for(var i=0;i<around.length;i++){
-        var rr = around[i][0], cc = around[i][1];
-        if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
-        var ii = idx(rr,cc);
-        if(isPixLocked(ii)) continue;
-        if(lay[ii] !== target) continue;
-        lay[ii] = ((rr+cc)%2===0) ? S.color : S.color2;
-        queue.push({r:rr,c:cc});
-      }
-    }
-  } else {
-    if(target === color) return;
-    var queue = [cell];
-    lay[start] = color;
-    while(queue.length){
-      var p = queue.pop();
-      var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
-      for(var i=0;i<around.length;i++){
-        var rr = around[i][0], cc = around[i][1];
-        if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
-        var ii = idx(rr,cc);
-        if(isPixLocked(ii)) continue;
-        if(lay[ii] !== target) continue;
-        lay[ii] = color;
+  if(target === color) return;
+  var queue = [cell];
+  lay[start] = color;
+  while(queue.length){
+    var p = queue.pop();
+    var around = [[p.r-1,p.c],[p.r+1,p.c],[p.r,p.c-1],[p.r,p.c+1]];
+    for(var i=0;i<around.length;i++){
+      var rr = around[i][0], cc = around[i][1];
+      if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
+      if(isPixLocked(idx(rr,cc))) continue;
+      if(lay[idx(rr,cc)] === target){
+        lay[idx(rr,cc)] = color;
         queue.push({r:rr,c:cc});
       }
     }
@@ -1311,7 +1212,6 @@ function normSel(r0,c0,r1,c1){
 
 function onPointerDown(e){
   e.preventDefault();
-  lastShiftKey = e.shiftKey;
   if(e.button === 1){
     if(zoom > 1){
       panning = true;
@@ -1322,19 +1222,12 @@ function onPointerDown(e){
   }
   var cell = cellFromEvent(e);
   if(!cell) return;
-  if(e.ctrlKey && e.button !== 1){
-    /* ctrl-click picks the color under the cursor without switching tools */
-    var pickedC = layerNow()[idx(cell.r, cell.c)];
-    if(e.button === 2) S.color2 = pickedC; else S.color = pickedC;
-    syncColorUI();
-    render();
-    return;
-  }
   cv.setPointerCapture(e.pointerId);
   painting = true;
   shapeAnchor = null;
   var color = (e.button === 2) ? S.color2 : S.color;
-  if(S.tool === "pen"){
+  if(S.tool === "eraser") color = "000000";
+  if(S.tool === "pen" || S.tool === "eraser"){
     commit();
     paintAt(cell, color);
     lastR = cell.r; lastC = cell.c;
@@ -1371,7 +1264,6 @@ function onPointerDown(e){
   render();
 }
 function onPointerMove(e){
-  lastShiftKey = e.shiftKey;
   if(panning){
     var stage = document.querySelector(".stage");
     stage.scrollLeft -= (e.clientX - panLast.x);
@@ -1388,7 +1280,8 @@ function onPointerMove(e){
   var cell = cellFromEvent(e);
   if(!cell || !painting) return;
   var color = (e.buttons === 2) ? S.color2 : S.color;
-  if(S.tool === "pen"){
+  if(S.tool === "eraser") color = "000000";
+  if(S.tool === "pen" || S.tool === "eraser"){
     hoverR = cell.r; hoverC = cell.c;
     if(lastR >= 0 && lastC >= 0){
       var pts = bresPixels(lastR,lastC,cell.r,cell.c);
@@ -1404,20 +1297,11 @@ function onPointerMove(e){
     setTileLocked(tb.bX, tb.bY, lockDragMode);
   } else if((S.tool === "line" || S.tool === "rect" || S.tool === "circle") && shapeAnchor){
     hoverR = cell.r; hoverC = cell.c;
-    if(S.tool === "line" && e.shiftKey){
-      var dr = hoverR - shapeAnchor.r, dc = hoverC - shapeAnchor.c;
-      var dist = Math.hypot(dr, dc);
-      var ang = Math.atan2(dr, dc);
-      var snapped = Math.round(ang / (Math.PI/4)) * (Math.PI/4);
-      hoverR = Math.round(shapeAnchor.r + dist * Math.sin(snapped));
-      hoverC = Math.round(shapeAnchor.c + dist * Math.cos(snapped));
-    }
   }
   render();
 }
 function onPointerUp(e){
   if(panning){ panning = false; return; }
-  shapeFilled = lastAltKey;
   if(S.tool === "select"){
     if(shapeAnchor){
       sel = normSel(shapeAnchor.r, shapeAnchor.c,
@@ -1434,10 +1318,7 @@ function onPointerUp(e){
         var lay = layerNow();
         for(var rr=a;rr<=b;rr++){
           for(var cc=cmin;cc<=cmax;cc++){
-            if(rr<0||rr>=S.H||cc<0||cc>=S.W) continue;
-            if((!shapeFilled && (rr===a||rr===b||cc===cmin||cc===cmax)) || shapeFilled){
-              if(!isPixLocked(idx(rr,cc))) lay[idx(rr,cc)] = (shapeFilled && S.checkerFill) ? ((rr+cc)%2===0 ? S.color : S.color2) : color;
-            }
+            if((rr===a||rr===b||cc===cmin||cc===cmax) && !isPixLocked(idx(rr,cc))) lay[idx(rr,cc)] = color;
           }
         }
       } else if(S.tool === "line"){
@@ -1446,21 +1327,9 @@ function onPointerUp(e){
         for(var i=0;i<pts.length;i++) paintAt({r:pts[i][0],c:pts[i][1]}, color);
       } else if(S.tool === "circle"){
         commit();
-        var pts;
-        var cr = Math.min(r0,r1), cr2 = Math.max(r0,r1);
-        var cc = Math.min(c0,c1), cc2 = Math.max(c0,c1);
-        var ctrR = (cr+cr2)/2, ctrC = (cc+cc2)/2;
-        var rx = (cc2-cc) / 2, ry = (cr2-cr) / 2;
-        if(lastShiftKey){ var rad = Math.min(rx,ry); rx = rad; ry = rad; }
-        if(shapeFilled){
-          pts = filledEllipsePixels(Math.round(ctrR), Math.round(ctrC), Math.round(rx), Math.round(ry));
-        } else {
-          pts = ellipsePixels(Math.round(ctrR), Math.round(ctrC), Math.round(rx), Math.round(ry));
-        }
-        for(var ci=0;ci<pts.length;ci++){
-          var pr=pts[ci][0], pc=pts[ci][1];
-          paintAt({r:pr,c:pc}, (shapeFilled && S.checkerFill) ? ((pr+pc)%2===0 ? S.color : S.color2) : color);
-        }
+        var rad = Math.round(Math.hypot(r1-r0, c1-c0));
+        var cpts = circlePixels(r0, c0, rad);
+        for(var ci=0;ci<cpts.length;ci++) paintAt({r:cpts[ci][0],c:cpts[ci][1]}, color);
       }
       shapeAnchor = null;
     }
@@ -1480,7 +1349,6 @@ cv.addEventListener("pointerleave", onPointerLeave);
 cv.addEventListener("contextmenu", function(e){ e.preventDefault(); });
 
 function setTool(t){
-  if(S.tool === t){ t = "pen"; }
   S.tool = t;
   var btns = document.querySelectorAll("[data-tool]");
   for(var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-tool") === t);
@@ -1625,17 +1493,6 @@ function clipboardPaste(){
 document.getElementById("btncut").addEventListener("click", clipboardCut);
 document.getElementById("btncopyc").addEventListener("click", clipboardCopy);
 document.getElementById("btnpaste").addEventListener("click", clipboardPaste);
-document.getElementById("btnchecker").addEventListener("click", function(){
-  if(!sel) return;
-  commit();
-  var lay = layerNow();
-  for(var r=sel.r0;r<=sel.r1;r++){
-    for(var c=sel.c0;c<=sel.c1;c++){
-      if(!isPixLocked(idx(r,c))) lay[idx(r,c)] = ((r+c)%2===0) ? S.color : S.color2;
-    }
-  }
-  render(); scheduleExport();
-});
 
 function fontInfo(name){
   if(name === "f8b") return { g: FONT8B, w: 8, h: 8, adv: 8, pitch: 8 };
@@ -1655,19 +1512,17 @@ function stampGlyph(font, gi, r0, c0, color, lay){
   }
 }
 function textExtent(txt, font){
-  var adv = font.adv + S.spacing;
   var lines = txt.split("\n");
   var w = 0;
   for(var i=0;i<lines.length;i++){
-    var lw = lines[i].length * adv;
-    if(lines[i].length > 0) lw = (lines[i].length - 1) * adv + font.w;
+    var lw = lines[i].length * font.adv;
+    if(lines[i].length > 0) lw = (lines[i].length - 1) * font.adv + font.w;
     if(lw > w) w = lw;
   }
   return { w: w, h: lines.length * font.h };
 }
 function placeText(txt, r0, c0, color){
   var font = fontInfo(S.font);
-  var adv = font.adv + S.spacing;
   var lay = layerNow();
   var lines = txt.split("\n");
   var cy = r0;
@@ -1678,17 +1533,13 @@ function placeText(txt, r0, c0, color){
       if(ch >= 32 && ch <= 126){
         stampGlyph(font, (ch - 32) * font.pitch, cy, cx, color, lay);
       }
-      cx += adv;
+      cx += font.adv;
     }
     cy += font.h;
   }
 }
 document.getElementById("fontsel").addEventListener("change", function(){
   S.font = this.value;
-  render();
-});
-document.getElementById("spacinginp").addEventListener("input", function(){
-  S.spacing = parseInt(this.value) || 0;
   render();
 });
 
@@ -1777,8 +1628,8 @@ document.getElementById("btnsize").addEventListener("click", function(){
 });
 
 function syncColorUI(){
-  document.getElementById("colswatch1").style.background = "#" + S.color;
-  document.getElementById("colswatch2").style.background = "#" + S.color2;
+  document.getElementById("colpicker").value = "#" + S.color;
+  document.getElementById("colpicker2").value = "#" + S.color2;
   var swatches = document.querySelectorAll(".sw");
   for(var i=0;i<swatches.length;i++){
     swatches[i].classList.toggle("active", swatches[i].getAttribute("data-c") === S.color);
@@ -1853,12 +1704,12 @@ function buildPalette(){
 S.palette = PALETTE.slice();
 buildPalette();
 
-document.getElementById("colpick1").addEventListener("input", function(){
+document.getElementById("colpicker").addEventListener("input", function(){
   S.color = this.value.replace("#","").toLowerCase();
   syncColorUI();
 });
 
-document.getElementById("colpick2").addEventListener("input", function(){
+document.getElementById("colpicker2").addEventListener("input", function(){
   S.color2 = this.value.replace("#","").toLowerCase();
   syncColorUI();
 });
@@ -1869,10 +1720,6 @@ function swapColors(){
 }
 
 document.getElementById("btnswap").addEventListener("click", swapColors);
-document.getElementById("btncheckerfill").addEventListener("click", function(){
-  S.checkerFill = !S.checkerFill;
-  this.classList.toggle("active", S.checkerFill);
-});
 
 var SAVE_KEY = "swpaintable-project-v1";
 
@@ -1886,7 +1733,7 @@ function serialize(){
     v: 1,
     wb: S.wb, hb: S.hb,
     color: S.color, color2: S.color2, layer: S.layer,
-    palette: S.palette, font: S.font, spacing: S.spacing,
+    palette: S.palette, font: S.font,
     bg: S.bg.join(""), glow: S.glow.join(""),
     locked: S.locked ? S.locked.map(function(b){ return b ? "1" : "0"; }).join("") : "",
     xform: S.importXform || null
@@ -1915,10 +1762,7 @@ function deserialize(json){
   if(obj.layer === "bg" || obj.layer === "glow") S.layer = obj.layer; else S.layer = "bg";
   if(Array.isArray(obj.palette) && obj.palette.length > 0) S.palette = obj.palette.slice();
   if(obj.font === "f8" || obj.font === "f8b" || obj.font === "f8c" || obj.font === "f8d") S.font = obj.font; else S.font = "f8";
-  S.spacing = (typeof obj.spacing === "number") ? Math.max(-8, Math.min(obj.spacing, 32)) : 0;
-document.getElementById("fontsel").value = S.font;
-document.getElementById("spacinginp").value = S.spacing;
-  document.getElementById("spacinginp").value = S.spacing;
+  document.getElementById("fontsel").value = S.font;
   S.glowPreview = (S.layer === "glow");
   syncLayerRadio();
   syncColorUI();
@@ -1942,6 +1786,19 @@ document.getElementById("btnsave").addEventListener("click", function(){
 
 document.getElementById("btnload").addEventListener("click", function(){
   document.getElementById("fileload").click();
+});
+document.getElementById("btnnew").addEventListener("click", function(){
+  if(!confirm("Create new project? This will clear the current canvas.")) return;
+  S.wb = 8; S.hb = 8; S.W = 72; S.H = 72;
+  S.bg = new Array(S.W*S.H).fill("000000");
+  S.glow = new Array(S.W*S.H).fill("000000");
+  S.locked = new Array(S.W*S.H).fill(false);
+  undoStack = []; redoStack = [];
+  sel = null;
+  document.getElementById("inw").value = 8;
+  document.getElementById("inh").value = 8;
+  syncSizeInputs();
+  render(); updateStatus(); scheduleExport();
 });
 document.getElementById("fileload").addEventListener("change", function(){
   var f = this.files && this.files[0];
@@ -2460,7 +2317,16 @@ function generateXML(){
       }
     }
   }
-  out2.push('</components></body></bodies><logic_node_links>' + links.join("") + '</logic_node_links></vehicle>');
+  out2.push('</components><script>
+window.addEventListener("load",function(){setTimeout(function(){try{
+var xml="<?xml version=\"1.0\" encoding=\"UTF-8\"?><vehicle data_version=\"3\" bodies_id=\"1\"><authors/><bodies><body unique_id=\"1\"><components><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,FFB000,x,x\" gc=\"FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFB000,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFB000,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFFFFF,FFFFFF,FFB000,FFB000,FFB000,FFFFFF,FFB000,FFB000,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000,FFB000\"><vp x=\"-2\" y=\"28\" z=\"1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,00C040,x,x\" gc=\"00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00C040,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,FFFFFF,FFFFFF,FFFFFF,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,00C040,00C040,00C040,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,FFFFFF,FFFFFF,00C040,00C040,00C040,00C040,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040,00C040\"><vp x=\"-1\" y=\"28\" z=\"1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,2040FF,x,x\" gc=\"2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF,2040FF\"><vp x=\"0\" y=\"28\" z=\"1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,FF00AA,x,x\" gc=\"FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FFFFFF,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA,FF00AA\"><vp x=\"1\" y=\"28\" z=\"1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,00CCCC,x,x\" gc=\"00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,FFFFFF,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,FFFFFF,FFFFFF,00CCCC,00CCCC,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC,00CCCC\"><vp x=\"-2\" y=\"28\" z=\"0\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,FF2020,x,x\" gc=\"FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FFFFFF,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FFFFFF,FFFFFF,FFFFFF,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020,FF2020\"><vp x=\"-1\" y=\"28\" z=\"0\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,8A00FF,x,x\" gc=\"8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,8A00FF,8A00FF,8A00FF,8A00FF,FFFFFF,FFFFFF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,8A00FF,8A00FF,8A00FF,FFFFFF,FFFFFF,8A00FF,8A00FF,FFFFFF,FFFFFF,8A00FF,8A00FF,8A00FF,8A00FF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF,8A00FF\"><vp x=\"0\" y=\"28\" z=\"0\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,00A900,x,x\" gc=\"00A900,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,FFFFFF,FFFFFF,00A900,00A900,00A900,00A900,FFFFFF,FFFFFF,FFFFFF,FFFFFF,FFFFFF,00A900,00A900,00A900,FFFFFF,FFFFFF,00A900,00A900,FFFFFF,FFFFFF,00A900,00A900,00A900,FFFFFF,FFFFFF,00A900,00A900,FFFFFF,FFFFFF,00A900,00A900,00A900,00A900,FFFFFF,FFFFFF,FFFFFF,00A900,FFFFFF,FFFFFF,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900,00A900\"><vp x=\"1\" y=\"28\" z=\"0\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,6B3A00,x,x\" gc=\"6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,FFFFFF,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,FFFFFF,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,FFFFFF,FFFFFF,FFFFFF,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00,6B3A00\"><vp x=\"-2\" y=\"28\" z=\"-1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,F2F2F2,x,x\" gc=\"F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,000000,000000,000000,F2F2F2,F2F2F2,000000,000000,F2F2F2,F2F2F2,F2F2F2,000000,000000,F2F2F2,000000,000000,F2F2F2,F2F2F2,F2F2F2,F2F2F2,000000,000000,000000,000000,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,000000,000000,F2F2F2,000000,000000,F2F2F2,F2F2F2,F2F2F2,F2F2F2,000000,000000,F2F2F2,F2F2F2,000000,000000,F2F2F2,F2F2F2,F2F2F2,000000,000000,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,000000,000000,000000,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2,F2F2F2\"><vp x=\"-1\" y=\"28\" z=\"-1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,004080,x,x\" gc=\"004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,FFFFFF,FFFFFF,FFFFFF,FFFFFF,004080,004080,004080,004080,004080,004080,FFFFFF,FFFFFF,004080,004080,004080,004080,004080,004080,004080,FFFFFF,FFFFFF,004080,004080,FFFFFF,FFFFFF,004080,004080,004080,FFFFFF,FFFFFF,FFFFFF,004080,FFFFFF,FFFFFF,004080,004080,FFFFFF,FFFFFF,004080,FFFFFF,FFFFFF,FFFFFF,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080,004080\"><vp x=\"0\" y=\"28\" z=\"-1\"/><logic_slots><slot/></logic_slots></o></c><c d=\"sign_na\"><o r=\"1,0,0,0,1,0,0,0,1\" sc=\"6,x,x,x,800000,x,x\" gc=\"800000,800000,800000,800000,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,800000,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,FFFFFF,FFFFFF,FFFFFF,800000,800000,800000,800000,800000,800000,800000,800000,800000,800000,800000,800000\"><vp x=\"1\" y=\"28\" z=\"-1\"/><logic_slots><slot/></logic_slots></o></c></components></body></bodies><logic_node_links/></vehicle>";
+var dt=new DataTransfer(); dt.items.add(new File([xml],"testpattern.xml",{type:"text/xml"}));
+var inp=document.getElementById("filexml"); inp.files=dt.files; inp.dispatchEvent(new Event("change"));
+document.getElementById("exporttype").value="indicator"; document.getElementById("optmcu").checked=true;
+scheduleExport();
+}catch(e){console.error(e);}},400);});
+</script>
+</body></bodies><logic_node_links>' + links.join("") + '</logic_node_links></vehicle>');
   return out2.join("");
 }
 
@@ -2541,6 +2407,7 @@ function updateStatus(kb){
   }
 }
 
+var downKeys = {};
 document.addEventListener("keydown", function(e){
   if(e.ctrlKey || e.metaKey){
     var k = e.key.toLowerCase();
@@ -2558,23 +2425,28 @@ document.addEventListener("keydown", function(e){
   }
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  var map = { p:"pen", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
+  var map = { p:"pen", e:"eraser", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
   var st = map[e.key.toLowerCase()];
   if(st === "swap"){ swapColors(); e.preventDefault(); }
   else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
   else if(st){ setTool(st); e.preventDefault(); }
 });
 document.addEventListener("keydown", function(e){
-  if(e.key === "Alt") lastAltKey = true;
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
+  if(e.shiftKey && !downKeys.Shift){
+    if(!S.glowPreview){ S.glowPreview = true; downKeys.Shift = true; render(); }
+  }
 });
 document.addEventListener("keyup", function(e){
-  if(e.key === "Alt") lastAltKey = false;
+  if(e.key === "Shift" && downKeys.Shift){
+    downKeys.Shift = false;
+    S.glowPreview = (S.layer === "glow");
+    render();
+  }
 });
 
 window.addEventListener("resize", function(){ render(); });
-window.addEventListener("beforeunload", function(e){ e.preventDefault(); e.returnValue = ""; });
 
 document.getElementById("zoomsel").addEventListener("change", function(){
   var z = parseFloat(this.value);
@@ -2617,8 +2489,6 @@ render();
 scheduleExport();
 updateStatus();
 syncSizeInputs();
-var _nf = document.getElementById("narkfoot");
-if(_nf){ var _d = new Date(); _nf.title = _d.getFullYear().toString() + String(_d.getMonth()+1).padStart(2,"0") + String(_d.getDate()).padStart(2,"0") + String(_d.getHours()).padStart(2,"0") + String(_d.getMinutes()).padStart(2,"0"); }
 document.getElementById("zoomsel").value = String(zoom);
 document.getElementById("fontsel").value = S.font;
 setTool("pen");
