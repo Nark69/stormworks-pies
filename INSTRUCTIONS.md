@@ -54,7 +54,7 @@ Click and drag to draw an ellipse. Hold **Shift** to constrain to a perfect circ
 Type your text in the Text panel, pick a font and spacing, then click on the canvas to place it. Left click uses the primary color, right click the secondary. Newlines place lines below each other.
 
 ### Select (S)
-Drag to select a region, then use Cut / Copy / Paste. Right click deselects.
+Drag to select a region, then use Cut / Copy / Paste. Right click deselects. When Select is active with a selection, the arrow/mirror/rotate buttons affect only the selected region.
 
 ### Lock (K)
 Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a red tint, cannot be painted and are skipped on XML export.
@@ -72,9 +72,9 @@ In the Color panel, click **Replace Primary → Secondary** to replace all occur
 - **Undo / Redo** (`Ctrl+Z` / `Ctrl+Y`) — every stroke or action is one undo step.
 - **Cut / Copy / Paste** (`Ctrl+X` / `Ctrl+C` / `Ctrl+V`) — operate on the current selection; paste inserts the copied region.
 - **Clear all** — empties both the Background and the Glow layer.
-- **Move** — the arrow buttons shift the active layer by one pixel, wrapping around the edges.
-- **Rotate** — the rotate buttons turn the whole canvas by 90° clockwise or counter-clockwise.
-- **Mirror** — the mirror buttons flip the canvas left-right or top-bottom.
+- **Move** — the arrow buttons shift the active layer by one pixel, wrapping around the edges. With an active selection (Select tool), shifts only the selected region.
+- **Rotate** — the rotate buttons turn the whole canvas by 90° clockwise or counter-clockwise. With an active selection, rotates only the selected region.
+- **Mirror** — the mirror buttons flip the canvas left-right or top-bottom. With an active selection, mirrors only the selected region.
 - **Color Replace** — in the Color panel, click **Replace Primary → Secondary** to replace all occurrences of the primary color with the secondary color in the active layer (locked tiles skipped).
 
 ---
