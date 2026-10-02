@@ -62,6 +62,9 @@ Click (or drag over) tiles to lock or unlock them. Locked tiles are shown with a
 ### Grid (G)
 Toggle the pixel grid and the 9-pixel block guide.
 
+### Color Replace
+In the Color panel, click **Replace Primary → Secondary** to replace all occurrences of the primary color with the secondary color in the active layer. Locked tiles are skipped.
+
 ---
 
 ## Editing
@@ -72,6 +75,7 @@ Toggle the pixel grid and the 9-pixel block guide.
 - **Move** — the arrow buttons shift the active layer by one pixel, wrapping around the edges.
 - **Rotate** — the rotate buttons turn the whole canvas by 90° clockwise or counter-clockwise.
 - **Mirror** — the mirror buttons flip the canvas left-right or top-bottom.
+- **Color Replace** — in the Color panel, click **Replace Primary → Secondary** to replace all occurrences of the primary color with the secondary color in the active layer (locked tiles skipped).
 
 ---
 
@@ -173,10 +177,9 @@ The status bar shows the project size in blocks and pixels and the size of the g
 | `L` | Line | `Z` | Zoom in |
 | `R` | Rectangle | `Q` | Zoom out |
 | `C` | Circle/Ellipse | `G` | Toggle grid |
-| `S` | Select | `1-5` | Recent colors |
+| `S` | Select | `X` | Swap colors |
 | `T` | Text | `Ctrl+Z` | Undo |
 | `K` | Lock | `Ctrl+Y` | Redo |
-| `X` | Swap colors | `Ctrl+A` | Select all |
 | `Delete` | Clear selection | `Ctrl+C` / `Ctrl+V` / `Ctrl+X` | Copy / Paste / Cut |
 | `Shift` | Snap line to 45° | `Alt` | Fill shape (release to apply) |
 | `Ctrl+click` | Pick color | | |

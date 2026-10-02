@@ -21,6 +21,7 @@ A free, open-source pixel editor for designing paintable sign mosaics in Stormwo
 - Select with cut, copy, paste, delete
 - Lock/unlock tiles
 - Checker fill toggle for pattern fills (fill tool + shape fills)
+- Color replace (Primary → Secondary)
 - Ctrl+click color picker with any tool active
 
 ### Layers & Preview
@@ -69,11 +70,10 @@ Load any vehicle XML containing paintable sign or indicator blocks. Block positi
 | `I` | Eyedropper | `=` | Both layers |
 | `L` | Line | `Z` | Zoom in |
 | `R` | Rectangle | `Q` | Zoom out |
-| `C` | Circle/Ellipse | `G` | Toggle glow preview |
-| `S` | Select | `1-5` | Recent colors |
+| `C` | Circle/Ellipse | `G` | Toggle grid |
+| `S` | Select | `X` | Swap colors |
 | `T` | Text | `Ctrl+Z` | Undo |
 | `K` | Lock | `Ctrl+Y` | Redo |
-| `X` | Swap colors | `Ctrl+A` | Select all |
 | `Delete` | Clear selection | `Ctrl+C` / `Ctrl+V` / `Ctrl+X` | Copy / Paste / Cut |
 | `Shift` | Snap line to 45° | `Alt` | Fill shape (release to apply) |
 | `Ctrl+click` | Pick color | | |
