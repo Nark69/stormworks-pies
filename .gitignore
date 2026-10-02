@@ -6,7 +6,8 @@ nodejs/
 
 # Allowlist
 !pies.html
-!LICENSE
-!README.md
+!pies_shot.html
 !INSTRUCTIONS.md
+!README.md
+!LICENSE
 !.gitignore

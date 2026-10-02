@@ -218,6 +218,7 @@
     <button class="tool" id="btncopyc" title="Copy selection (Ctrl+C)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></svg></button>
     <button class="tool" id="btnpaste" title="Paste selection (Ctrl+V)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 14h10"/><path d="M16 4h2a2 2 0 0 1 2 2v1.344"/><path d="m17 18 4-4-4-4"/><path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 1.793-1.113"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></button>
     <button class="tool" id="btnchecker" title="Fill selection with checker pattern"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" fill="currentColor" opacity=".4"/><rect x="13" y="3" width="8" height="8"/><rect x="3" y="13" width="8" height="8"/><rect x="13" y="13" width="8" height="8" fill="currentColor" opacity=".4"/></svg></button>
+    <button class="tool" data-tool="colorreplace" title="Color Replace (H)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><path d="M15 3h6v6"/><path d="M3 3 18 18"/><path d="M18 7 20 7 20 9"/></svg></button>
   </div>
 
   <div class="center">
@@ -315,6 +316,17 @@
       </div>
       <div class="row" style="margin-top:6px;justify-content:flex-end">
         <span id="pixrgb">–</span>
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btncolorreplace" title="Replace all occurrences of Source color with Target color in the active layer">Replace Color</button>
+      </div>
+      <div class="row" style="margin-top:6px;align-items:center">
+        <span style="font-size:12px;color:var(--dim);width:50px">Source</span>
+        <div id="crSrcSwatch" style="width:24px;height:24px;border:1px solid var(--line);border-radius:4px;background:#ffffff;cursor:pointer" onclick="document.getElementById('crSrcPick').click()"></div>
+        <input type="color" id="crSrcPick" value="#ffffff" style="display:none">
+        <span style="font-size:12px;color:var(--dim);width:50px">Target</span>
+        <div id="crDstSwatch" style="width:24px;height:24px;border:1px solid var(--line);border-radius:4px;background:#ff0000;cursor:pointer" onclick="document.getElementById('crDstPick').click()"></div>
+        <input type="color" id="crDstPick" value="#ff0000" style="display:none">
       </div>
     </section>
 
@@ -540,6 +552,7 @@ var S = {
   wb: 8, hb: 8, W: 72, H: 72,
   bg: null, glow: null,
   color: "ffffff", color2: "ff0000",
+  crSrc: "ffffff", crDst: "ff0000",
   palette: null,
   font: "f8", spacing: 0, checkerFill: false,
   tool: "pen", layer: "bg", glowPreview: false, showGrid: true,
@@ -1637,6 +1650,24 @@ document.getElementById("btnchecker").addEventListener("click", function(){
   }
   render(); scheduleExport();
 });
+document.getElementById("btncolorreplace").addEventListener("click", function(){
+  commit();
+  var lay = layerNow();
+  var src = S.crSrc || S.color;
+  var dst = S.crDst || S.color2;
+  for(var i=0;i<lay.length;i++){
+    if(lay[i] === src && !isPixLocked(i)) lay[i] = dst;
+  }
+  render(); scheduleExport();
+});
+document.getElementById("crSrcPick").addEventListener("input", function(){
+  S.crSrc = this.value.replace("#","").toLowerCase();
+  document.getElementById("crSrcSwatch").style.background = "#" + S.crSrc;
+});
+document.getElementById("crDstPick").addEventListener("input", function(){
+  S.crDst = this.value.replace("#","").toLowerCase();
+  document.getElementById("crDstSwatch").style.background = "#" + S.crDst;
+});
 
 function fontInfo(name){
   if(name === "f8b") return { g: FONT8B, w: 8, h: 8, adv: 8, pitch: 8 };
@@ -1780,6 +1811,8 @@ document.getElementById("btnsize").addEventListener("click", function(){
 function syncColorUI(){
   document.getElementById("colswatch1").style.background = "#" + S.color;
   document.getElementById("colswatch2").style.background = "#" + S.color2;
+  if(S.crSrc) document.getElementById("crSrcSwatch").style.background = "#" + S.crSrc;
+  if(S.crDst) document.getElementById("crDstSwatch").style.background = "#" + S.crDst;
   var swatches = document.querySelectorAll(".sw");
   for(var i=0;i<swatches.length;i++){
     swatches[i].classList.toggle("active", swatches[i].getAttribute("data-c") === S.color);
@@ -2573,11 +2606,11 @@ document.addEventListener("keydown", function(e){
   }
   var tgt = e.target;
   if(tgt && (tgt.tagName === "TEXTAREA" || tgt.tagName === "INPUT" || tgt.isContentEditable)) return;
-  var map = { p:"pen", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster" };
+var map = { p:"pen", f:"fill", i:"picker", l:"line", r:"rect", c:"circle", s:"select", t:"text", k:"lock", x:"swap", g:"raster", h:"colorreplace" };
   var st = map[e.key.toLowerCase()];
   if(st === "swap"){ swapColors(); e.preventDefault(); }
   else if(st === "raster"){ btnRaster.click(); e.preventDefault(); }
-else if(st){ setTool(st); e.preventDefault(); }
+  else if(st){ setTool(st); e.preventDefault(); }
 });
 document.addEventListener("keyup", function(e){
   if(e.key === "Alt") lastAltKey = false;
